@@ -1,10 +1,10 @@
-package model;
+package model.entity;
 
 
 import java.io.Serializable;
 import java.sql.Date;
 
-public class UserBean implements Serializable {
+public class UserEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -19,7 +19,7 @@ public class UserBean implements Serializable {
 
 	
 	
-	public UserBean()
+	public UserEntity()
 	{
 		id = 0;
 		email="";
@@ -133,7 +133,7 @@ public class UserBean implements Serializable {
 
 	@Override
 	public String toString() {
-		return "UserBean [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", surname="
+		return "User [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", surname="
 				+ surname + ", gender=" + gender + ", birthDate=" + birthDate + ", country=" + country + "]";
 	}
 

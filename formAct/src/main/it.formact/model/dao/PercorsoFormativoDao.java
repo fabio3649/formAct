@@ -1,19 +1,19 @@
-package model;
+package model.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-public class UserDS  {
+import model.entity.PercorsoFormativoEntity;
+
+public class PercorsoFormativoDao {
 	
 private static DataSource ds;
     
@@ -29,40 +29,42 @@ private static DataSource ds;
 		}
 	}
                                     
-	private static final String TABLE_NAME = "studente";
+	private static final String TABLE_NAME = "percorso_formativo";
 	
-	// creazione id studente dinamico
+	// creazione id percorso formativo dinamico
 	public int nextId() throws SQLException {
 		
-		ArrayList<UserBean> users = (ArrayList<UserBean>) this.doRetrieveAll();
-		if(users.size()==0)
+		ArrayList<PercorsoFormativoEntity> percorsi = (ArrayList<PercorsoFormativoEntity>) this.doRetrieveAll();
+		if(percorsi.size()==0)
 			return 1;
-		int next = (users.get(users.size()-1).getId())+1;
+		int next = (percorsi.get(percorsi.size()-1).getId())+1;
 		
 		return next;
 
 	}
-
+	
 	
 	public void doSave(Object bean) throws SQLException {
+		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		UserBean user = (UserBean) bean;
-		String insertSQL = "INSERT INTO " + UserDS.TABLE_NAME
-				+ " (IDSTUDENTE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, DATANASCITA, PAESEORIGINE)"
+		
+		PercorsoFormativoEntity percorso = (PercorsoFormativoEntity) bean;
+		String insertSQL = "INSERT INTO " + PercorsoFormativoDao.TABLE_NAME
+				+ " (IDPERCORSO_FORMATIVO, FORMATORE, NOME, DESCRIZIONE, CATEGORIA, INDICECONTENUTI, NUMEROLEZIONI, COSTO)"
 				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		try {
 			connection = ds.getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
 			preparedStatement.setInt(1, this.nextId());
-			preparedStatement.setString(2, user.getEmail());
-			preparedStatement.setString(3, user.getPassword());
-			preparedStatement.setString(4, user.getName());
-			preparedStatement.setString(5, user.getSurname());
-			preparedStatement.setString(6, user.getGender());
-			preparedStatement.setDate(7, user.getBirthDate());
-			preparedStatement.setString(8, user.getCountry());
+			preparedStatement.setInt(2, percorso.getId_formatore());
+			preparedStatement.setString(3, percorso.getNome());
+			preparedStatement.setString(4, percorso.getDescrizione());
+			preparedStatement.setInt(5, percorso.getCategoria());
+			preparedStatement.setString(6, percorso.getIndice_contenuti());
+			preparedStatement.setInt(7, percorso.getNum_lezioni());
+			preparedStatement.setDouble(8, percorso.getCosto());
 			preparedStatement.executeUpdate();
 			connection.setAutoCommit(false);
 			connection.commit();
@@ -88,7 +90,7 @@ private static DataSource ds;
          
 		int result = 0;
 
-		String deleteSQL = "DELETE FROM " + UserDS.TABLE_NAME + " WHERE IDSTUDENTE = ?";
+		String deleteSQL = "DELETE FROM " + PercorsoFormativoDao.TABLE_NAME + " WHERE IDPERCORSO_FORMATIVO = ?";
         
 		try {
 			connection = ds.getConnection();
@@ -117,9 +119,9 @@ private static DataSource ds;
 
 		
 		
-		UserBean bean = new UserBean();
+		PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
         
-		String selectSQL = "SELECT * FROM " + UserDS.TABLE_NAME + " WHERE IDSTUDENTE = ?";
+		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME + " WHERE IDPERCORSO_FORMATIVO = ?";
 
 		try {
 			connection = ds.getConnection();
@@ -129,14 +131,14 @@ private static DataSource ds;
 			ResultSet rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
-				bean.setId(rs.getInt("IDSTUDENTE"));
-				bean.setEmail(rs.getString("EMAIL"));
-				bean.setPassword(rs.getString("PASSWORD"));
-				bean.setName(rs.getString("NOME"));
-				bean.setSurname(rs.getString("COGNOME"));
-			    bean.setGender(rs.getString("SESSO"));
-	            bean.setBirthDate(rs.getDate("DATANASCITA"));
-	            bean.setCountry(rs.getString("PAESEORIGINE"));
+				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
+				bean.setId_formatore(rs.getInt("FORMATORE"));
+				bean.setNome(rs.getString("NOME"));
+				bean.setDescrizione(rs.getString("DESCRIZIONE"));
+				bean.setCategoria(rs.getInt("CATEGORIA"));
+			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
+	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
+	            bean.setCosto(rs.getDouble("COSTO"));
 	       
 			    
 			}
@@ -155,16 +157,16 @@ private static DataSource ds;
 	
 
 	
-	public ArrayList<UserBean> doRetrieveAll() throws SQLException {
+	public ArrayList<PercorsoFormativoEntity> doRetrieveAll() throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
-		ArrayList<UserBean> users = new ArrayList<UserBean>();
+		ArrayList<PercorsoFormativoEntity> percorsi = new ArrayList<PercorsoFormativoEntity>();
 
-		String selectSQL = "SELECT * FROM " + UserDS.TABLE_NAME;
+		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME;
 
-		if (users != null && !users.equals("")) {
-			selectSQL += " ORDER BY IDSTUDENTE";  // l' errore era qui , clausola order by non aveva un attributo corretto per la tabella studente.
+		if (percorsi != null && !percorsi.equals("")) {
+			selectSQL += " ORDER BY IDPERCORSO_FORMATIVO";  // l' errore era qui , clausola order by non aveva un attributo corretto per la tabella studente.
 		}
 
 		try {
@@ -175,17 +177,17 @@ private static DataSource ds;
 
 			while (rs.next()) {
 				
-				UserBean bean = new UserBean();
+				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
 
-				bean.setId(rs.getInt("IDSTUDENTE"));
-				bean.setEmail(rs.getString("EMAIL"));
-				bean.setPassword(rs.getString("PASSWORD"));
-				bean.setName(rs.getString("NOME"));
-				bean.setSurname(rs.getString("COGNOME"));
-			    bean.setGender(rs.getString("SESSO"));
-	            bean.setBirthDate(rs.getDate("DATANASCITA"));
-	            bean.setCountry(rs.getString("PAESEORIGINE"));
-				users.add(bean);
+				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
+				bean.setId_formatore(rs.getInt("FORMATORE"));
+				bean.setNome(rs.getString("NOME"));
+				bean.setDescrizione(rs.getString("DESCRIZIONE"));
+				bean.setCategoria(rs.getInt("CATEGORIA"));
+			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
+	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
+	            bean.setCosto(rs.getDouble("COSTO"));
+				percorsi.add(bean);
 			}
 
 		} finally {
@@ -197,6 +199,7 @@ private static DataSource ds;
 					connection.close();
 			}
 		}
-		return users;
+		return percorsi;
 	}
 	}
+

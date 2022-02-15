@@ -1,5 +1,5 @@
 package pianopfpersonalizzato.control;
 
-public class FiaControl {
+public class SoloControl {
 
 }

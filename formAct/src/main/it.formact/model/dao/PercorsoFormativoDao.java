@@ -155,7 +155,189 @@ private static DataSource ds;
 		return bean;
 	}
 	
+	public ArrayList<PercorsoFormativoEntity> doRetrieveByCosto(Double costo) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
 
+		
+		
+		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
+        
+		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME + " WHERE NOME = ?";
+
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setDouble(1, costo);
+
+			ResultSet rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+				
+				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
+				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
+				bean.setId_formatore(rs.getInt("FORMATORE"));
+				bean.setNome(rs.getString("NOME"));
+				bean.setDescrizione(rs.getString("DESCRIZIONE"));
+				bean.setCategoria(rs.getInt("CATEGORIA"));
+			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
+	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
+	            bean.setCosto(rs.getDouble("COSTO"));
+	            corsi.add(bean);
+			    
+			}
+
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} finally {
+				if (connection != null)
+					connection.close();
+			}
+		}
+		return corsi;
+	}
+	
+	
+	public ArrayList<PercorsoFormativoEntity> doRetrieveByString(String str) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		
+		
+		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
+		
+        String nome = "%" + str +"%";
+		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME + " WHERE NOME LIKE ? ";
+
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setString(1, nome);
+
+			ResultSet rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+				
+				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
+				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
+				bean.setId_formatore(rs.getInt("FORMATORE"));
+				bean.setNome(rs.getString("NOME"));
+				bean.setDescrizione(rs.getString("DESCRIZIONE"));
+				bean.setCategoria(rs.getInt("CATEGORIA"));
+			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
+	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
+	            bean.setCosto(rs.getDouble("COSTO"));
+	            corsi.add(bean);
+			    
+			}
+
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} finally {
+				if (connection != null)
+					connection.close();
+			}
+		}
+		return corsi;
+	}
+
+	
+	public ArrayList<PercorsoFormativoEntity> doRetrieveByName(String name) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		
+		
+		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
+        
+		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME + " WHERE NOME = ?";
+
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setString(1, name);
+
+			ResultSet rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+				
+				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
+				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
+				bean.setId_formatore(rs.getInt("FORMATORE"));
+				bean.setNome(rs.getString("NOME"));
+				bean.setDescrizione(rs.getString("DESCRIZIONE"));
+				bean.setCategoria(rs.getInt("CATEGORIA"));
+			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
+	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
+	            bean.setCosto(rs.getDouble("COSTO"));
+	            corsi.add(bean);
+			    
+			}
+
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} finally {
+				if (connection != null)
+					connection.close();
+			}
+		}
+		return corsi;
+	}
+	
+	
+	public ArrayList<PercorsoFormativoEntity> doRetrieveAllByFormatore(String nome, String cognome) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		
+		
+		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
+        
+		String selectSQL = "SELECT * "
+				+ "FROM PERCORSO_FORMATIVO,FORMATORE "
+				+ "WHERE FORMATORE.NOME = ? AND FORMATORE.COGNOME = ?";
+
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setString(1, nome);
+			preparedStatement.setString(2, cognome);
+
+			ResultSet rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
+				
+				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
+				bean.setId_formatore(rs.getInt("FORMATORE"));
+				bean.setNome(rs.getString("NOME"));
+				bean.setDescrizione(rs.getString("DESCRIZIONE"));
+				bean.setCategoria(rs.getInt("CATEGORIA"));
+			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
+	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
+	            bean.setCosto(rs.getDouble("COSTO"));
+	            corsi.add(bean);
+			    
+			}
+
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} finally {
+				if (connection != null)
+					connection.close();
+			}
+		}
+		return corsi;
+	}
+	
 	
 	public ArrayList<PercorsoFormativoEntity> doRetrieveAll() throws SQLException {
 		Connection connection = null;
@@ -166,7 +348,7 @@ private static DataSource ds;
 		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME;
 
 		if (percorsi != null && !percorsi.equals("")) {
-			selectSQL += " ORDER BY IDPERCORSO_FORMATIVO";  // l' errore era qui , clausola order by non aveva un attributo corretto per la tabella studente.
+			selectSQL += " ORDER BY IDPERCORSO_FORMATIVO";  
 		}
 
 		try {

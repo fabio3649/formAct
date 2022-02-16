@@ -11,7 +11,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import model.entity.StudenteEntity;
 import model.entity.ValutazioneEntity;
 
 public class ValutazioneDao {

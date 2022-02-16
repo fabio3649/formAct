@@ -10,30 +10,30 @@
 <%
 PercorsoFormativoEntity corso = new PercorsoFormativoEntity();
 	
-		corso.setId(1);
-		corso.setId_formatore(1);
-		corso.setNome("matematica");
-		corso.setDescrizione("matamtica con domenico uni, yeaaaaaaah");
-		corso.setCategoria(1);
-		corso.setIndice_contenuti("1 -- analisi 2 ---- bhooo ");
-		corso.setNum_lezioni(50);
-		corso.setCosto(20);
+		
 		
 		PercorsoFormativoDao model = new PercorsoFormativoDao();
 		
 		
-		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
-		corsi = model.doRetrieveAll();
-%>
-	<h3> REgistrazione avvenuta 
+		ArrayList<PercorsoFormativoEntity> c = new ArrayList<PercorsoFormativoEntity>();
+		c = model.doRetrieveByString("mat");
+		%>
+	<h3> REgistrazione avvenuta  </h3>
 			
 			<%
-				for ( int i =0; i< corsi.size() ; i++) {
-					System.out.println(corsi.get(i).toString());
+				for ( int i =0; i< c.size() ; i++) {
+					
+					%>
+				<h3> <%	 System.out.println(c.get(i).toString());    %> </h3>
+				<h3> <%= c.get(i).toString() %> </h3>
+					
+					<%
 				}
+			
 			%>
+			
 	
-	</h3>
+			
 
 </body>
 </html>

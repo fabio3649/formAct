@@ -1,21 +1,19 @@
 package model.dao;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import model.entity.UserEntity;
+import model.entity.StudenteEntity;
 
-public class UserDao  {
+public class StudenteDao  {
 	
 private static DataSource ds;
     
@@ -36,7 +34,7 @@ private static DataSource ds;
 	// creazione id studente dinamico
 	public int nextId() throws SQLException {
 		
-		ArrayList<UserEntity> users = (ArrayList<UserEntity>) this.doRetrieveAll();
+		ArrayList<StudenteEntity> users = (ArrayList<StudenteEntity>) this.doRetrieveAll();
 		if(users.size()==0)
 			return 1;
 		int next = (users.get(users.size()-1).getId())+1;
@@ -49,8 +47,8 @@ private static DataSource ds;
 	public void doSave(Object bean) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		UserEntity user = (UserEntity) bean;
-		String insertSQL = "INSERT INTO " + UserDao.TABLE_NAME
+		StudenteEntity user = (StudenteEntity) bean;
+		String insertSQL = "INSERT INTO " + StudenteDao.TABLE_NAME
 				+ " (IDSTUDENTE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, DATANASCITA, PAESEORIGINE)"
 				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		
@@ -90,7 +88,7 @@ private static DataSource ds;
          
 		int result = 0;
 
-		String deleteSQL = "DELETE FROM " + UserDao.TABLE_NAME + " WHERE IDSTUDENTE = ?";
+		String deleteSQL = "DELETE FROM " + StudenteDao.TABLE_NAME + " WHERE IDSTUDENTE = ?";
         
 		try {
 			connection = ds.getConnection();
@@ -119,9 +117,9 @@ private static DataSource ds;
 
 		
 		
-		UserEntity bean = new UserEntity();
+		StudenteEntity bean = new StudenteEntity();
         
-		String selectSQL = "SELECT * FROM " + UserDao.TABLE_NAME + " WHERE IDSTUDENTE = ?";
+		String selectSQL = "SELECT * FROM " + StudenteDao.TABLE_NAME + " WHERE IDSTUDENTE = ?";
 
 		try {
 			connection = ds.getConnection();
@@ -157,13 +155,13 @@ private static DataSource ds;
 	
 
 	
-	public ArrayList<UserEntity> doRetrieveAll() throws SQLException {
+	public ArrayList<StudenteEntity> doRetrieveAll() throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
-		ArrayList<UserEntity> users = new ArrayList<UserEntity>();
+		ArrayList<StudenteEntity> users = new ArrayList<StudenteEntity>();
 
-		String selectSQL = "SELECT * FROM " + UserDao.TABLE_NAME;
+		String selectSQL = "SELECT * FROM " + StudenteDao.TABLE_NAME;
 
 		if (users != null && !users.equals("")) {
 			selectSQL += " ORDER BY IDSTUDENTE";  // l' errore era qui , clausola order by non aveva un attributo corretto per la tabella studente.
@@ -177,7 +175,7 @@ private static DataSource ds;
 
 			while (rs.next()) {
 				
-				UserEntity bean = new UserEntity();
+				StudenteEntity bean = new StudenteEntity();
 
 				bean.setId(rs.getInt("IDSTUDENTE"));
 				bean.setEmail(rs.getString("EMAIL"));

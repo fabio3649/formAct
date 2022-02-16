@@ -4,7 +4,7 @@ package model.entity;
 import java.io.Serializable;
 import java.sql.Date;
 
-public class UserEntity implements Serializable {
+public class StudenteEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -19,7 +19,7 @@ public class UserEntity implements Serializable {
 
 	
 	
-	public UserEntity()
+	public StudenteEntity()
 	{
 		id = 0;
 		email="";

@@ -83,12 +83,12 @@ DROP TABLE IF EXISTS `disponibilità`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `disponibilità` (
-  `iddisponibilità` int NOT NULL,
+  `id` int NOT NULL,
   `giornoSettimana` varchar(10) NOT NULL,
   `orario` time NOT NULL,
-  `stato` tinyint NOT NULL,
+  `stato` tinyint(1) NOT NULL DEFAULT '1',
   `percorsoFormativo` int NOT NULL,
-  PRIMARY KEY (`iddisponibilità`),
+  PRIMARY KEY (`id`),
   KEY `percorso_formativo_idx` (`percorsoFormativo`),
   CONSTRAINT `percorso_formativo` FOREIGN KEY (`percorsoFormativo`) REFERENCES `percorso_formativo` (`idpercorso_formativo`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -100,6 +100,7 @@ CREATE TABLE `disponibilità` (
 
 LOCK TABLES `disponibilità` WRITE;
 /*!40000 ALTER TABLE `disponibilità` DISABLE KEYS */;
+INSERT INTO `disponibilità` VALUES (1,'lunedì','12:00:00',1,1);
 /*!40000 ALTER TABLE `disponibilità` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -252,29 +253,30 @@ INSERT INTO `percorso_formativo` VALUES (1,1,'matematica','matamtica con domenic
 UNLOCK TABLES;
 
 --
--- Table structure for table `preferenza`
+-- Table structure for table `preferenza_studente`
 --
 
-DROP TABLE IF EXISTS `preferenza`;
+DROP TABLE IF EXISTS `preferenza_studente`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `preferenza` (
-  `idStudente` int NOT NULL,
-  `idDisponibilità` int NOT NULL,
-  PRIMARY KEY (`idStudente`,`idDisponibilità`),
-  KEY `disponibilità_idx` (`idDisponibilità`),
-  CONSTRAINT `disponibilità` FOREIGN KEY (`idDisponibilità`) REFERENCES `disponibilità` (`iddisponibilità`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `idStudente` FOREIGN KEY (`idStudente`) REFERENCES `studente` (`idstudente`) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE `preferenza_studente` (
+  `studente` int NOT NULL,
+  `disponibile` int NOT NULL,
+  PRIMARY KEY (`studente`,`disponibile`),
+  KEY `disponibilità_idx` (`disponibile`),
+  CONSTRAINT `disp` FOREIGN KEY (`disponibile`) REFERENCES `disponibilità` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idstudente` FOREIGN KEY (`studente`) REFERENCES `studente` (`idstudente`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `preferenza`
+-- Dumping data for table `preferenza_studente`
 --
 
-LOCK TABLES `preferenza` WRITE;
-/*!40000 ALTER TABLE `preferenza` DISABLE KEYS */;
-/*!40000 ALTER TABLE `preferenza` ENABLE KEYS */;
+LOCK TABLES `preferenza_studente` WRITE;
+/*!40000 ALTER TABLE `preferenza_studente` DISABLE KEYS */;
+INSERT INTO `preferenza_studente` VALUES (1,1);
+/*!40000 ALTER TABLE `preferenza_studente` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -348,4 +350,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-16 18:07:34
+-- Dump completed on 2022-02-16 19:42:59

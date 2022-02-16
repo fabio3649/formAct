@@ -338,6 +338,54 @@ private static DataSource ds;
 		return corsi;
 	}
 	
+	public ArrayList<PercorsoFormativoEntity> doRetrieveAvailable() throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		
+		
+		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
+        
+		int disp = 1;
+		
+		String selectSQL = "SELECT * "
+				+ "FROM percorso_formativo,disponibilità "
+				+ "WHERE disponibilità.stato = ?";
+
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, disp);
+
+			ResultSet rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
+				
+				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
+				bean.setId_formatore(rs.getInt("FORMATORE"));
+				bean.setNome(rs.getString("NOME"));
+				bean.setDescrizione(rs.getString("DESCRIZIONE"));
+				bean.setCategoria(rs.getInt("CATEGORIA"));
+			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
+	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
+	            bean.setCosto(rs.getDouble("COSTO"));
+	            corsi.add(bean);
+			    
+			}
+
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} finally {
+				if (connection != null)
+					connection.close();
+			}
+		}
+		return corsi;
+	}
+	
 	
 	public ArrayList<PercorsoFormativoEntity> doRetrieveAll() throws SQLException {
 		Connection connection = null;
@@ -383,5 +431,8 @@ private static DataSource ds;
 		}
 		return percorsi;
 	}
+	
+	
+	
 	}
 

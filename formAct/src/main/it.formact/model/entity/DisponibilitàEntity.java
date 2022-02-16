@@ -14,7 +14,8 @@ public class Disponibilit‡Entity implements Serializable{
 	int idPercorso;
 	String giornoSettimana;
 	Time orario;
-	Boolean stato;
+	int stato;
+	
 	
 	
 	public Disponibilit‡Entity() {
@@ -23,8 +24,67 @@ public class Disponibilit‡Entity implements Serializable{
 		idPercorso=0;
 		giornoSettimana="";
 		orario=null;
-		stato=true;
+		stato=1;
 	}
+
+
+	public int getIdDisp() {
+		return idDisp;
+	}
+
+
+	public void setIdDisp(int idDisp) {
+		this.idDisp = idDisp;
+	}
+
+
+	public int getIdPercorso() {
+		return idPercorso;
+	}
+
+
+	public void setIdPercorso(int idPercorso) {
+		this.idPercorso = idPercorso;
+	}
+
+
+	public String getGiornoSettimana() {
+		return giornoSettimana;
+	}
+
+
+	public void setGiornoSettimana(String giornoSettimana) {
+		this.giornoSettimana = giornoSettimana;
+	}
+
+
+	public Time getOrario() {
+		return orario;
+	}
+
+
+	public void setOrario(Time orario) {
+		this.orario = orario;
+	}
+
+
+	public int getStato() {
+		return stato;
+	}
+
+
+	public void setStato(int stato) {
+		this.stato = stato;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Disponibilit‡ [idDisp=" + idDisp + ", idPercorso=" + idPercorso + ", giornoSettimana="
+				+ giornoSettimana + ", orario=" + orario + ", stato=" + stato + "]";
+	}
+	
+	
 	
 	
 	

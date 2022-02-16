@@ -8,15 +8,15 @@
 </head>
 <body>
 <%
-PercorsoFormativoEntity corso = new PercorsoFormativoEntity();
+PreferenzaStudenteEntity pref = new PreferenzaStudenteEntity();
 	
 		
 		
-		PercorsoFormativoDao model = new PercorsoFormativoDao();
+		PreferenzaStudenteDao model = new PreferenzaStudenteDao();
 		
 		
-		ArrayList<PercorsoFormativoEntity> c = new ArrayList<PercorsoFormativoEntity>();
-		c = model.doRetrieveByString("mat");
+		ArrayList<PreferenzaStudenteEntity> c = new ArrayList<PreferenzaStudenteEntity>();
+		c = model.doRetrieveAllPrefsByStudent("fabio","pica");
 		%>
 	<h3> REgistrazione avvenuta  </h3>
 			

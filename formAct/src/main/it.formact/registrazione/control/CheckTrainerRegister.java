@@ -35,7 +35,7 @@ public class CheckTrainerRegister extends HttpServlet {
 		} catch (SQLException e) {
 			
 		}
-		//
+		
 		/*
 		//Check del codice fiscale per controllare se l'utente già è registrato nella piattaforma
 		if(request.getParameter("cf")!=null) {

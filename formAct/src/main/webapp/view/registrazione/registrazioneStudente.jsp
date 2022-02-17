@@ -15,7 +15,7 @@
 			<fieldset>
 				<legend>Credenziali di accesso</legend>
 				
-				<!-- Text-Email , variabile ="email" -->
+				<!-- Text-Email , variabile="email" -->
 				<div>
 					<label>Email : </label>
 					<input type="text" id="email" name="email" minlength="6" required>

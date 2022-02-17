@@ -12,39 +12,7 @@ public class PreferenzaStudenteEntity implements Serializable{
 	
 	int studente;
 	int disponibilita;
-	String nomeStudente;
-	String giorno;
-	Time orario;
 	
-	
-	public String getNomeStudente() {
-		return nomeStudente;
-	}
-
-
-	public void setNomeStudente(String nomeStudente) {
-		this.nomeStudente = nomeStudente;
-	}
-
-
-	public String getGiorno() {
-		return giorno;
-	}
-
-
-	public void setGiorno(String giorno) {
-		this.giorno = giorno;
-	}
-
-
-	public Time getOrario() {
-		return orario;
-	}
-
-
-	public void setOrario(Time orario) {
-		this.orario = orario;
-	}
 
 
 	public PreferenzaStudenteEntity() {
@@ -76,9 +44,11 @@ public class PreferenzaStudenteEntity implements Serializable{
 
 	@Override
 	public String toString() {
-		return "PreferenzaStudente [nomeStudente=" + nomeStudente + ", giorno=" + giorno + ", orario=" + orario
-				+ "]";
+		return "Preferenza [studente=" + studente + ", disponibilita=" + disponibilita + "]";
 	}
+
+
+	
 
 
 	

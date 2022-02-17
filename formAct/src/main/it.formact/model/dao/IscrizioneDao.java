@@ -102,10 +102,10 @@ private static DataSource ds;
 		
 
 		
-		public Object doRetrieveByKey(int studente) throws SQLException {    // restituisce una entry di iscrizione per id studente, #iscrizione di uno studente#
+		public Object doRetrieveByStudent(int studente) throws SQLException {    // restituisce una entry di iscrizione per id studente, #iscrizione di uno studente#
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
-
+            
 			
 			
 			IscrizioneEntity bean = new IscrizioneEntity();

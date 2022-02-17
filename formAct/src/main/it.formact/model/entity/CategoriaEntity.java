@@ -13,6 +13,7 @@ public class CategoriaEntity implements Serializable{
 	String nome;
 	String descrizione;
 	String ambito;
+	int percorso;
 	
 	public CategoriaEntity() {
 		
@@ -20,6 +21,7 @@ public class CategoriaEntity implements Serializable{
 		nome="";
 		descrizione="";
 		ambito="";
+		percorso=0;
 		
 	}
 
@@ -55,11 +57,21 @@ public class CategoriaEntity implements Serializable{
 		this.ambito = ambito;
 	}
 
+	public int getPercorso() {
+		return percorso;
+	}
+
+	public void setPercorso(int percorso) {
+		this.percorso = percorso;
+	}
+
 	@Override
 	public String toString() {
 		return "Categoria [idCategoria=" + idCategoria + ", nome=" + nome + ", descrizione=" + descrizione
-				+ ", ambito=" + ambito + "]";
+				+ ", ambito=" + ambito + ", percorso=" + percorso + "]";
 	}
+
+	
 	
 	
 

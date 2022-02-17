@@ -97,16 +97,14 @@ public class PreferenzaStudenteDao {
 		}
 	
 	
-		public ArrayList<PreferenzaStudenteEntity> doRetrieveAllPrefsByStudent(String nome, String cognome) throws SQLException {
+		public ArrayList<PreferenzaStudenteEntity> doRetrieveAll() throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 
 			ArrayList<PreferenzaStudenteEntity> prefs = new ArrayList<PreferenzaStudenteEntity>();
 
-			String selectSQL = "SELECT studente.nome,disponibilità.giornosettimana,disponibilità.orario"
-					+ " FROM preferenza_studente,disponibilità,studente"
-					+ "WHERE studente.nome = ? AND studente.cognome = ? ";
-
+			String selectSQL = "SELECT * FROM " + PreferenzaStudenteDao.TABLE_NAME;
+					
 			if (prefs != null && !prefs.equals("")) {
 				selectSQL += " ORDER BY STUDENTE";  
 			}
@@ -114,17 +112,15 @@ public class PreferenzaStudenteDao {
 			try {
 				connection = ds.getConnection();
 				preparedStatement = connection.prepareStatement(selectSQL);
-				preparedStatement.setString(1, nome);
-				preparedStatement.setString(2, cognome);
+			
 
 				ResultSet rs = preparedStatement.executeQuery();
 
 				while (rs.next()) {
 					
 					PreferenzaStudenteEntity bean = new PreferenzaStudenteEntity();
-					bean.setNomeStudente(rs.getString("NOME"));
-					bean.setGiorno(rs.getString("GIORNOSETTIMANA"));
-					bean.setOrario(rs.getTime("ORARIO"));
+					bean.setStudente(rs.getInt("STUDENTE"));
+					bean.setDisponibilita(rs.getInt("DISPONIBILE"));
 					prefs.add(bean);
 				}
 

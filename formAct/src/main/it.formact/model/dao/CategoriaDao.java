@@ -50,8 +50,8 @@ private static DataSource ds;
 			PreparedStatement preparedStatement = null;
 			CategoriaEntity categoria = (CategoriaEntity) bean;
 			String insertSQL = "INSERT INTO " + CategoriaDao.TABLE_NAME
-					+ " (IDCATEGORIA, NOME, DESCRIZIONE, AMBITODISCIPLINARE)"
-					+ " VALUES (?, ?, ?, ?)";
+					+ " (IDCATEGORIA, NOME, DESCRIZIONE, AMBITODISCIPLINARE, PERCORSO)"
+					+ " VALUES (?, ?, ?, ?, ?)";
 			
 			try {
 				connection = ds.getConnection();
@@ -60,6 +60,7 @@ private static DataSource ds;
 				preparedStatement.setString(2, categoria.getNome());
 				preparedStatement.setString(3, categoria.getDescrizione());
 				preparedStatement.setString(4, categoria.getAmbito());
+				preparedStatement.setInt(5, categoria.getPercorso());
 				preparedStatement.executeUpdate();
 				connection.setAutoCommit(false);
 				connection.commit();

@@ -29,7 +29,10 @@ CREATE TABLE `categoria` (
   `nome` varchar(50) NOT NULL,
   `descrizione` varchar(300) DEFAULT NULL,
   `ambitoDisciplinare` varchar(100) NOT NULL,
-  PRIMARY KEY (`idcategoria`)
+  `percorso` int DEFAULT NULL,
+  PRIMARY KEY (`idcategoria`),
+  KEY `percorso_idx` (`percorso`),
+  CONSTRAINT `percorso` FOREIGN KEY (`percorso`) REFERENCES `percorso_formativo` (`idpercorso_formativo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -39,7 +42,7 @@ CREATE TABLE `categoria` (
 
 LOCK TABLES `categoria` WRITE;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
-INSERT INTO `categoria` VALUES (1,'matematica','matematica e calcolo','integrativa/affine');
+INSERT INTO `categoria` VALUES (1,'matematica','matematica e calcolo','integrativa/affine',NULL);
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -162,6 +165,33 @@ INSERT INTO `interesse` VALUES (1,'programmazione Java','programmazione orientat
 UNLOCK TABLES;
 
 --
+-- Table structure for table `interesse_studente`
+--
+
+DROP TABLE IF EXISTS `interesse_studente`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `interesse_studente` (
+  `studente` int NOT NULL,
+  `interesse` int NOT NULL,
+  PRIMARY KEY (`studente`,`interesse`),
+  KEY `interesse_idx` (`interesse`),
+  CONSTRAINT `interesse` FOREIGN KEY (`interesse`) REFERENCES `interesse` (`idinteresse`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `studente` FOREIGN KEY (`studente`) REFERENCES `studente` (`idstudente`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `interesse_studente`
+--
+
+LOCK TABLES `interesse_studente` WRITE;
+/*!40000 ALTER TABLE `interesse_studente` DISABLE KEYS */;
+INSERT INTO `interesse_studente` VALUES (1,1);
+/*!40000 ALTER TABLE `interesse_studente` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `iscrizione`
 --
 
@@ -189,33 +219,6 @@ CREATE TABLE `iscrizione` (
 LOCK TABLES `iscrizione` WRITE;
 /*!40000 ALTER TABLE `iscrizione` DISABLE KEYS */;
 /*!40000 ALTER TABLE `iscrizione` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `passione`
---
-
-DROP TABLE IF EXISTS `passione`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `passione` (
-  `studente` int NOT NULL,
-  `interesse` int NOT NULL,
-  PRIMARY KEY (`studente`,`interesse`),
-  KEY `interesse_idx` (`interesse`),
-  CONSTRAINT `interesse` FOREIGN KEY (`interesse`) REFERENCES `interesse` (`idinteresse`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `studente` FOREIGN KEY (`studente`) REFERENCES `studente` (`idstudente`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `passione`
---
-
-LOCK TABLES `passione` WRITE;
-/*!40000 ALTER TABLE `passione` DISABLE KEYS */;
-INSERT INTO `passione` VALUES (1,1);
-/*!40000 ALTER TABLE `passione` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -350,4 +353,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-16 19:42:59
+-- Dump completed on 2022-02-17 15:24:54

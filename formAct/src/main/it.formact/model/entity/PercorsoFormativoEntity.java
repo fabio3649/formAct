@@ -11,8 +11,8 @@ public class PercorsoFormativoEntity implements Serializable{
 	private int id;
 	private int id_formatore;
 	private String nome;
-	private String descrizione;
 	private int categoria;
+	private String descrizione;
 	private String indice_contenuti;
 	private int num_lezioni;
 	private double costo;
@@ -24,8 +24,8 @@ public class PercorsoFormativoEntity implements Serializable{
 		id = 0;
 		id_formatore = 0;
 		nome = "";
-		descrizione = "";
 		categoria = 0;
+		descrizione = "";
 		indice_contenuti = "";
 		num_lezioni = 0;
 		costo = 0;

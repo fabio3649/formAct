@@ -46,6 +46,7 @@ public class CreazionePercorsoServlet extends HttpServlet {
 		PercorsoFormativoEntity p = new PercorsoFormativoEntity();
 		PercorsoFormativoDao dao = new PercorsoFormativoDao();
 		CategoriaDao daoCat = new CategoriaDao();
+		CategoriaEntity c = new CategoriaEntity();
 		
 		
 		// recupero i parametri dal form
@@ -53,13 +54,7 @@ public class CreazionePercorsoServlet extends HttpServlet {
 		String descrizione = (String) request.getParameter("descrizione");
 		String categoria = request.getParameter("categoria");
 		
-		try {
-			CategoriaEntity c = (CategoriaEntity) daoCat.doRetrieveByName(categoria);	
-			p.setCategoria(c.getIdCategoria());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		
 		String indice = (String) request.getParameter("indice");
 		int lezioni = Integer.parseInt(request.getParameter("lezioni"));
@@ -67,12 +62,14 @@ public class CreazionePercorsoServlet extends HttpServlet {
 		
 		
 		p.setNome(nome);
+		p.setCategoria(Integer.parseInt(categoria));
 		p.setDescrizione(descrizione);
 		p.setId_formatore(1);
 		p.setIndice_contenuti(indice);
 		p.setNum_lezioni(lezioni);
 		p.setCosto(costo);
 		
+		System.out.println(p.toString());		
 		try {
 			dao.doSave(p);
 			System.out.println("Inserimento percorso effettuato con successo\n");
@@ -80,6 +77,7 @@ public class CreazionePercorsoServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		
 		
 		

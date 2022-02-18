@@ -123,7 +123,7 @@ private static DataSource ds;
 			
 			FormatoreEntity bean = new FormatoreEntity();
 	        
-			String selectSQL = "SELECT * FROM " + FormatoreDao.TABLE_NAME + " WHERE IDSTUDENTE = ?";
+			String selectSQL = "SELECT * FROM " + FormatoreDao.TABLE_NAME + " WHERE IDFORMATORE = ?";
 
 			try {
 				connection = ds.getConnection();
@@ -133,7 +133,7 @@ private static DataSource ds;
 				ResultSet rs = preparedStatement.executeQuery();
 
 				while (rs.next()) {
-					bean.setId(rs.getInt("IDSTUDENTE"));
+					bean.setId(rs.getInt("IDFORMATORE"));
 					bean.setEmail(rs.getString("EMAIL"));
 					bean.setPassword(rs.getString("PASSWORD"));
 					bean.setName(rs.getString("NOME"));
@@ -170,7 +170,7 @@ private static DataSource ds;
 			String selectSQL = "SELECT * FROM " + FormatoreDao.TABLE_NAME;
 
 			if (users != null && !users.equals("")) {
-				selectSQL += " ORDER BY IDSTUDENTE";  // l' errore era qui , clausola order by non aveva un attributo corretto per la tabella studente.
+				selectSQL += " ORDER BY IDFORMATORE";  // l' errore era qui , clausola order by non aveva un attributo corretto per la tabella studente.
 			}
 
 			try {
@@ -183,7 +183,7 @@ private static DataSource ds;
 					
 					FormatoreEntity bean = new FormatoreEntity();
 
-					bean.setId(rs.getInt("IDSTUDENTE"));
+					bean.setId(rs.getInt("IDFORMATORE"));
 					bean.setEmail(rs.getString("EMAIL"));
 					bean.setPassword(rs.getString("PASSWORD"));
 					bean.setName(rs.getString("NOME"));

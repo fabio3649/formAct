@@ -21,10 +21,10 @@
 					<input type="text" id="email" name="email" minlength="6" required>
 				</div>
 				
-				<!-- Text-Password , variabile="password" -->
+				<!-- Password-Password , variabile="password" -->
 				<div>
 					<label>Password : </label>
-					<input type="text" id="password" name="password" minlength="6" required>
+					<input type="password" id="password" name="password"  required>
 				</div>
 				
 			</fieldset>

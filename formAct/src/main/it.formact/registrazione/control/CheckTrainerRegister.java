@@ -2,6 +2,7 @@ package registrazione.control;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,22 +29,15 @@ public class CheckTrainerRegister extends HttpServlet {
 		doGet(request, response);
 	
 		//iniziallizzazione dao
-		PercorsoFormativoDao dao = new PercorsoFormativoDao();
+		FormatoreDao dao = new FormatoreDao();
 		
-		try {
-			System.out.println(dao.doRetrieveAll());
-		} catch (SQLException e) {
-			
-		}
-		
-		/*
 		//Check del codice fiscale per controllare se l'utente già è registrato nella piattaforma
 		if(request.getParameter("cf")!=null) {
 			
 			String newCF = request.getParameter("cf");
 			
 			try{
-				List<FormatoreEntity> AllTrainers = dao.doRetrieveAll();
+				ArrayList<FormatoreEntity> AllTrainers = (ArrayList)dao.doRetrieveAll();
 				
 				if(AllTrainers.size()!=0){
 					for(FormatoreEntity trainer : AllTrainers) {
@@ -82,6 +76,7 @@ public class CheckTrainerRegister extends HttpServlet {
 			newTrainer.setCodiceFiscale(request.getParameter("cf"));
 			newTrainer.setContoCorrente(request.getParameter("numCC"));
 			
+			//System.out.println(newTrainer);
 			dao.doSave(newTrainer);
 			System.out.println(dao.doRetrieveByKey(newTrainer.getId()));
 			
@@ -89,6 +84,6 @@ public class CheckTrainerRegister extends HttpServlet {
 				exception.printStackTrace();
 		}
 		
-		*/
+		
 	}
 }

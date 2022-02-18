@@ -21,10 +21,10 @@
 					<input type="text" id="email" name="email" minlength="6" required>
 				</div>
 				
-				<!-- Text-Password , variabile="password" -->
+				<!-- Password-Password , variabile="password" -->
 				<div>
 					<label>Password : </label>
-					<input type="text" id="password" name="password" minlength="6" required>
+					<input type="password" id="password" name="password"  required>
 				</div>
 				
 			</fieldset>
@@ -49,9 +49,9 @@
 				<!-- RadioButtons-Sesso , variabile = "gender(maschio or femmina)" -->
 				<div>
 					<label>Sesso : </label>
-					<input type="radio" id="male" name="gender" value="maschio" required>
+					<input type="radio" id="male" name="gender" value="m" required>
 					<label> Maschio </label>
-					<input type="radio" id="female" name="gender" value="femmina" required>
+					<input type="radio" id="female" name="gender" value="f" required>
 					<label> Femmina </label>
 				</div>
 				

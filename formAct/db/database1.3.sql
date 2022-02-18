@@ -29,10 +29,7 @@ CREATE TABLE `categoria` (
   `nome` varchar(50) NOT NULL,
   `descrizione` varchar(300) DEFAULT NULL,
   `ambitoDisciplinare` varchar(100) NOT NULL,
-  `percorso` int DEFAULT NULL,
-  PRIMARY KEY (`idcategoria`),
-  KEY `percorso_idx` (`percorso`),
-  CONSTRAINT `percorso` FOREIGN KEY (`percorso`) REFERENCES `percorso_formativo` (`idpercorso_formativo`)
+  PRIMARY KEY (`idcategoria`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -42,7 +39,7 @@ CREATE TABLE `categoria` (
 
 LOCK TABLES `categoria` WRITE;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
-INSERT INTO `categoria` VALUES (1,'matematica','matematica e calcolo','integrativa/affine',NULL);
+INSERT INTO `categoria` VALUES (1,'matematica 1','studio di funzioni','affine/integrativo'),(2,'programmazione 1','programmazione procedurale','informatiche'),(3,'reti di calcolatori','protocolli e topologie','informatiche');
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -117,7 +114,7 @@ DROP TABLE IF EXISTS `formatore`;
 CREATE TABLE `formatore` (
   `idformatore` int NOT NULL,
   `email` varchar(50) NOT NULL,
-  `password` varchar(10) NOT NULL,
+  `password` varchar(20) NOT NULL,
   `nome` varchar(30) NOT NULL,
   `cognome` varchar(30) NOT NULL,
   `sesso` varchar(1) DEFAULT NULL,
@@ -200,14 +197,14 @@ DROP TABLE IF EXISTS `iscrizione`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `iscrizione` (
   `studente` int NOT NULL,
-  `percorsFormativo` int NOT NULL,
+  `percorsoFormativo` int NOT NULL,
   `giorno` varchar(45) DEFAULT NULL,
   `orario` varchar(45) DEFAULT NULL,
   `metodoPagamento` varchar(45) DEFAULT NULL,
   `dataPagamento` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`studente`,`percorsFormativo`),
-  KEY `percorsoFormativo_idx` (`percorsFormativo`),
-  CONSTRAINT `percorsoFormativo` FOREIGN KEY (`percorsFormativo`) REFERENCES `percorso_formativo` (`idpercorso_formativo`) ON DELETE CASCADE ON UPDATE CASCADE,
+  PRIMARY KEY (`studente`,`percorsoFormativo`),
+  KEY `percorsoFormativo_idx` (`percorsoFormativo`),
+  CONSTRAINT `percorsoFormativo` FOREIGN KEY (`percorsoFormativo`) REFERENCES `percorso_formativo` (`idpercorso_formativo`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `studenteIscritto` FOREIGN KEY (`studente`) REFERENCES `studente` (`idstudente`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -218,6 +215,7 @@ CREATE TABLE `iscrizione` (
 
 LOCK TABLES `iscrizione` WRITE;
 /*!40000 ALTER TABLE `iscrizione` DISABLE KEYS */;
+INSERT INTO `iscrizione` VALUES (1,1,'lunedì','12:00','visa','2022-02-18');
 /*!40000 ALTER TABLE `iscrizione` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,15 +230,15 @@ CREATE TABLE `percorso_formativo` (
   `idpercorso_formativo` int NOT NULL,
   `formatore` int NOT NULL,
   `nome` varchar(50) NOT NULL,
+  `ambito` int NOT NULL,
   `descrizione` varchar(500) NOT NULL,
-  `categoria` int NOT NULL,
   `indiceContenuti` varchar(500) NOT NULL,
   `numeroLezioni` int DEFAULT NULL,
   `costo` int NOT NULL,
   PRIMARY KEY (`idpercorso_formativo`),
   KEY `formatore_idx` (`formatore`),
-  KEY `categoria_idx` (`categoria`),
-  CONSTRAINT `categoria` FOREIGN KEY (`categoria`) REFERENCES `categoria` (`idcategoria`) ON UPDATE CASCADE,
+  KEY `categoria_idx` (`ambito`),
+  CONSTRAINT `ambito` FOREIGN KEY (`ambito`) REFERENCES `categoria` (`idcategoria`) ON UPDATE CASCADE,
   CONSTRAINT `idFormatore` FOREIGN KEY (`formatore`) REFERENCES `formatore` (`idformatore`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -251,7 +249,7 @@ CREATE TABLE `percorso_formativo` (
 
 LOCK TABLES `percorso_formativo` WRITE;
 /*!40000 ALTER TABLE `percorso_formativo` DISABLE KEYS */;
-INSERT INTO `percorso_formativo` VALUES (1,1,'matematica','matamtica con domenico uni, yeaaaaaaah',1,'1 -- analisi 2 ---- bhooo ',50,20);
+INSERT INTO `percorso_formativo` VALUES (1,1,'scienza merendine',1,'merendine hmmmm','sdaweafs',3,200),(2,1,'scienza educazione',2,'fdzfae','asdasdaf',50,100),(3,1,'inglese',3,'asdasd','sadadad',20,20);
 /*!40000 ALTER TABLE `percorso_formativo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -278,7 +276,6 @@ CREATE TABLE `preferenza_studente` (
 
 LOCK TABLES `preferenza_studente` WRITE;
 /*!40000 ALTER TABLE `preferenza_studente` DISABLE KEYS */;
-INSERT INTO `preferenza_studente` VALUES (1,1);
 /*!40000 ALTER TABLE `preferenza_studente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -292,7 +289,7 @@ DROP TABLE IF EXISTS `studente`;
 CREATE TABLE `studente` (
   `idstudente` int NOT NULL,
   `email` varchar(50) NOT NULL,
-  `password` varchar(10) NOT NULL,
+  `password` varchar(20) NOT NULL,
   `nome` varchar(30) NOT NULL,
   `cognome` varchar(30) NOT NULL,
   `sesso` varchar(1) DEFAULT NULL,
@@ -353,4 +350,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-17 15:24:54
+-- Dump completed on 2022-02-18 21:13:34

@@ -11,6 +11,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import model.entity.IscrizioneEntity;
 import model.entity.PercorsoFormativoEntity;
 
 public class PercorsoFormativoDao implements DaoInterface{
@@ -51,7 +52,7 @@ private static DataSource ds;
 		
 		PercorsoFormativoEntity percorso = (PercorsoFormativoEntity) bean;
 		String insertSQL = "INSERT INTO " + PercorsoFormativoDao.TABLE_NAME
-				+ " (IDPERCORSO_FORMATIVO, FORMATORE, NOME, DESCRIZIONE, CATEGORIA, INDICECONTENUTI, NUMEROLEZIONI, COSTO)"
+				+ " (IDPERCORSO_FORMATIVO, FORMATORE, NOME, AMBITO, DESCRIZIONE, INDICECONTENUTI, NUMEROLEZIONI, COSTO)"
 				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		try {
@@ -60,8 +61,8 @@ private static DataSource ds;
 			preparedStatement.setInt(1, this.nextId());
 			preparedStatement.setInt(2, percorso.getId_formatore());
 			preparedStatement.setString(3, percorso.getNome());
-			preparedStatement.setString(4, percorso.getDescrizione());
-			preparedStatement.setInt(5, percorso.getCategoria());
+			preparedStatement.setInt(4, percorso.getCategoria());
+			preparedStatement.setString(5, percorso.getDescrizione());
 			preparedStatement.setString(6, percorso.getIndice_contenuti());
 			preparedStatement.setInt(7, percorso.getNum_lezioni());
 			preparedStatement.setDouble(8, percorso.getCosto());
@@ -134,8 +135,8 @@ private static DataSource ds;
 				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
 				bean.setId_formatore(rs.getInt("FORMATORE"));
 				bean.setNome(rs.getString("NOME"));
+				bean.setCategoria(rs.getInt("AMBITO"));
 				bean.setDescrizione(rs.getString("DESCRIZIONE"));
-				bean.setCategoria(rs.getInt("CATEGORIA"));
 			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
 	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
 	            bean.setCosto(rs.getDouble("COSTO"));
@@ -178,8 +179,8 @@ private static DataSource ds;
 				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
 				bean.setId_formatore(rs.getInt("FORMATORE"));
 				bean.setNome(rs.getString("NOME"));
+				bean.setCategoria(rs.getInt("AMBITO"));
 				bean.setDescrizione(rs.getString("DESCRIZIONE"));
-				bean.setCategoria(rs.getInt("CATEGORIA"));
 			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
 	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
 	            bean.setCosto(rs.getDouble("COSTO"));
@@ -224,8 +225,8 @@ private static DataSource ds;
 				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
 				bean.setId_formatore(rs.getInt("FORMATORE"));
 				bean.setNome(rs.getString("NOME"));
+				bean.setCategoria(rs.getInt("AMBITO"));
 				bean.setDescrizione(rs.getString("DESCRIZIONE"));
-				bean.setCategoria(rs.getInt("CATEGORIA"));
 			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
 	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
 	            bean.setCosto(rs.getDouble("COSTO"));
@@ -269,8 +270,8 @@ private static DataSource ds;
 				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
 				bean.setId_formatore(rs.getInt("FORMATORE"));
 				bean.setNome(rs.getString("NOME"));
+				bean.setCategoria(rs.getInt("AMBITO"));
 				bean.setDescrizione(rs.getString("DESCRIZIONE"));
-				bean.setCategoria(rs.getInt("CATEGORIA"));
 			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
 	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
 	            bean.setCosto(rs.getDouble("COSTO"));
@@ -317,8 +318,55 @@ private static DataSource ds;
 				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
 				bean.setId_formatore(rs.getInt("FORMATORE"));
 				bean.setNome(rs.getString("NOME"));
+				bean.setCategoria(rs.getInt("AMBITO"));
 				bean.setDescrizione(rs.getString("DESCRIZIONE"));
-				bean.setCategoria(rs.getInt("CATEGORIA"));
+			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
+	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
+	            bean.setCosto(rs.getDouble("COSTO"));
+	            corsi.add(bean);
+			    
+			}
+
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} finally {
+				if (connection != null)
+					connection.close();
+			}
+		}
+		return corsi;
+	}
+	
+	public ArrayList<PercorsoFormativoEntity> doRetrieveAllByCategory(String categoria) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		
+		
+		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
+        
+		String selectSQL = "SELECT * "
+				+ "FROM PERCORSO_FORMATIVO,CATEGORIA "
+				+ "WHERE CATEGORIA.NOME = ?";
+
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setString(1, categoria);
+		
+
+			ResultSet rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
+				
+				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
+				bean.setId_formatore(rs.getInt("FORMATORE"));
+				bean.setNome(rs.getString("NOME"));
+				bean.setCategoria(rs.getInt("AMBITO"));
+				bean.setDescrizione(rs.getString("DESCRIZIONE"));
 			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
 	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
 	            bean.setCosto(rs.getDouble("COSTO"));
@@ -365,8 +413,8 @@ private static DataSource ds;
 				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
 				bean.setId_formatore(rs.getInt("FORMATORE"));
 				bean.setNome(rs.getString("NOME"));
+				bean.setCategoria(rs.getInt("AMBITO"));
 				bean.setDescrizione(rs.getString("DESCRIZIONE"));
-				bean.setCategoria(rs.getInt("CATEGORIA"));
 			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
 	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
 	            bean.setCosto(rs.getDouble("COSTO"));
@@ -412,8 +460,8 @@ private static DataSource ds;
 				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
 				bean.setId_formatore(rs.getInt("FORMATORE"));
 				bean.setNome(rs.getString("NOME"));
+				bean.setCategoria(rs.getInt("AMBITO"));
 				bean.setDescrizione(rs.getString("DESCRIZIONE"));
-				bean.setCategoria(rs.getInt("CATEGORIA"));
 			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
 	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
 	            bean.setCosto(rs.getDouble("COSTO"));
@@ -431,6 +479,109 @@ private static DataSource ds;
 		}
 		return percorsi;
 	}
+	
+	public ArrayList<PercorsoFormativoEntity> doRetrieveAllByParams(String str , double min, double max, String giorno) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		
+		
+		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
+		String stringa = "%" + str +"%";
+		
+		String selectSQL = "SELECT * "
+				+ "FROM percorso_formativo,disponibilità "
+				+ "WHERE percorso_formativo.nome LIKE  ?" 
+				+ " AND percorso_formativo.costo >= ?"
+				+ " AND percorso_formativo.costo <= ?"
+				+ " AND disponibilità.giornoSettimana = ?";
+
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setString(1, stringa);
+			preparedStatement.setDouble(2 , min);
+		    preparedStatement.setDouble(3,  max);
+		    preparedStatement.setString(4, giorno);
+
+			ResultSet rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
+				
+				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
+				bean.setId_formatore(rs.getInt("FORMATORE"));
+				bean.setNome(rs.getString("NOME"));
+				bean.setCategoria(rs.getInt("AMBITO"));
+				bean.setDescrizione(rs.getString("DESCRIZIONE"));
+			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
+	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
+	            bean.setCosto(rs.getDouble("COSTO"));
+	            corsi.add(bean);
+			    
+			}
+
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} finally {
+				if (connection != null)
+					connection.close();
+			}
+		}
+		return corsi;
+	}
+	
+	public ArrayList<PercorsoFormativoEntity> doRetrieveIscrizioniStudente(int idStudente) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		ArrayList<PercorsoFormativoEntity> iscrizioni = new ArrayList<PercorsoFormativoEntity>();
+
+		String selectSQL = "SELECT * FROM percorso_formativo,iscrizione"
+								+" WHERE percorso_formativo.idpercorso_formativo = iscrizione.percorsoFormativo"
+									+ " AND iscrizione.studente = ?";
+
+		if (iscrizioni != null && !iscrizioni.equals("")) {
+			selectSQL += " ORDER BY STUDENTE";  
+		}
+
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+
+			ResultSet rs = preparedStatement.executeQuery();
+			preparedStatement.setInt(1, idStudente);
+
+			while (rs.next()) {
+				
+				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
+
+				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
+				bean.setId_formatore(rs.getInt("FORMATORE"));
+				bean.setNome(rs.getString("NOME"));
+				bean.setCategoria(rs.getInt("AMBITO"));
+				bean.setDescrizione(rs.getString("DESCRIZIONE"));
+			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
+	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
+	            bean.setCosto(rs.getDouble("COSTO"));
+	            iscrizioni.add(bean);
+			}
+
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} finally {
+				if (connection != null)
+					connection.close();
+			}
+		}
+		return iscrizioni;
+	}
+	
+	
 	
 	
 	

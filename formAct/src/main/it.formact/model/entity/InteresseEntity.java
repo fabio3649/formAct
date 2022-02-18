@@ -11,12 +11,12 @@ public class InteresseEntity implements Serializable{
 	
 	int idInteresse;
 	String nome;
-	String descrizione;
+	
 	
 	public InteresseEntity() {
 		idInteresse=0;
 		nome="";
-		descrizione="";
+		
 	}
 
 	public int getIdInteresse() {
@@ -35,17 +35,11 @@ public class InteresseEntity implements Serializable{
 		this.nome = nome;
 	}
 
-	public String getDescrizione() {
-		return descrizione;
-	}
-
-	public void setDescrizione(String descrizione) {
-		this.descrizione = descrizione;
-	}
+	
 
 	@Override
 	public String toString() {
-		return "Interesse Studente [ nome=" + nome + ", descrizione=" + descrizione + "]";
+		return "Interesse Studente [ nome=" + nome + " ]";
 	}
 	
 	

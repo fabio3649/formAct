@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 import model.entity.PercorsoFormativoEntity;
 
-public class PercorsoFormativoDao {
+public class PercorsoFormativoDao implements DaoInterface{
 	
 private static DataSource ds;
     

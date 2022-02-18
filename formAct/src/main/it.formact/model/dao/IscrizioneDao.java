@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 import model.entity.IscrizioneEntity;
 
-public class IscrizioneDao {
+public class IscrizioneDao implements DaoInterface{
 	
 private static DataSource ds;
     
@@ -185,6 +185,15 @@ private static DataSource ds;
 				}
 			}
 			return iscrizioni;
+		}
+
+
+
+
+		@Override
+		public Object doRetrieveByKey(int id) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
 		}
 		
 		

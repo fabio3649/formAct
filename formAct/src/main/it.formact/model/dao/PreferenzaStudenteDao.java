@@ -12,10 +12,11 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import model.entity.Disponibilit‡Entity;
+import model.entity.FormatoreEntity;
 import model.entity.PercorsoFormativoEntity;
 import model.entity.PreferenzaStudenteEntity;
 
-public class PreferenzaStudenteDao {
+public class PreferenzaStudenteDao implements DaoInterface{
 	
 		private static DataSource ds;
 		    
@@ -135,6 +136,61 @@ public class PreferenzaStudenteDao {
 			}
 			return prefs;
 		}
+		
+		public Object doRetrieveByStudent(int studente) throws SQLException {
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+
+			
+			
+			ArrayList<PreferenzaStudenteEntity> prefs = new ArrayList<PreferenzaStudenteEntity>();
+	        
+			String selectSQL = "SELECT * FROM " + PreferenzaStudenteDao.TABLE_NAME + " WHERE STUDENTE = ?";
+
+			try {
+				connection = ds.getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL);
+				preparedStatement.setInt(1, studente);
+
+				ResultSet rs = preparedStatement.executeQuery();
+
+				while (rs.next()) {
+					
+					PreferenzaStudenteEntity bean = new PreferenzaStudenteEntity();
+					bean.setStudente(rs.getInt("STUDENTE"));
+					bean.setDisponibilita(rs.getInt("DISPONIBILE"));
+					prefs.add(bean);
+		            
+				    
+				}
+
+			} finally {
+				try {
+					if (preparedStatement != null)
+						preparedStatement.close();
+				} finally {
+					if (connection != null)
+						connection.close();
+				}
+			}
+			return prefs;
+		}
+
+
+		@Override
+		public boolean doDelete(int id) throws SQLException {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+
+		@Override
+		public Object doRetrieveByKey(int id) throws SQLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		
 		
        
 

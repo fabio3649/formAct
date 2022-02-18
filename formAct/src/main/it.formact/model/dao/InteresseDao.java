@@ -51,15 +51,14 @@ private static DataSource ds;
 		
 		InteresseEntity interesse = (InteresseEntity) bean;
 		String insertSQL = "INSERT INTO " + InteresseDao.TABLE_NAME
-				+ " (IDINTERESSE, NOME, DESCRIZIONE)"
-				+ " VALUES (?, ?, ?)";
+				+ " (IDINTERESSE, NOME)"
+				+ " VALUES (?, ?)";
 		
 		try {
 			connection = ds.getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
 			preparedStatement.setInt(1, this.nextId());
 			preparedStatement.setString(2, interesse.getNome());
-			preparedStatement.setString(3, interesse.getDescrizione());
 			preparedStatement.executeUpdate();
 			connection.setAutoCommit(false);
 			connection.commit();
@@ -128,7 +127,7 @@ private static DataSource ds;
 			while (rs.next()) {
 				bean.setIdInteresse(rs.getInt("IDINTERESSE"));
 				bean.setNome(rs.getString("NOME"));
-				bean.setDescrizione(rs.getString("DECRIZIONE"));
+			
 				
 	       
 			    
@@ -172,7 +171,6 @@ private static DataSource ds;
 
 				bean.setIdInteresse(rs.getInt("IDINTERESSE"));
 				bean.setNome(rs.getString("NOME"));
-				bean.setDescrizione(rs.getString("DECRIZIONE"));
 				interessi.add(bean);
 			}
 
@@ -213,7 +211,6 @@ private static DataSource ds;
 
 				bean.setIdInteresse(rs.getInt("IDINTERESSE"));
 				bean.setNome(rs.getString("NOME"));
-				bean.setDescrizione(rs.getString("DECRIZIONE"));
 				interessi.add(bean);
 			}
 

@@ -16,7 +16,7 @@ import model.entity.CategoriaEntity;
 
 
 
-public class CategoriaDao {
+public class CategoriaDao implements DaoInterface{
 private static DataSource ds;
     
 	static {
@@ -153,7 +153,7 @@ private static DataSource ds;
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 
-			ArrayList<CategoriaEntity> categorie = new ArrayList<CategoriaEntity>();
+			ArrayList<CategoriaEntity> categorie =  new ArrayList<CategoriaEntity>();
 
 			String selectSQL = "SELECT * FROM " + CategoriaDao.TABLE_NAME;
 
@@ -187,8 +187,53 @@ private static DataSource ds;
 						connection.close();
 				}
 			}
-			return categorie;
+			
+			return  categorie;
 		}
+		
+		
+		public CategoriaEntity doRetrieveByName(String name) throws SQLException {
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+
+			
+
+			String selectSQL = "SELECT * FROM " + CategoriaDao.TABLE_NAME + "WHERE NOME = ?";
+
+			CategoriaEntity bean = new CategoriaEntity();
+
+			try {
+				connection = ds.getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL);
+				ResultSet rs = preparedStatement.executeQuery();
+				preparedStatement.setString(1, name);	
+				
+				while (rs.next()) {
+					
+					
+
+					bean.setIdCategoria(rs.getInt("IDCATEGORIA"));
+					bean.setNome(rs.getString("NOME"));
+					bean.setDescrizione(rs.getString("DESCRIZIONE"));
+					bean.setAmbito(rs.getString("AMBITODISCIPLINARE"));
+					
+				}
+
+			} finally {
+				try {
+					if (preparedStatement != null)
+						preparedStatement.close();
+				} finally {
+					if (connection != null)
+						connection.close();
+				}
+			}
+			
+			return  bean;
+		}
+		
+		
+		
 		}
 	
 	

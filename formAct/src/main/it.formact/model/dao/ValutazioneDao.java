@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 import model.entity.ValutazioneEntity;
 
-public class ValutazioneDao {
+public class ValutazioneDao implements DaoInterface{
 	
 private static DataSource ds;
     
@@ -257,5 +257,23 @@ private static DataSource ds;
 			}
 		}
 		return valutazioni;
+	}
+
+
+
+
+	@Override
+	public boolean doDelete(int id) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+
+	@Override
+	public Object doRetrieveByKey(int id) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	}

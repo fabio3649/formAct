@@ -2,7 +2,11 @@ package model.entity;
 
 import java.io.Serializable;
 
+
+
 public class PercorsoFormativoEntity implements Serializable{
+	
+	
 	
 	private int id;
 	private int id_formatore;
@@ -12,6 +16,8 @@ public class PercorsoFormativoEntity implements Serializable{
 	private String indice_contenuti;
 	private int num_lezioni;
 	private double costo;
+	
+	
 	
 	
 	public PercorsoFormativoEntity() {

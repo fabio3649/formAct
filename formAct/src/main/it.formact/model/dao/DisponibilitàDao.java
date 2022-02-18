@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 import model.entity.Disponibilit‡Entity;
 
 
-public class Disponibilit‡Dao {
+public class Disponibilit‡Dao implements DaoInterface{
 	
 private static DataSource ds;
     

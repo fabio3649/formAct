@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 import model.entity.StudenteEntity;
 
-public class StudenteDao  {
+public class StudenteDao implements DaoInterface {
 	
 private static DataSource ds;
     

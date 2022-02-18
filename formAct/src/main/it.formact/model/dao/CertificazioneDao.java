@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 import model.entity.CertificazioneEntity;
 
-public class CertificazioneDao {
+public class CertificazioneDao implements DaoInterface{
 	
 	
 private static DataSource ds;
@@ -205,4 +205,55 @@ private static DataSource ds;
 	}
 	
 	
+	public Object doRetrieveAll() throws SQLException {  // vuoto;
+	
+	return null;
 	}
+
+
+
+
+
+
+	@Override
+	public boolean doDelete(int id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		
+	
+         
+		int result = 0;
+
+		String deleteSQL = "DELETE FROM " + CertificazioneDao.TABLE_NAME + " WHERE IDCERTIFICAZIONE = ?";
+        
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(deleteSQL);
+			preparedStatement.setInt(1, id);
+
+			result = preparedStatement.executeUpdate();
+
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} finally {
+				if (connection != null)
+					connection.close();
+			}
+		}
+		return (result != 0);
+	}
+
+
+
+
+
+
+	@Override
+	public Object doRetrieveByKey(int id) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+}

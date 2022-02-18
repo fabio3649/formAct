@@ -8,15 +8,15 @@
 </head>
 <body>
 <%
-PreferenzaStudenteEntity pref = new PreferenzaStudenteEntity();
+	
 	
 		
 		
-		PreferenzaStudenteDao model = new PreferenzaStudenteDao();
+		CategoriaDao model = new CategoriaDao();
 		
 		
-		ArrayList<PreferenzaStudenteEntity> c = new ArrayList<PreferenzaStudenteEntity>();
-		c = model.doRetrieveAllPrefsByStudent("fabio","pica");
+		ArrayList<CategoriaEntity> c = new ArrayList<CategoriaEntity>();
+		c =  (ArrayList<CategoriaEntity>)  model.doRetrieveAll();
 		%>
 	<h3> REgistrazione avvenuta  </h3>
 			

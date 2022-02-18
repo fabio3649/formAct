@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 import model.entity.FormatoreEntity;
 
 
-public class FormatoreDao {
+public class FormatoreDao implements DaoInterface{
 	
 private static DataSource ds;
     

@@ -102,7 +102,9 @@ private static DataSource ds;
 		
 
 		/**
+		 * 
 		 * Modificato
+		 * 
 		 */
 		public Object doRetrieveByStudent(int studente) throws SQLException {    // restituisce una entry di iscrizione per id studente, #iscrizione di uno studente#
 			Connection connection = null;

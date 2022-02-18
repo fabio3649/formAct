@@ -101,16 +101,22 @@ private static DataSource ds;
 		}
 		
 
-		
+		/**
+		 * Modificato
+		 */
 		public Object doRetrieveByStudent(int studente) throws SQLException {    // restituisce una entry di iscrizione per id studente, #iscrizione di uno studente#
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
             
 			
 			
-			IscrizioneEntity bean = new IscrizioneEntity();
+			ArrayList<IscrizioneEntity> iscrizioni = new ArrayList<IscrizioneEntity>();
 	        
 			String selectSQL = "SELECT * FROM " + IscrizioneDao.TABLE_NAME + " WHERE STUDENTE = ?";
+			
+			if (iscrizioni != null && !iscrizioni.equals("")) {
+				selectSQL += " ORDER BY STUDENTE";  
+			}
 
 			try {
 				connection = ds.getConnection();
@@ -120,6 +126,9 @@ private static DataSource ds;
 				ResultSet rs = preparedStatement.executeQuery();
 
 				while (rs.next()) {
+					
+					IscrizioneEntity bean = new IscrizioneEntity();
+					
 					bean.setStudente(rs.getInt("STUDENTE"));
 					bean.setPercorsoFormativo(rs.getInt("PERCORSOFORMATIVO"));
 					bean.setGiorno(rs.getString("GIORNO"));
@@ -127,6 +136,7 @@ private static DataSource ds;
 					bean.setMetodoPagamento(rs.getString("METODOPAGAMENTO"));
 					bean.setDataPagamento(rs.getDate("DATAPAGAMENTO"));
 		            
+					iscrizioni.add(bean);
 				    
 				}
 
@@ -139,7 +149,7 @@ private static DataSource ds;
 						connection.close();
 				}
 			}
-			return bean;
+			return iscrizioni;
 		}
 		
 

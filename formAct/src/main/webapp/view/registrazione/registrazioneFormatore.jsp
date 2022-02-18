@@ -15,6 +15,16 @@
 			<fieldset>
 				<legend>Credenziali di accesso</legend>
 				
+				<!-- Visualizzazione errore (codice fiscale già presente nel database) -->
+				<%
+					if(request.getSession().getAttribute("cfError")!=null && request.getSession().getAttribute("cfError").equals("true")){
+				%>
+						<h3>Formatore già iscritto alla piattaforma</h3>
+				<%
+					
+					request.getSession().removeAttribute("cfError");
+					}
+				%>
 				<!-- Text-Email , variabile="email" -->
 				<div>
 					<label>Email : </label>
@@ -24,7 +34,7 @@
 				<!-- Password-Password , variabile="password" -->
 				<div>
 					<label>Password : </label>
-					<input type="password" id="password" name="password"  required>
+					<input type="password" id="password" name="password" maxlenght="8" required>
 				</div>
 				
 			</fieldset>
@@ -70,7 +80,7 @@
 				<!-- Text-Codice Fiscale , variabile = "cf" -->
 				<div>
 					<label>Codice Fiscale : </label>
-					<input type="text" id="cf" name="cf" required>
+					<input type="text" id="cf" name="cf" minlength="16"  maxlength="16" required>
 				</div> 
 				
 				<!-- Text-Conto Corrente , variabile = "numCC" -->
@@ -87,6 +97,5 @@
 			</fieldset>
 		</form>
 	</div>
-	
 </body>
 </html>

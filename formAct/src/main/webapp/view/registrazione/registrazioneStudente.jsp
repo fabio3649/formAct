@@ -9,11 +9,22 @@
 <body>
 	<!-- Divisione dedicata al form di registrazione di un utente che ha intenzione di iscriversi come studente -->
 	<div>
-		<form action="${pageContext.request.contextPath}/CheckRegister" method="post">
+		<form action="${pageContext.request.contextPath}/CheckStudenteRegister" method="post">
 			
 			<!-- fieldset dedicato alle credenziali di accesso -->
 			<fieldset>
 				<legend>Credenziali di accesso</legend>
+				
+				<!-- Visualizzazione errore (codice fiscale già presente nel database) -->
+				<%
+					if(request.getSession().getAttribute("emailError")!=null && request.getSession().getAttribute("emailError").equals("true")){
+				%>
+						<h3>Studente già iscritto alla piattaforma</h3>
+				<%
+					
+					request.getSession().removeAttribute("emailError");
+					}
+				%>
 				
 				<!-- Text-Email , variabile="email" -->
 				<div>
@@ -49,9 +60,9 @@
 				<!-- RadioButtons-Sesso , variabile = "gender(maschio or femmina)" -->
 				<div>
 					<label>Sesso : </label>
-					<input type="radio" id="male" name="gender" value="maschio" required>
+					<input type="radio" id="male" name="gender" value="m" required>
 					<label> Maschio </label>
-					<input type="radio" id="female" name="gender" value="femmina" required>
+					<input type="radio" id="female" name="gender" value="f" required>
 					<label> Femmina </label>
 				</div>
 				

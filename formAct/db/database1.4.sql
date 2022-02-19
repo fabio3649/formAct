@@ -234,7 +234,7 @@ CREATE TABLE `percorso_formativo` (
   `descrizione` varchar(500) NOT NULL,
   `indiceContenuti` varchar(500) NOT NULL,
   `numeroLezioni` int DEFAULT NULL,
-  `costo` int NOT NULL,
+  `costo` double NOT NULL,
   PRIMARY KEY (`idpercorso_formativo`),
   KEY `formatore_idx` (`formatore`),
   KEY `categoria_idx` (`ambito`),
@@ -305,7 +305,7 @@ CREATE TABLE `studente` (
 
 LOCK TABLES `studente` WRITE;
 /*!40000 ALTER TABLE `studente` DISABLE KEYS */;
-INSERT INTO `studente` VALUES (1,'fabio.pica10@gmail.com','Balocco.95','fabio','pica','M','1995-09-10','Italia'),(2,'fabio@peppo.it','123sdas','fabio2','peppo','M','3895-03-09','Italia');
+INSERT INTO `studente` VALUES (1,'fabio.pica10@gmail.com','Balocco.95','fabio','pica','M','1995-09-10','Italia'),(2,'fabio@peppo.it','123sdas','fabio2','peppo','M','3895-03-09','Italia'),(3,'dasd@pica.it','dsadasda','dasda','dsada','m','2022-02-02','dsad');
 /*!40000 ALTER TABLE `studente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -350,4 +350,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-18 21:13:34
+-- Dump completed on 2022-02-19 13:26:20

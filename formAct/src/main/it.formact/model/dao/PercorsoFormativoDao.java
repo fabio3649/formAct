@@ -480,7 +480,7 @@ private static DataSource ds;
 		return percorsi;
 	}
 	
-	public ArrayList<PercorsoFormativoEntity> doRetrieveAllByParams(String str , double min, double max, String giorno) throws SQLException {
+	public ArrayList<PercorsoFormativoEntity> doRetrieveAllByParams(String str , String min, String max, String giorno) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
@@ -489,21 +489,47 @@ private static DataSource ds;
 		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
 		String stringa = "%" + str +"%";
 		
-		String selectSQL = "SELECT * "
-				+ "FROM percorso_formativo,disponibilità "
-				+ "WHERE percorso_formativo.nome LIKE  ?" 
-				+ " AND percorso_formativo.costo >= ?"
-				+ " AND percorso_formativo.costo <= ?"
-				+ " AND disponibilità.giornoSettimana = ?";
-
+		String selectSQL = "";
+		selectSQL += "SELECT DISTINCT *";
+		selectSQL += " FROM percorso_formativo,disponibilità";
+		selectSQL += " WHERE";
+		selectSQL += " percorso_formativo.idpercorso_formativo = disponibilità.percorsoFormativo";
+		
+		if (str != null && !str.equals("")) {
+			selectSQL += " AND percorso_formativo.nome LIKE ?";
+		}
+		if (min != null && !min.equals("")) {
+			selectSQL += " AND percorso_formativo.costo >= ?";
+		}
+		if (max != null && !max.equals("")) {
+			selectSQL += " AND percorso_formativo.costo <= ?";
+		}
+		if (giorno != null && !giorno.equals("")) {
+			selectSQL += " AND disponibilità.giornoSettimana = ?";
+		}
+		
 		try {
 			connection = ds.getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
-			preparedStatement.setString(1, stringa);
-			preparedStatement.setDouble(2 , min);
-		    preparedStatement.setDouble(3,  max);
-		    preparedStatement.setString(4, giorno);
-
+			
+			int i = 1;
+			if (str != null && !str.equals("")) {
+				preparedStatement.setString(i, stringa);
+				i++;
+			}
+			if (min != null && !min.equals("")) {
+				preparedStatement.setDouble(i , Double.parseDouble(min));
+				i++;
+			}
+			if (max != null && !max.equals("")) {
+				preparedStatement.setDouble(i, Double.parseDouble(max));
+				i++;
+			}
+			if (giorno != null && !giorno.equals("")) {
+				preparedStatement.setString(i, giorno);
+				i++;
+			}
+			
 			ResultSet rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
@@ -539,7 +565,7 @@ private static DataSource ds;
 
 		ArrayList<PercorsoFormativoEntity> iscrizioni = new ArrayList<PercorsoFormativoEntity>();
 
-		String selectSQL = "SELECT * FROM percorso_formativo,iscrizione"
+		String selectSQL = "SELECT DISTINCT * FROM percorso_formativo,iscrizione"
 								+" WHERE percorso_formativo.idpercorso_formativo = iscrizione.percorsoFormativo"
 									+ " AND iscrizione.studente = ?";
 
@@ -550,9 +576,10 @@ private static DataSource ds;
 		try {
 			connection = ds.getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
-
-			ResultSet rs = preparedStatement.executeQuery();
+			
+			// Problema: questi 2 comandi erano invertiti:
 			preparedStatement.setInt(1, idStudente);
+			ResultSet rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				
@@ -581,9 +608,5 @@ private static DataSource ds;
 		return iscrizioni;
 	}
 	
-	
-	
-	
-	
-	}
+}
 

@@ -490,7 +490,12 @@ private static DataSource ds;
 		String stringa = "%" + str +"%";
 		
 		String selectSQL = "";
-		selectSQL += "SELECT DISTINCT *";
+		selectSQL += "SELECT DISTINCT";
+		selectSQL += " percorso_formativo.idpercorso_formativo, percorso_formativo.formatore,"
+				+    " percorso_formativo.nome, percorso_formativo.ambito, percorso_formativo.descrizione,"
+				+    " percorso_formativo.indiceContenuti, percorso_formativo.numeroLezioni,"
+				+    " percorso_formativo.costo";
+		
 		selectSQL += " FROM percorso_formativo,disponibilità";
 		selectSQL += " WHERE";
 		selectSQL += " percorso_formativo.idpercorso_formativo = disponibilità.percorsoFormativo";

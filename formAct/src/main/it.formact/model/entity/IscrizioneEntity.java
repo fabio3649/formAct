@@ -3,6 +3,7 @@ package model.entity;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalTime;
 
 public class IscrizioneEntity implements Serializable{
 	
@@ -15,7 +16,7 @@ public class IscrizioneEntity implements Serializable{
 	
 	int percorsoFormativo;
 	String giorno;
-	Time orario;
+	LocalTime orario;
 	String metodoPagamento;
 	Date dataPagamento;
 	
@@ -53,11 +54,11 @@ public class IscrizioneEntity implements Serializable{
 		this.giorno = giorno;
 	}
 
-	public Time getOrario() {
+	public LocalTime getOrario() {
 		return orario;
 	}
 
-	public void setOrario(Time orario) {
+	public void setOrario(LocalTime orario) {
 		this.orario = orario;
 	}
 

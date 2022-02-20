@@ -32,19 +32,38 @@
 						           <%
 						           AgendaCorsi ag = new AgendaCorsi();
 						           ArrayList<PercorsoFormativoEntity> lunedi = ag.getLunedi();
+						           ArrayList<PercorsoFormativoEntity> martedi = ag.getMartedi();
+						           ArrayList<PercorsoFormativoEntity> mercoledi = ag.getMercoledi();
+						           ArrayList<PercorsoFormativoEntity> giovedi = ag.getGiovedi();
+						           ArrayList<PercorsoFormativoEntity> venerdi = ag.getVenerdi();
+						           
 								for(int i =0; i< lunedi.size() ; i++){
 								
 									%>
 							                  <tr>
 											    
 											    <td> <%=lunedi.get(i).getNome()%>  </td>
-											    <td>  </td>
-											  </tr>
+											                        <% 	
+								 									}
+									                                  %>
+											    
+											    
+						                      	<td>  <% for ( int i  =0; i<martedi.size() ;i++) {
+								  		                                                        %>
+								  		          
+											    
+											  		<td> <%=martedi.get(i).getNome()%>  </td>
+												                                               <%
+											                                                     }
+								  	 																%>		
+								  	             </tr>
+											  
 											  
 					
-								                                     <% 	
-								 										}
-									                                  %>
+								                                    
+									                                  
+									                                  
+								  	                            
 									                                  
 									                                  	
 						</table>

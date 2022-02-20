@@ -2,6 +2,11 @@ package getionepf.control;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,9 +14,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import getionepf.service.CreatorService;
 import model.dao.CategoriaDao;
+import model.dao.Disponibilit‡Dao;
 import model.dao.PercorsoFormativoDao;
 import model.entity.CategoriaEntity;
+import model.entity.Disponibilit‡Entity;
 import model.entity.PercorsoFormativoEntity;
 
 /**
@@ -42,45 +50,10 @@ public class CreazionePercorsoServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// Dao e entity
-		PercorsoFormativoEntity p = new PercorsoFormativoEntity();
-		PercorsoFormativoDao dao = new PercorsoFormativoDao();
-		CategoriaDao daoCat = new CategoriaDao();
-		CategoriaEntity c = new CategoriaEntity();
+	
 		
-		
-		// recupero i parametri dal form
-		String nome = (String) request.getParameter("nome");
-		String descrizione = (String) request.getParameter("descrizione");
-		String categoria = request.getParameter("categoria");
-		
-		
-		
-		String indice = (String) request.getParameter("indice");
-		int lezioni = Integer.parseInt(request.getParameter("lezioni"));
-		double costo = Double.parseDouble(request.getParameter("costo"));
-		
-		
-		p.setNome(nome);
-		p.setCategoria(Integer.parseInt(categoria));
-		p.setDescrizione(descrizione);
-		p.setId_formatore(1);
-		p.setIndice_contenuti(indice);
-		p.setNum_lezioni(lezioni);
-		p.setCosto(costo);
-		
-		System.out.println(p.toString());		
-		try {
-			dao.doSave(p);
-			System.out.println("Inserimento percorso effettuato con successo\n");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		
-		
+		CreatorService cr = new CreatorService();
+		cr.creatorPercorso(request);
 		
 	}
 

@@ -2,6 +2,7 @@ package model.entity;
 
 import java.io.Serializable;
 import java.sql.Time;
+import java.time.LocalTime;
 
 public class Disponibilit‡Entity implements Serializable{
 
@@ -13,7 +14,7 @@ public class Disponibilit‡Entity implements Serializable{
 	int idDisp;
 	int idPercorso;
 	String giornoSettimana;
-	Time orario;
+	LocalTime orario;
 	int stato;
 	
 	
@@ -58,12 +59,12 @@ public class Disponibilit‡Entity implements Serializable{
 	}
 
 
-	public Time getOrario() {
+	public LocalTime getOrario() {
 		return orario;
 	}
 
 
-	public void setOrario(Time orario) {
+	public void setOrario(LocalTime orario) {
 		this.orario = orario;
 	}
 

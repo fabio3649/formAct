@@ -2,6 +2,7 @@ package model.dao;
 
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -83,6 +84,38 @@ private static DataSource ds;
 			
 		
 
+		public boolean updatePassword(int id, String pwd) throws SQLException {
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+			int result = 0;
+			
+			
+	
+
+			String selectSQL = "UPDATE " + FormatoreDao.TABLE_NAME + " SET PASSWORD = ? " + " WHERE IDFORMATORE = ? ";
+
+			try {
+				connection = ds.getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL);
+				preparedStatement.setString(1, pwd);
+				preparedStatement.setInt(2, id);
+
+				
+				result = preparedStatement.executeUpdate();
+
+			} finally {
+				try {
+					if (preparedStatement != null)
+						preparedStatement.close();
+				} finally {
+					if (connection != null)
+						connection.close();
+				}
+			}
+			return (result != 0);
+		}
+			
+    
 		
 		public boolean doDelete(int id) throws SQLException {
 			Connection connection = null;

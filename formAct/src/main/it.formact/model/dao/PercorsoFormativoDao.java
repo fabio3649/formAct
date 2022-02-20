@@ -45,6 +45,8 @@ private static DataSource ds;
 	}
 	
 	
+	
+	
 	public void doSave(Object bean) throws SQLException {
 		
 		Connection connection = null;
@@ -434,6 +436,54 @@ private static DataSource ds;
 		return corsi;
 	}
 	
+	public ArrayList<PercorsoFormativoEntity> doRetrieveByDisponibilità(String giorno) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		
+		
+		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
+        
+		int disp = 1;
+		
+		String selectSQL = "SELECT DISTINCT * "
+				+ "FROM percorso_formativo,disponibilità "
+				+ "WHERE disponibilità.giornoSettimana = ? AND percorso_formativo.idpercorso_formativo = disponibilità.percorsoFormativo";
+
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setString(1, giorno);
+
+			ResultSet rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
+				
+				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
+				bean.setId_formatore(rs.getInt("FORMATORE"));
+				bean.setNome(rs.getString("NOME"));
+				bean.setCategoria(rs.getInt("AMBITO"));
+				bean.setDescrizione(rs.getString("DESCRIZIONE"));
+			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
+	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
+	            bean.setCosto(rs.getDouble("COSTO"));
+	            corsi.add(bean);
+			    
+			}
+
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} finally {
+				if (connection != null)
+					connection.close();
+			}
+		}
+		return corsi;
+	}
+	
 	
 	public ArrayList<PercorsoFormativoEntity> doRetrieveAll() throws SQLException {
 		Connection connection = null;
@@ -612,6 +662,8 @@ private static DataSource ds;
 		}
 		return iscrizioni;
 	}
+	
+	
 	
 }
 

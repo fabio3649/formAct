@@ -12,6 +12,8 @@
 	ArrayList <CategoriaEntity> categorie = new ArrayList<CategoriaEntity>();
 	CategoriaDao dao = new CategoriaDao();
 	categorie = dao.doRetrieveAll();
+	DisponibilitàDao daoDisp = new DisponibilitàDao();
+	ArrayList<DisponibilitàEntity> disps = daoDisp.doRetrieveAll();
 
 %>
 
@@ -19,12 +21,12 @@
 
 	<form action="${pageContext.request.contextPath}/CreazionePercorsoServlet"  method="post"  id="formPercorso" >
 		<label for="nome">Nome</label> <br> <br>
-			<input type="text" id="nome" name="nome" required maxlength="16" placeholder="inserisci nome corso">
+			<input type="text" id="nome" name="nome"  placeholder="inserisci nome corso">
 		<br><br> <label for="descrizione">Descrizione</label> <br> <br>
 			<textarea id="descrizione" rows="10" cols="10" name="descrizione"> Dettagli corso </textarea>
 		<br><br> <label for="indice">Indice dei contenuti</label> <br> <br>
 			<textarea id="indice" rows="50" cols="50" name="indice" > Indice dei contenuti... </textarea>
-		<br><br> <label for="cars">Choose a car:</label>
+		<br><br> <label for="cars">Scegli ambito:</label>
 			  <select  id="categoria" name="categoria">
 			  <%	
    			 for( int i =0 ; i< categorie.size();i++) {
@@ -40,11 +42,85 @@
   			
 		<br><br> <label for="lezioni">Numero lezioni</label> <br> <br>
 			<input type="number" id="lezioni" name="lezioni" required maxlength="16" placeholder="inserisci numero di lezioni">
+			
+			<br><br> <label for="disp">Scegli una disponibilità:</label> 
+			<div id="disponibilità">
+			  <select  id="giorno" name="giorno">
+			  
+   				 <option value="lunedì"> Lunedì </option>	
+   				 <option value="martedì"> Martedì </option>
+   				 <option value="mercoledì"> Mercoledì </option>
+   				 <option value="giovedì">Giovedì </option>
+   				 <option value="venerdì"> Venerdì </option> 
+			   
+   				 
+   			
+   				    </select> <br> <br> 
+   				    <select  id="orario" name="orario">
+			  <%  // LocalTime considera 1 ora indietro;  %>
+   				 <option value="10:00"> 09:00 </option>	
+   				 <option value="11:00"> 10:00 </option>
+   				 <option value="12:00"> 11:00 </option>
+   				 <option value="16:00"> 15:00 </option>
+   				 <option value="16:30"> 15:30 </option>
+   				 <option value="17:00"> 16:00 </option>
+   				 <option value="17:30"> 16:30 </option>
+   				 <option value="19:00"> 18:00 </option>
+   				
+			   
+   				 
+   			
+   				    </select>
+   			</div> <input type="button" id="button1" value="aggiungi altri giorni" >
+   			
+   			<div id ="altroGiorno" style="display: none" >
+   				 <select  id="giorno" name="giorno">
+			  
+   				 <option value="lunedì"> Lunedì </option>	
+   				 <option value="martedì"> Martedì </option>
+   				 <option value="mercoledì"> Mercoledì </option>
+   				 <option value="giovedì">Giovedì </option>
+   				 <option value="venerdì"> Venerdì </option> 
+			   
+   				 
+   			
+   				    </select> <br> <br> 
+   				    <select  id="orario" name="orario">
+			  
+   				 <option value="10:00"> 09:00 </option>	
+   				 <option value="11:00"> 10:00 </option>
+   				 <option value="12:00"> 11:00 </option>
+   				 <option value="16:00"> 15:00 </option>
+   				 <option value="16:30"> 15:30 </option>
+   				 <option value="17:00"> 16:00 </option>
+   				 <option value="17:30"> 16:30 </option>
+   				 <option value="19:00"> 18:00 </option>
+   			
+   				    </select>
+   			
+   			
+   			</div>
+   			
+			   			<script >
+			   					document.getElementById("button1").addEventListener("click", 
+			   					function () {
+			   					 		document.getElementById("altroGiorno").style.display='inline';
+			   					}, false );
+			   			
+			   			
+			   			</script>
+			   				    
+   				     <br> <br>  
 		<br><br> <label for="costo">Costo</label> <br> <br>
 			<input type="text" id="costo" name="costo" required maxlength="16" placeholder="inserisci costo corso"> <br> <br>
 		
 	
-	
+	                     <%
+	                     ArrayList<DisponibilitàEntity> disponibilità = new ArrayList<DisponibilitàEntity>();
+						 DisponibilitàEntity d = new DisponibilitàEntity();
+				        
+	                     
+	                     %>
      <input type="submit" value="Crea percorso formativo">
 	</form>
 

@@ -23,8 +23,8 @@ public class CreatorService {
 		public boolean creatorPercorso(HttpServletRequest request) {
 		
 			
-			getRequestDataPercorso(request);
-			getRequestDataDisponibilit‡(request, p);
+		p =	getRequestDataPercorso(request);
+		disp = getRequestDataDisponibilit‡(request, p);
 			
 			System.out.println(p.toString());		
 			try {
@@ -55,12 +55,7 @@ public class CreatorService {
 		}
 	
 	
-	
-	
-	
-	
-	
-	
+
 	
 	// acquisisce i dati dal form e crea l'oggetto percorso formativo entity
 	public PercorsoFormativoEntity getRequestDataPercorso(HttpServletRequest request) {
@@ -96,6 +91,8 @@ public class CreatorService {
 		return p;
 	}
 	
+	
+	// recupero i dati di una disponibilit‡ dal form e creo l'oggetto disponibilit‡ entity
 	public Disponibilit‡Entity getRequestDataDisponibilit‡(HttpServletRequest request, PercorsoFormativoEntity p) {
 		
 		// recupero i parametri dal form

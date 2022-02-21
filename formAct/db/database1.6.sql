@@ -100,7 +100,7 @@ CREATE TABLE `disponibilità` (
 
 LOCK TABLES `disponibilità` WRITE;
 /*!40000 ALTER TABLE `disponibilità` DISABLE KEYS */;
-INSERT INTO `disponibilità` VALUES (1,'martedì','09:00:00',1,1);
+INSERT INTO `disponibilità` VALUES (1,'martedì','09:00:00',1,1),(2,'lunedì','09:00:00',1,2),(3,'lunedì','10:00:00',1,3),(4,'venerdì','11:00:00',1,4);
 /*!40000 ALTER TABLE `disponibilità` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,7 +170,6 @@ DROP TABLE IF EXISTS `interesse`;
 CREATE TABLE `interesse` (
   `idinteresse` int NOT NULL,
   `nome` varchar(50) NOT NULL,
-  `descrizione` varchar(300) NOT NULL,
   PRIMARY KEY (`idinteresse`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -181,7 +180,7 @@ CREATE TABLE `interesse` (
 
 LOCK TABLES `interesse` WRITE;
 /*!40000 ALTER TABLE `interesse` DISABLE KEYS */;
-INSERT INTO `interesse` VALUES (1,'programmazione Java','programmazione orientata agli oggetti, Java , C ++');
+INSERT INTO `interesse` VALUES (1,'Informatica teorica'),(2,'Matematica'),(3,'Linguaggio di programmazione'),(4,'Informatica di base'),(5,'Reti 1'),(6,'Reti 2'),(7,'Pacchetto Office'),(8,'Analisi 1'),(9,'Analisi 2'),(10,'Algebra'),(11,'Geometria'),(12,'Insiemistica'),(13,'Java'),(14,'Python'),(15,'HTML'),(16,'CSS'),(17,'XML'),(18,'PHP'),(19,'Go'),(20,'UML'),(21,'Android'),(22,'Ingegneria del sfotware'),(23,'discreto'),(24,'Assembly'),(25,'Algoirtmi'),(26,'Intelligenza artificiale'),(27,'Grafica e interattività'),(28,'3d'),(29,'Interfacce'),(30,'Programmazione orientata agli oggetti');
 /*!40000 ALTER TABLE `interesse` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -239,6 +238,7 @@ CREATE TABLE `iscrizione` (
 
 LOCK TABLES `iscrizione` WRITE;
 /*!40000 ALTER TABLE `iscrizione` DISABLE KEYS */;
+INSERT INTO `iscrizione` VALUES (1,1,'martedì','09:00:00','visa','2022-01-18'),(1,2,'lunedì','09:00:00','visa','2022-02-15'),(1,3,'lunedì','10:00:00','visa','2022-01-10'),(1,4,'venerdì','11:00:00','visa','2022-02-08');
 /*!40000 ALTER TABLE `iscrizione` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -272,7 +272,7 @@ CREATE TABLE `percorso_formativo` (
 
 LOCK TABLES `percorso_formativo` WRITE;
 /*!40000 ALTER TABLE `percorso_formativo` DISABLE KEYS */;
-INSERT INTO `percorso_formativo` VALUES (1,1,'prova molteplici disp',1,' Dettagli corso ',' Indice dei contenuti... ',222,32);
+INSERT INTO `percorso_formativo` VALUES (1,1,'prova molteplici disp',1,' Dettagli corso ',' Indice dei contenuti... ',222,32),(2,1,'creator service',4,' Dettagli corso ',' Indice dei contenuti... ',23,3),(3,1,'terzo percorso creato',2,'dett','durata lezioni : 1 ora',24,3),(4,1,'quarto percorso creato',1,'dertt','ddasdas',23,32);
 /*!40000 ALTER TABLE `percorso_formativo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -374,4 +374,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-20 19:12:55
+-- Dump completed on 2022-02-21 13:18:22

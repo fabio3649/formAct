@@ -329,6 +329,49 @@ private static DataSource ds;
 			return disps;
 		}
 		
+		public ArrayList<Disponibilit‡Entity> doRetrieveAllByPercorso(int percorso) throws SQLException {
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+
+			ArrayList<Disponibilit‡Entity> disps = new ArrayList<Disponibilit‡Entity>();
+
+			String selectSQL = "SELECT * FROM " + Disponibilit‡Dao.TABLE_NAME + "WHERE PERCORSOFORMATIVO = ?";
+
+			/*if (disps != null && !disps.equals("")) {
+				selectSQL += " ORDER BY GIORNOSETTIMANA";  
+			}*/
+
+			try {
+				connection = ds.getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL);
+				preparedStatement.setInt(1, percorso);
+
+				ResultSet rs = preparedStatement.executeQuery();
+
+				while (rs.next()) {
+					
+					Disponibilit‡Entity bean = new Disponibilit‡Entity();
+
+					bean.setIdDisp(rs.getInt("ID"));
+					bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
+					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
+					bean.setStato(rs.getInt("STATO"));
+					bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
+					disps.add(bean);
+				}
+
+			} finally {
+				try {
+					if (preparedStatement != null)
+						preparedStatement.close();
+				} finally {
+					if (connection != null)
+						connection.close();
+				}
+			}
+			return disps;
+		}
+		
 		
 		
 	}

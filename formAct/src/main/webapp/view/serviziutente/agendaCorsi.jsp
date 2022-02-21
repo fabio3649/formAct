@@ -8,14 +8,11 @@
 </head>
 <body>
 	<%
-	PercorsoFormativoDao dao = new PercorsoFormativoDao();	
-	
-	IscrizioneDao daoIsc = new IscrizioneDao();
-	
-	ArrayList<IscrizioneEntity> iscrizioni = (ArrayList<IscrizioneEntity>) daoIsc.doRetrieveByStudent(1);
-	
-	//ArrayList<PercorsoFormativoEntity> giorno = dao.doRetrieveByDisponibilità("lunedì");
-	
+						AgendaCorsi ag = new AgendaCorsi();
+						ArrayList<Calendario> agenda = new ArrayList<Calendario>();
+						
+						
+						
 	%>
 				
 				<div>
@@ -28,34 +25,77 @@
 						<th> Mercoledì  </th>
 						<th> Giovedì  </th>
 						<th> Venerdì  </th>
-						</tr>
+						
 						           <%
-						           AgendaCorsi ag = new AgendaCorsi();
-						           ArrayList<PercorsoFormativoEntity> lunedi = ag.getLunedi();
-						           ArrayList<PercorsoFormativoEntity> martedi = ag.getMartedi();
-						           ArrayList<PercorsoFormativoEntity> mercoledi = ag.getMercoledi();
-						           ArrayList<PercorsoFormativoEntity> giovedi = ag.getGiovedi();
-						           ArrayList<PercorsoFormativoEntity> venerdi = ag.getVenerdi();
-						           
-								for(int i =0; i< lunedi.size() ; i++){
-								
+						          	    agenda = ag.getLunedi(1);
+										for(int i =0; i< agenda.size() ; i++){
+								   
 									%>
 							                  <tr>
 											    
-											    <td> <%=lunedi.get(i).getNome()%>  </td>
+											    <td> <%=agenda.get(i).getNome()%>  <br> <%=agenda.get(i).getTime()%> </td>  
 											                        <% 	
 								 									}
+																		//System.out.println(agenda);	
+																		//System.out.println("\n");
 									                                  %>
 											    
 											    
-						                      	<td>  <% for ( int i  =0; i<martedi.size() ;i++) {
-								  		                                                        %>
+						                      	  
+								  		                <%
+								  		              agenda = ag.getMartedi(1);
+								  		              for(int i =0; i< agenda.size() ; i++){
+								  		                
+								  		                %>                                        
 								  		          
 											    
-											  		<td> <%=martedi.get(i).getNome()%>  </td>
-												                                               <%
-											                                                     }
-								  	 																%>		
+											  		<td>  <%=agenda.get(i).getNome()%>  <br> <%=agenda.get(i).getTime()%>     </td>
+											  						 <% 	
+								 									}
+								  		           						// System.out.println(agenda);						
+									                                 %>
+											  		
+											  		
+								  		                <%
+								  		              agenda = ag.getMercoledi(1);
+								  		              for(int i =0; i< agenda.size() ; i++){
+								  		                
+								  		                %>                                        
+								  		          
+											    
+											  		<td>  <%=agenda.get(i).getNome()%>  <br> <%=agenda.get(i).getTime()%>     </td>
+											  						 <% 	
+								 									}
+								  		           						 //System.out.println(agenda);						
+									                                 %>
+									                                 
+									                                 <%
+								  		              agenda = ag.getGiovedi(1);
+								  		              for(int i =0; i< agenda.size() ; i++){
+								  		                
+								  		                %>                                        
+								  		          
+											    
+											  		<td>  <%=agenda.get(i).getNome()%>  <br> <%=agenda.get(i).getTime()%>     </td>
+											  						 <% 	
+								 									}
+								  		           						// System.out.println(agenda);						
+									                                 %>
+									                                 
+									                                 
+									                                 <%
+								  		              agenda = ag.getVenerdi(1);
+								  		              for(int i =0; i< agenda.size() ; i++){
+								  		                
+								  		                %>                                        
+								  		          
+											    
+											  		<td>  <%=agenda.get(i).getNome()%>  <br> <%=agenda.get(i).getTime()%>     </td>
+											  						 <% 	
+								 									}
+								  		           						// System.out.println(agenda);						
+									                                %>
+												                                              		
 								  	             </tr>
 											  
 											  

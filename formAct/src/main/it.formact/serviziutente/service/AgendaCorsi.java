@@ -3,123 +3,110 @@ package serviziutente.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import model.dao.DisponibilitàDao;
 import model.dao.IscrizioneDao;
 import model.dao.PercorsoFormativoDao;
+import model.entity.DisponibilitàEntity;
 import model.entity.IscrizioneEntity;
 import model.entity.PercorsoFormativoEntity;
 
 public class AgendaCorsi {
 	
-	PercorsoFormativoEntity p;
-	ArrayList<PercorsoFormativoEntity> lista;
-	ArrayList<IscrizioneEntity> iscrizioniStudente;
-	IscrizioneDao daoIsc;
-	PercorsoFormativoDao dao;
+	PercorsoFormativoDao daoP = new PercorsoFormativoDao();
+	DisponibilitàDao daoDisp = new DisponibilitàDao();
+	IscrizioneDao daoIsc = new IscrizioneDao();
+	ArrayList<IscrizioneEntity> iscrizioni ; 
+	ArrayList<DisponibilitàEntity> disps;
+	
 	
 	
 	public AgendaCorsi() throws SQLException {
-		p = new PercorsoFormativoEntity();
-		lista = new ArrayList<PercorsoFormativoEntity>();
-		iscrizioniStudente = new ArrayList<IscrizioneEntity>();
-		daoIsc = new IscrizioneDao();
-		dao = new PercorsoFormativoDao();
-		getIscrizioni();
+		
+		
+		
 	}
 	
 	
-	public ArrayList<IscrizioneEntity> getIscrizioni() throws SQLException {
-		return iscrizioniStudente = (ArrayList<IscrizioneEntity>) daoIsc.doRetrieveByStudent(1);
-	}
-	
-	
-	
-	public ArrayList<PercorsoFormativoEntity> getLunedi() throws SQLException{
 		
-		ArrayList<PercorsoFormativoEntity> lunedi = new ArrayList<PercorsoFormativoEntity>();
-	
-		
-		for (  int i =0 ; i< iscrizioniStudente.size() ; i++ ) {
+		public ArrayList<Calendario> getLunedi(int studente) throws SQLException {
 			
-			if(iscrizioniStudente.get(i).getGiorno().equalsIgnoreCase("lunedì")) {
-				 lunedi.add((PercorsoFormativoEntity) dao.doRetrieveByKey(iscrizioniStudente.get(i).getPercorsoFormativo()));
-				
+			iscrizioni = (ArrayList<IscrizioneEntity>) daoIsc.doRetrieveAllByDay(studente, "lunedì");
+			ArrayList<Calendario> c = new ArrayList<Calendario>();
+			for( int i=0;i< iscrizioni.size(); i++) {
+				 PercorsoFormativoEntity p = new PercorsoFormativoEntity();
+				 p =  (PercorsoFormativoEntity) daoP.doRetrieveByKey(iscrizioni.get(i).getPercorsoFormativo());
+				 c.add(new Calendario(p.getNome(),iscrizioni.get(i).getOrario() , iscrizioni.get(i).getStudente()));
 			}
+			
+			
+			
+			return c;
+		}
+	
+		public ArrayList<Calendario> getMartedi(int studente) throws SQLException {
+				
+				iscrizioni = (ArrayList<IscrizioneEntity>) daoIsc.doRetrieveAllByDay(studente, "martedì");
+				ArrayList<Calendario> c = new ArrayList<Calendario>();
+				for( int i=0;i< iscrizioni.size(); i++) {
+					 PercorsoFormativoEntity p = new PercorsoFormativoEntity();
+					 p =  (PercorsoFormativoEntity) daoP.doRetrieveByKey(iscrizioni.get(i).getPercorsoFormativo());
+					 c.add(new Calendario(p.getNome(),iscrizioni.get(i).getOrario(), iscrizioni.get(i).getStudente()));
+				}
+				
+				
+				
+				return c;
+			}
+		
+		public ArrayList<Calendario> getMercoledi(int studente) throws SQLException {
+			
+			iscrizioni = (ArrayList<IscrizioneEntity>) daoIsc.doRetrieveAllByDay(studente, "mercoledì");
+			ArrayList<Calendario> c = new ArrayList<Calendario>();
+			for( int i=0;i< iscrizioni.size(); i++) {
+				 PercorsoFormativoEntity p = new PercorsoFormativoEntity();
+				 p =  (PercorsoFormativoEntity) daoP.doRetrieveByKey(iscrizioni.get(i).getPercorsoFormativo());
+				 c.add(new Calendario(p.getNome(),iscrizioni.get(i).getOrario(), iscrizioni.get(i).getStudente()));
+			}
+			
+			
+			
+			return c;
 		}
 		
-			return lunedi;
-		
-	
-	}
-		
-		public ArrayList<PercorsoFormativoEntity> getMartedi() throws SQLException{
+		public ArrayList<Calendario> getGiovedi(int studente) throws SQLException {
 			
-			ArrayList<PercorsoFormativoEntity> martedi = new ArrayList<PercorsoFormativoEntity>();
-		
-			
-			for (  int i =0 ; i< iscrizioniStudente.size() ; i++ ) {
-				
-				if(iscrizioniStudente.get(i).getGiorno().equalsIgnoreCase("martedì")) {
-					 martedi.add((PercorsoFormativoEntity) dao.doRetrieveByKey(iscrizioniStudente.get(i).getPercorsoFormativo()));
-					
-				}
+			iscrizioni = (ArrayList<IscrizioneEntity>) daoIsc.doRetrieveAllByDay(studente, "giovedì");
+			ArrayList<Calendario> c = new ArrayList<Calendario>();
+			for( int i=0;i< iscrizioni.size(); i++) {
+				 PercorsoFormativoEntity p = new PercorsoFormativoEntity();
+				 p =  (PercorsoFormativoEntity) daoP.doRetrieveByKey(iscrizioni.get(i).getPercorsoFormativo());
+				 c.add(new Calendario(p.getNome(),iscrizioni.get(i).getOrario(), iscrizioni.get(i).getStudente()));
 			}
-			return martedi;
 			
+			
+			
+			return c;
+		}
+		
+		public ArrayList<Calendario> getVenerdi(int studente) throws SQLException {
+			
+			iscrizioni = (ArrayList<IscrizioneEntity>) daoIsc.doRetrieveAllByDay(studente, "venerdì");
+			ArrayList<Calendario> c = new ArrayList<Calendario>();
+			for( int i=0;i< iscrizioni.size(); i++) {
+				 PercorsoFormativoEntity p = new PercorsoFormativoEntity();
+				 p =  (PercorsoFormativoEntity) daoP.doRetrieveByKey(iscrizioni.get(i).getPercorsoFormativo());
+				 c.add(new Calendario(p.getNome(),iscrizioni.get(i).getOrario(), iscrizioni.get(i).getStudente()));
+			}
+			
+			
+			
+			return c;
 		}
 			
-			
-			public ArrayList<PercorsoFormativoEntity> getMercoledi() throws SQLException {
-				
-				ArrayList<PercorsoFormativoEntity> mercoledi = new ArrayList<PercorsoFormativoEntity>();
-			
-				
-				for (  int i =0 ; i< iscrizioniStudente.size() ; i++ ) {
-					
-					if(iscrizioniStudente.get(i).getGiorno().equalsIgnoreCase("mercoledì")) {
-						 mercoledi.add((PercorsoFormativoEntity) dao.doRetrieveByKey(iscrizioniStudente.get(i).getPercorsoFormativo()));
-						
-					}
-				
-				}
-					return mercoledi;
-			}
-				
-				
-				public ArrayList<PercorsoFormativoEntity> getGiovedi() throws SQLException{
-					
-					ArrayList<PercorsoFormativoEntity> giovedi = new ArrayList<PercorsoFormativoEntity>();
-				
-					
-					for (  int i =0 ; i< iscrizioniStudente.size() ; i++ ) {
-						
-						if(iscrizioniStudente.get(i).getGiorno().equalsIgnoreCase("giovedì")) {
-							 giovedi.add((PercorsoFormativoEntity) dao.doRetrieveByKey(iscrizioniStudente.get(i).getPercorsoFormativo()));
-							
-						}
-					}
-					return giovedi;
-					
-					
-				}
-					
-					
-					public ArrayList<PercorsoFormativoEntity> getVenerdi() throws SQLException {
-						
-						ArrayList<PercorsoFormativoEntity> venerdi = new ArrayList<PercorsoFormativoEntity>();
-					
-						
-						for (  int i =0 ; i< iscrizioniStudente.size() ; i++ ) {
-							
-							if(iscrizioniStudente.get(i).getGiorno().equalsIgnoreCase("venerdì")) {
-								 venerdi.add((PercorsoFormativoEntity) dao.doRetrieveByKey(iscrizioniStudente.get(i).getPercorsoFormativo()));
-								
-							}
-						
-						
-					}
-						return venerdi;
 	
-						}
+	
+
+	
 					
 					
 					

@@ -73,7 +73,7 @@ private static DataSource ds;
 		}
 	}
 		
-	public boolean doUpdate(int id, String nome, String descrizione) throws SQLException {
+	public boolean doUpdate(int id, String nome) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		int result = 0;
@@ -81,14 +81,13 @@ private static DataSource ds;
 		
 
 
-		String selectSQL = "UPDATE " + InteresseDao.TABLE_NAME + " SET NOME = ? , DESCRIZIONE = ?" + " WHERE IDINTERESSE = ? ";
+		String selectSQL = "UPDATE " + InteresseDao.TABLE_NAME + " SET NOME = ? " + " WHERE IDINTERESSE = ? ";
 
 		try {
 			connection = ds.getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
 			preparedStatement.setString(1, nome);
-			preparedStatement.setString(2, descrizione);
-			preparedStatement.setInt(3, id);
+			preparedStatement.setInt(2, id);
 
 			
 			result = preparedStatement.executeUpdate();

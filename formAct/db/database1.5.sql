@@ -39,7 +39,7 @@ CREATE TABLE `categoria` (
 
 LOCK TABLES `categoria` WRITE;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
-INSERT INTO `categoria` VALUES (1,'matematica 1','studio di funzioni','affine/integrativo'),(2,'programmazione 1','programmazione procedurale','informatiche'),(3,'reti di calcolatori','protocolli e topologie','informatiche');
+INSERT INTO `categoria` VALUES (1,'matematica 1','studio di funzioni','affine/integrativo'),(2,'programmazione 1','programmazione procedurale','informatiche'),(3,'reti di calcolatori','protocolli e topologie','informatiche'),(4,'databases','algebra relazionale','informatiche');
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,7 +87,7 @@ CREATE TABLE `disponibilità` (
   `giornoSettimana` varchar(10) NOT NULL,
   `orario` time NOT NULL,
   `stato` tinyint(1) NOT NULL DEFAULT '1',
-  `percorsoFormativo` int NOT NULL,
+  `percorsoFormativo` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `percorso_formativo_idx` (`percorsoFormativo`),
   CONSTRAINT `percorso_formativo` FOREIGN KEY (`percorsoFormativo`) REFERENCES `percorso_formativo` (`idpercorso_formativo`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -100,7 +100,7 @@ CREATE TABLE `disponibilità` (
 
 LOCK TABLES `disponibilità` WRITE;
 /*!40000 ALTER TABLE `disponibilità` DISABLE KEYS */;
-INSERT INTO `disponibilità` VALUES (1,'lunedì','12:00:00',1,1);
+INSERT INTO `disponibilità` VALUES (1,'martedì','09:00:00',1,1);
 /*!40000 ALTER TABLE `disponibilità` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -132,8 +132,32 @@ CREATE TABLE `formatore` (
 
 LOCK TABLES `formatore` WRITE;
 /*!40000 ALTER TABLE `formatore` DISABLE KEYS */;
-INSERT INTO `formatore` VALUES (1,'domenico@uni.it','barba90','domenico','uni','M','2000-02-10','Italia','DASDADWETQG','1dasdqw5d4784');
+INSERT INTO `formatore` VALUES (1,'ciaociao','ueue','','uni','M','2000-02-10','Italia','DASDADWETQG','1dasdqw5d4784');
 /*!40000 ALTER TABLE `formatore` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `giorno_settimana`
+--
+
+DROP TABLE IF EXISTS `giorno_settimana`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `giorno_settimana` (
+  `id` int NOT NULL,
+  `giorno` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `giorno_settimana`
+--
+
+LOCK TABLES `giorno_settimana` WRITE;
+/*!40000 ALTER TABLE `giorno_settimana` DISABLE KEYS */;
+INSERT INTO `giorno_settimana` VALUES (1,'lunedì'),(2,'martedì'),(3,'mercoledì'),(4,'giovedì'),(5,'venerdì');
+/*!40000 ALTER TABLE `giorno_settimana` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -197,14 +221,14 @@ DROP TABLE IF EXISTS `iscrizione`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `iscrizione` (
   `studente` int NOT NULL,
-  `percorsoFormativo` int NOT NULL,
+  `percorso_formativo` int NOT NULL,
   `giorno` varchar(45) DEFAULT NULL,
-  `orario` varchar(45) DEFAULT NULL,
-  `metodoPagamento` varchar(45) DEFAULT NULL,
-  `dataPagamento` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`studente`,`percorsoFormativo`),
-  KEY `percorsoFormativo_idx` (`percorsoFormativo`),
-  CONSTRAINT `percorsoFormativo` FOREIGN KEY (`percorsoFormativo`) REFERENCES `percorso_formativo` (`idpercorso_formativo`) ON DELETE CASCADE ON UPDATE CASCADE,
+  `orario` time DEFAULT NULL,
+  `metodo_pagamento` varchar(45) DEFAULT NULL,
+  `data_pagamento` date DEFAULT NULL,
+  PRIMARY KEY (`studente`,`percorso_formativo`),
+  KEY `percorsoFormativo_idx` (`percorso_formativo`),
+  CONSTRAINT `percorsoFormativo` FOREIGN KEY (`percorso_formativo`) REFERENCES `percorso_formativo` (`idpercorso_formativo`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `studenteIscritto` FOREIGN KEY (`studente`) REFERENCES `studente` (`idstudente`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -215,7 +239,6 @@ CREATE TABLE `iscrizione` (
 
 LOCK TABLES `iscrizione` WRITE;
 /*!40000 ALTER TABLE `iscrizione` DISABLE KEYS */;
-INSERT INTO `iscrizione` VALUES (1,1,'lunedì','12:00','visa','2022-02-18');
 /*!40000 ALTER TABLE `iscrizione` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -229,7 +252,7 @@ DROP TABLE IF EXISTS `percorso_formativo`;
 CREATE TABLE `percorso_formativo` (
   `idpercorso_formativo` int NOT NULL,
   `formatore` int NOT NULL,
-  `nome` varchar(50) NOT NULL,
+  `nome` varchar(100) NOT NULL,
   `ambito` int NOT NULL,
   `descrizione` varchar(500) NOT NULL,
   `indiceContenuti` varchar(500) NOT NULL,
@@ -249,7 +272,7 @@ CREATE TABLE `percorso_formativo` (
 
 LOCK TABLES `percorso_formativo` WRITE;
 /*!40000 ALTER TABLE `percorso_formativo` DISABLE KEYS */;
-INSERT INTO `percorso_formativo` VALUES (1,1,'scienza merendine',1,'merendine hmmmm','sdaweafs',3,200),(2,1,'scienza educazione',2,'fdzfae','asdasdaf',50,100),(3,1,'inglese',3,'asdasd','sadadad',20,20);
+INSERT INTO `percorso_formativo` VALUES (1,1,'prova molteplici disp',1,' Dettagli corso ',' Indice dei contenuti... ',222,32);
 /*!40000 ALTER TABLE `percorso_formativo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,8 +287,8 @@ CREATE TABLE `preferenza_studente` (
   `studente` int NOT NULL,
   `disponibile` int NOT NULL,
   PRIMARY KEY (`studente`,`disponibile`),
-  KEY `disponibilità_idx` (`disponibile`),
-  CONSTRAINT `disp` FOREIGN KEY (`disponibile`) REFERENCES `disponibilità` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `disp_idx` (`disponibile`),
+  CONSTRAINT `disp` FOREIGN KEY (`disponibile`) REFERENCES `giorno_settimana` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idstudente` FOREIGN KEY (`studente`) REFERENCES `studente` (`idstudente`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -276,6 +299,7 @@ CREATE TABLE `preferenza_studente` (
 
 LOCK TABLES `preferenza_studente` WRITE;
 /*!40000 ALTER TABLE `preferenza_studente` DISABLE KEYS */;
+INSERT INTO `preferenza_studente` VALUES (1,1),(1,2);
 /*!40000 ALTER TABLE `preferenza_studente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -350,4 +374,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-19 13:26:20
+-- Dump completed on 2022-02-20 19:12:55

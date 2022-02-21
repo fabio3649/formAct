@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import javax.naming.Context;
@@ -62,7 +63,7 @@ private static DataSource ds;
 			preparedStatement = connection.prepareStatement(insertSQL);
 			preparedStatement.setInt(1, this.nextId());
 			preparedStatement.setString(2, disp.getGiornoSettimana());
-			preparedStatement.setTime(3, disp.getOrario());
+			preparedStatement.setTime(3, Time.valueOf(disp.getOrario()));
 			preparedStatement.setInt(4, disp.getStato());
 			preparedStatement.setInt(5, disp.getIdPercorso());
 			preparedStatement.executeUpdate();
@@ -133,7 +134,8 @@ private static DataSource ds;
 			while (rs.next()) {
 				bean.setIdDisp(rs.getInt("ID"));
 				bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
-				bean.setOrario(rs.getTime("ORARIO"));
+				
+				bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
 				bean.setStato(rs.getInt("STATO"));
 				bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
 	       
@@ -178,7 +180,7 @@ private static DataSource ds;
 
 				bean.setIdDisp(rs.getInt("ID"));
 				bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
-				bean.setOrario(rs.getTime("ORARIO"));
+				bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
 				bean.setStato(rs.getInt("STATO"));
 				bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
 				disps.add(bean);
@@ -223,7 +225,7 @@ private static DataSource ds;
 
 					bean.setIdDisp(rs.getInt("ID"));
 					bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
-					bean.setOrario(rs.getTime("ORARIO"));
+					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
 					bean.setStato(rs.getInt("STATO"));
 					bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
 					disps.add(bean);
@@ -266,7 +268,7 @@ private static DataSource ds;
 
 					bean.setIdDisp(rs.getInt("ID"));
 					bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
-					bean.setOrario(rs.getTime("ORARIO"));
+					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
 					bean.setStato(rs.getInt("STATO"));
 					bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
 					disps.add(bean);
@@ -309,7 +311,50 @@ private static DataSource ds;
 
 					bean.setIdDisp(rs.getInt("ID"));
 					bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
-					bean.setOrario(rs.getTime("ORARIO"));
+					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
+					bean.setStato(rs.getInt("STATO"));
+					bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
+					disps.add(bean);
+				}
+
+			} finally {
+				try {
+					if (preparedStatement != null)
+						preparedStatement.close();
+				} finally {
+					if (connection != null)
+						connection.close();
+				}
+			}
+			return disps;
+		}
+		
+		public ArrayList<Disponibilit‡Entity> doRetrieveAllByPercorso(int percorso) throws SQLException {
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+
+			ArrayList<Disponibilit‡Entity> disps = new ArrayList<Disponibilit‡Entity>();
+
+			String selectSQL = "SELECT * FROM " + Disponibilit‡Dao.TABLE_NAME + "WHERE PERCORSOFORMATIVO = ?";
+
+			/*if (disps != null && !disps.equals("")) {
+				selectSQL += " ORDER BY GIORNOSETTIMANA";  
+			}*/
+
+			try {
+				connection = ds.getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL);
+				preparedStatement.setInt(1, percorso);
+
+				ResultSet rs = preparedStatement.executeQuery();
+
+				while (rs.next()) {
+					
+					Disponibilit‡Entity bean = new Disponibilit‡Entity();
+
+					bean.setIdDisp(rs.getInt("ID"));
+					bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
+					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
 					bean.setStato(rs.getInt("STATO"));
 					bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
 					disps.add(bean);

@@ -33,7 +33,7 @@
 									%>
 							                  <tr>
 											    
-											    <td> <%=agenda.get(i).getNome()%>  <br> <%=agenda.get(i).getTime()%> </td>  
+											    <td> <%=agenda.get(i).getNome()%>  <br> <%=agenda.get(i).getTime()%> </td>  </tr>
 											                        <% 	
 								 									}
 																		//System.out.println(agenda);	

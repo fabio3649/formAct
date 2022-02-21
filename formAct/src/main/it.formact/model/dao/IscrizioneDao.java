@@ -214,15 +214,15 @@ private static DataSource ds;
 
 			if (iscrizioni != null && !iscrizioni.equals("")) {
 				selectSQL += " ORDER BY STUDENTE";  
-			}
+			} 
 
 			try {
 				connection = ds.getConnection();
 				preparedStatement = connection.prepareStatement(selectSQL);
-
-				ResultSet rs = preparedStatement.executeQuery();
 				preparedStatement.setInt(1, studente);
 				preparedStatement.setString(2, giorno);
+				ResultSet rs = preparedStatement.executeQuery();
+				
 
 
 
@@ -252,9 +252,6 @@ private static DataSource ds;
 		}
 
 		
-		
-		
-
 
 
 		@Override

@@ -292,7 +292,7 @@ private static DataSource ds;
 
 			ArrayList<Disponibilit‡Entity> disps = new ArrayList<Disponibilit‡Entity>();
 
-			String selectSQL = "SELECT * FROM " + Disponibilit‡Dao.TABLE_NAME + "WHERE GIORNOSETTIMANA = ?";
+			String selectSQL = "SELECT * FROM " + Disponibilit‡Dao.TABLE_NAME + " WHERE GIORNOSETTIMANA = ?";
 
 			if (disps != null && !disps.equals("")) {
 				selectSQL += " ORDER BY GIORNOSETTIMANA";  
@@ -335,7 +335,7 @@ private static DataSource ds;
 
 			ArrayList<Disponibilit‡Entity> disps = new ArrayList<Disponibilit‡Entity>();
 
-			String selectSQL = "SELECT * FROM " + Disponibilit‡Dao.TABLE_NAME + "WHERE PERCORSOFORMATIVO = ?";
+			String selectSQL = "SELECT * FROM " + Disponibilit‡Dao.TABLE_NAME + " WHERE PERCORSOFORMATIVO = ?";
 
 			/*if (disps != null && !disps.equals("")) {
 				selectSQL += " ORDER BY GIORNOSETTIMANA";  
@@ -373,6 +373,45 @@ private static DataSource ds;
 		}
 		
 		
+		public ArrayList<Disponibilit‡Entity> doRetrieveByGiornoAndPercorsoFormativo(String giorno, int percorsoFormativo) throws SQLException {
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+
+			ArrayList<Disponibilit‡Entity> disps = new ArrayList<Disponibilit‡Entity>();
+
+			String selectSQL = "SELECT * FROM " + Disponibilit‡Dao.TABLE_NAME + " WHERE giornoSettimana = ? AND percorsoFormativo = ?";
+			
+			try {
+				connection = ds.getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL);
+				preparedStatement.setString(1, giorno);
+				preparedStatement.setInt(2, percorsoFormativo);
+
+				ResultSet rs = preparedStatement.executeQuery();
+
+				while (rs.next()) {
+					
+					Disponibilit‡Entity bean = new Disponibilit‡Entity();
+
+					bean.setIdDisp(rs.getInt("ID"));
+					bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
+					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
+					bean.setStato(rs.getInt("STATO"));
+					bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
+					disps.add(bean);
+				}
+
+			} finally {
+				try {
+					if (preparedStatement != null)
+						preparedStatement.close();
+				} finally {
+					if (connection != null)
+						connection.close();
+				}
+			}
+			return disps;
+		}
 		
 	}
 	

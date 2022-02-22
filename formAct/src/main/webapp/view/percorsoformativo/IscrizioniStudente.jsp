@@ -17,7 +17,7 @@
 	<head>
 		<meta charset="UTF-8">
  	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	    <script src="DisiscrizionePercorsoFormativo.js"></script>
+	    <script src="ConfermaDisiscrizione.js"></script>
 		<title>Insert title here</title>
 	</head>
 	
@@ -57,13 +57,9 @@
             		    	<td><%= percorsoFormativo.getCosto() + " €"%></td>
             		    	
             		    	<td>
-            		    		<form action="${pageContext.request.contextPath}/DisiscrizionePercorsoFormativoServlet" method="post">
-            		    		<input type="hidden" id="action" name="action" value="disiscrizionePercorsoFormativo">
-            		    		<input type="hidden" id="idPercorsoFormativo" name="idPercorsoFormativo" value="<%= percorsoFormativo.getId() %>">
-    							<button type="submit" name="disiscrivitiButton" value="disiscrivitiButton" class="disiscrivitiButton">Disiscriviti</button>
-							</form>
-            		    	
-            		        </td>
+            		    		<input type="hidden" value="<%= percorsoFormativo.getId() %>" class="idPercorsoFormativo">
+    							<button name="disiscrivitiButton" value="disiscrivitiButton" class="disiscrivitiButton">Disiscriviti</button>
+							</td>
             			</tr>
 <%
 						i++;

@@ -70,7 +70,7 @@ public class DisiscrizionePercorsoFormativoServlet extends HttpServlet {
 	    			PercorsoFormativoDao percorsoFormativoDao = new PercorsoFormativoDao();
 	    			ArrayList<PercorsoFormativoEntity> percorsiFormativi = percorsoFormativoDao.doRetrieveIscrizioniStudente(idStudente);
 	    			session.setAttribute("percorsiFormativi",percorsiFormativi);
-	    			response.sendRedirect("/formAct/view/percorsoformativo/IscrizioniStudente.jsp");
+	    			response.setStatus(200);
 	    		}
 			}
     	}

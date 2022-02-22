@@ -9,20 +9,7 @@ $(document).ready(function() {
 		var meseScadenza = $('#meseScadenza').val();
 		var annoScadenza = $('#annoScadenza').val();
 		var societa = ""
-		
-		/*
-		alert (
-			  "giorno:" + giorno + "\n"
-			+ "idDisponibilita:" + idDisponibilita + "\n"
-			+ "costo:" + costo + "\n"
-			+ "email:" + email + "\n"
-			+ "numeroCarta:" + numeroCarta + "\n"
-			+ "cvv:" + cvv + "\n"
-			+ "meseScadenza:" + meseScadenza + "\n"
-			+ "annoScadenza:" + annoScadenza + "\n"
-		);
-		*/
-		
+				
 		var regExpressionVisa = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
 		var regExpressionMasterCard =  /^(?:5[1-5][0-9]{14})$/;
 		var regExpressionNumeri = /^[0-9]+$/;

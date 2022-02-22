@@ -33,7 +33,8 @@ public class CheckFormatoreRegister extends HttpServlet {
 		FormatoreDao dao = new FormatoreDao();
 		RegisterServices services = new RegisterServices();
 		
-		if(request.getParameter("cf")!=null) {
+		//Controllo se le due password inseerite coincidono 
+		if(request.getParameter("password").equals(request.getParameter("password2"))) {
 			
 			String newCF = request.getParameter("cf");
 			
@@ -43,11 +44,15 @@ public class CheckFormatoreRegister extends HttpServlet {
 					//Creazione dell'oggetto formatore, attributi prelevati dalla request (submit del form) 
 					services.executeTrainerFormRequest(request);
 				}
-				else {
+				else{
 					request.getSession().setAttribute("cfError", "true");	
 					response.sendRedirect("/formAct/view/registrazione/registrazioneFormatore.jsp");
 				}	
 		}
-		//else cf == null errore nella jsp
+		//Se le password non coincidono 
+		else {
+			request.getSession().setAttribute("pswError", "true");	
+			response.sendRedirect("/formAct/view/registrazione/registrazioneFormatore.jsp");
+		}
 	}
 }

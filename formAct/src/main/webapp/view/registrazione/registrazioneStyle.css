@@ -1,0 +1,15 @@
+body{
+  background-color: #4682B4;
+  background-image: url('bgImage.jpg');
+}
+
+.pricipalContainer{
+  background-color: white;
+  max-width:85%
+}
+
+@media (min-width: 1200px) {
+  .pricipalContainer{
+    max-width: 50%
+  }
+}

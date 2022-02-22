@@ -10,7 +10,7 @@ import registrazione.service.*;
 import model.dao.StudenteDao;
 import registrazione.service.RegisterServices;
 
-@WebServlet("/CheckStudenteRegister")
+@WebServlet("/CheckStudentRegister")
 public class CheckStudenteRegister extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -30,7 +30,7 @@ public class CheckStudenteRegister extends HttpServlet {
 		StudenteDao dao = new StudenteDao();
 		RegisterServices services = new RegisterServices();
 		
-		if(request.getParameter("email")!=null) {
+		if(request.getParameter("password").equals(request.getParameter("password2"))) {
 			
 			String newEmail = request.getParameter("email");
 			
@@ -45,7 +45,9 @@ public class CheckStudenteRegister extends HttpServlet {
 					response.sendRedirect("/formAct/view/registrazione/registrazioneStudente.jsp");
 				}	
 		}
-		//else emaul == null errore nella jsp
+		else {
+			request.getSession().setAttribute("pswError", "true");	
+			response.sendRedirect("/formAct/view/registrazione/registrazioneStudente.jsp");
+		}
 	}
-
 }

@@ -151,8 +151,47 @@ public class InteresseStudenteDao implements DaoInterface{
 	}
 	
 	
+	public boolean isContent(int idInteresse,int idStudente) throws SQLException {
+		
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		
+		InteresseStudenteEntity bean= new InteresseStudenteEntity();
+		
+		String selectSQL = "SELECT * FROM " + InteresseStudenteDao.TABLE_NAME + " WHERE STUDENTE=? AND INTERESSE= ?";
+		
+		try {
+		connection = ds.getConnection();
+		preparedStatement = connection.prepareStatement(selectSQL);
+		preparedStatement.setInt(1, idStudente);
+		preparedStatement.setInt(2, idInteresse);
+		
+		ResultSet rs = preparedStatement.executeQuery();
+		while (rs.next()) {
+			bean.setInteresse(rs.getInt("INTERESSE"));
+			bean.setStudente(rs.getInt("STUDENTE"));
+		
+		}
+
+		}catch(SQLException e) {
+			
+			
+		}finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			} finally {
+				if (connection != null)
+					connection.close();
+			}
+		}
+		
+		if(bean.getInteresse() == 0)
+			return false;
 	
+		return true;
 	}
+}
 
  
 

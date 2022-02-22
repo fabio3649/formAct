@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -172,14 +173,14 @@ private static DataSource ds;
 	}
 	
 	
-	public Object doRetrieveByFormatore(int formatore) throws SQLException {
+	public ArrayList<ValutazioneEntity> doRetrieveByFormatore(int formatore) throws SQLException {
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		
+		ArrayList<ValutazioneEntity> allValutazioni=new ArrayList<ValutazioneEntity>();
 		
 		
-		ValutazioneEntity bean = new ValutazioneEntity();
         
 		String selectSQL = "SELECT * FROM " + ValutazioneDao.TABLE_NAME + " WHERE IDFORMATORE = ?";
 
@@ -191,7 +192,7 @@ private static DataSource ds;
 			ResultSet rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
-				
+				ValutazioneEntity bean = new ValutazioneEntity();
 				bean.setStudente(rs.getInt("IDSTUDENTE"));
 				bean.setFormatore(rs.getInt("IDFORMATORE"));
 				bean.setPercorsoFormativo(rs.getInt("IDPERCORSOFORMATIVO"));
@@ -199,7 +200,7 @@ private static DataSource ds;
 			    bean.setData(rs.getDate("DATA"));
 			    bean.setStelle(rs.getInt("STELLE"));
 	       
-			    
+			    allValutazioni.add(bean);
 			}
 
 		} finally {
@@ -211,7 +212,7 @@ private static DataSource ds;
 					connection.close();
 			}
 		}
-		return bean;
+		return allValutazioni;
 	}
 	
 

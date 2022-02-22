@@ -18,7 +18,7 @@ public class LoginServices {
 		List<FormatoreEntity> allFormatori= dao.doRetrieveAll();
 		String newEmail= request.getParameter("email");
 		String newPassword = request.getParameter("password");
-		boolean isSubscribed = false;
+		
 		
 		if(allFormatori.size() != 0){
 			for(FormatoreEntity a : allFormatori) {
@@ -46,7 +46,7 @@ public boolean checkStudentLogin(HttpServletRequest request) throws SQLException
 				 if((a.getEmail().equals(newEmail)) && (a.getPassword().equals(newPassword))) {
 					request.getSession().setAttribute("currentId", a.getId());
 					request.getSession().setAttribute("validation", "true");
-					request.getSession().setAttribute("role", "Formatore");
+					request.getSession().setAttribute("role", "Studente");
 					return true;
 				}
 			}

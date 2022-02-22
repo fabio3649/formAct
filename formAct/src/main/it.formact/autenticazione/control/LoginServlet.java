@@ -33,21 +33,18 @@ public class LoginServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request,response);
 		
-		FormatoreDao dao = new FormatoreDao();
-		StudenteDao dao1 = new StudenteDao();
-		String newEmail= request.getParameter("email");
-		String newPassword = request.getParameter("password");
+		
 			
 			try{
 				LoginServices services= new LoginServices();
 				if(services.checkTrainerLogin(request) || services.checkStudentLogin(request)){
 					//login effettuato con successo torna alla home
-					
+					response.sendRedirect("/formAct/view/autenticazione/ModificaInteresse2.jsp");
 				}else {
 					//login fallito
 					
 					request.getSession().setAttribute("logError", "true");
-					response.sendRedirect("/formAct/view/autenticazione/autenticazione.jsp");
+					response.sendRedirect("/formAct/view/autenticazione/login.jsp");
 				}
 			}catch(SQLException e) {
 				

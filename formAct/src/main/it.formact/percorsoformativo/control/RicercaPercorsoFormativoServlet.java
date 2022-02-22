@@ -60,10 +60,6 @@ public class RicercaPercorsoFormativoServlet extends HttpServlet {
 	    			String costoMin = request.getParameter("costoMin");
 	    			String costoMax = request.getParameter("costoMax");
 	    			String disponibilita = request.getParameter("disponibilita");
-	    			System.out.println("argomento = " + argomento);
-	    			System.out.println("costoMin = " + costoMin);
-	    			System.out.println("costoMax = " + costoMax);
-	    			System.out.println("disponibilita = " + disponibilita);
 	    			
 	    			PercorsoFormativoDao percorsoFormativoDao = new PercorsoFormativoDao();
 	    			ArrayList<PercorsoFormativoEntity> percorsiFormativi = percorsoFormativoDao.doRetrieveAllByParams(argomento, costoMin, costoMax, disponibilita);

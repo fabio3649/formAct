@@ -16,16 +16,16 @@ import model.dao.PercorsoFormativoDao;
 import model.entity.PercorsoFormativoEntity;
 
 /**
- * Servlet implementation class PercorsoFormativoServlet
+ * Servlet implementation class VisualizzaPercorsiFormativiServlet
  */
-@WebServlet("/RicercaPercorsoFormativoServlet")
-public class RicercaPercorsoFormativoServlet extends HttpServlet {
+@WebServlet("/VisualizzaPercorsiFormativiServlet")
+public class VisualizzaPercorsiFormativiServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RicercaPercorsoFormativoServlet() {
+    public VisualizzaPercorsiFormativiServlet() {
         super();
     }
 
@@ -48,23 +48,11 @@ public class RicercaPercorsoFormativoServlet extends HttpServlet {
 	    
 	    try {
 	    	if (action != null) {
-	    		if (action.equalsIgnoreCase("ricercaPercorsoFormativo")) {
-	    			String argomento = request.getParameter("argomento");
+	    		if (action.equalsIgnoreCase("visualizzaPercorsiFormativi")) {
 	    			PercorsoFormativoDao percorsoFormativoDao = new PercorsoFormativoDao();
-	    			ArrayList<PercorsoFormativoEntity> percorsiFormativi = percorsoFormativoDao.doRetrieveByString(argomento);
+	    			ArrayList<PercorsoFormativoEntity> percorsiFormativi = percorsoFormativoDao.doRetrieveAll();
 	    			session.setAttribute("percorsiFormativi",percorsiFormativi);
-	    			response.sendRedirect("/formAct/view/percorsoformativo/RisultatiRicercaProva.jsp");
-	    		}
-	    		else if (action.equalsIgnoreCase("ricercaPercorsoFormativoFiltri")) {
-	    			String argomento = request.getParameter("argomento");
-	    			String costoMin = request.getParameter("costoMin");
-	    			String costoMax = request.getParameter("costoMax");
-	    			String disponibilita = request.getParameter("disponibilita");
-	    			
-	    			PercorsoFormativoDao percorsoFormativoDao = new PercorsoFormativoDao();
-	    			ArrayList<PercorsoFormativoEntity> percorsiFormativi = percorsoFormativoDao.doRetrieveAllByParams(argomento, costoMin, costoMax, disponibilita);
-	    			session.setAttribute("percorsiFormativi",percorsiFormativi);
-	    			response.sendRedirect("/formAct/view/percorsoformativo/RisultatiRicercaProva.jsp");
+	    			response.sendRedirect("/formAct/view/percorsoformativo/RisultatiVisualizzaPercorsiFormativi.jsp");
 	    		}
 	    	}
 	    }
@@ -72,12 +60,5 @@ public class RicercaPercorsoFormativoServlet extends HttpServlet {
 	    	System.out.println("Error:" + e.getMessage());
 	    }
 	}
+
 }
-
-
-
-
-
-
-
-

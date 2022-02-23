@@ -621,7 +621,7 @@ private static DataSource ds;
 		ArrayList<PercorsoFormativoEntity> iscrizioni = new ArrayList<PercorsoFormativoEntity>();
 
 		String selectSQL = "SELECT DISTINCT * FROM percorso_formativo,iscrizione"
-								+" WHERE percorso_formativo.idpercorso_formativo = iscrizione.percorsoFormativo"
+								+" WHERE percorso_formativo.idpercorso_formativo = iscrizione.percorso_formativo"
 									+ " AND iscrizione.studente = ?";
 
 		if (iscrizioni != null && !iscrizioni.equals("")) {

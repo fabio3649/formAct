@@ -70,7 +70,7 @@ public class CreatorService {
 		String indice = (String) request.getParameter("indice");
 		int lezioni = Integer.parseInt(request.getParameter("lezioni"));
 		double costo = Double.parseDouble(request.getParameter("costo"));
-		
+			
 		
 		try {
 			p.setId(dao.nextId());
@@ -85,8 +85,9 @@ public class CreatorService {
 		p.setId_formatore(1);
 		p.setIndice_contenuti(indice);
 		p.setNum_lezioni(lezioni);
+		if(costo!=0) {
 		p.setCosto(costo);
-		
+		}
 		
 		return p;
 	}

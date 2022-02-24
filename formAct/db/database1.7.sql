@@ -100,7 +100,7 @@ CREATE TABLE `disponibilità` (
 
 LOCK TABLES `disponibilità` WRITE;
 /*!40000 ALTER TABLE `disponibilità` DISABLE KEYS */;
-INSERT INTO `disponibilità` VALUES (1,'martedì','09:00:00',1,1),(2,'lunedì','09:00:00',1,2),(3,'lunedì','10:00:00',1,3),(4,'venerdì','11:00:00',1,4);
+INSERT INTO `disponibilità` VALUES (1,'martedì','09:00:00',1,1),(2,'lunedì','09:00:00',1,2),(3,'lunedì','10:00:00',1,3),(4,'venerdì','11:00:00',1,4),(5,'lunedì','09:00:00',1,5);
 /*!40000 ALTER TABLE `disponibilità` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -255,9 +255,10 @@ CREATE TABLE `percorso_formativo` (
   `nome` varchar(100) NOT NULL,
   `ambito` int NOT NULL,
   `descrizione` varchar(500) NOT NULL,
-  `indiceContenuti` varchar(500) NOT NULL,
+  `indiceContenuti` text NOT NULL,
   `numeroLezioni` int DEFAULT NULL,
   `costo` double NOT NULL,
+  `validate` tinyint NOT NULL,
   PRIMARY KEY (`idpercorso_formativo`),
   KEY `formatore_idx` (`formatore`),
   KEY `categoria_idx` (`ambito`),
@@ -272,7 +273,7 @@ CREATE TABLE `percorso_formativo` (
 
 LOCK TABLES `percorso_formativo` WRITE;
 /*!40000 ALTER TABLE `percorso_formativo` DISABLE KEYS */;
-INSERT INTO `percorso_formativo` VALUES (1,1,'prova molteplici disp',1,' Dettagli corso ',' Indice dei contenuti... ',222,32),(2,1,'creator service',4,' Dettagli corso ',' Indice dei contenuti... ',23,3),(3,1,'terzo percorso creato',2,'dett','durata lezioni : 1 ora',24,3),(4,1,'quarto percorso creato',1,'dertt','ddasdas',23,32);
+INSERT INTO `percorso_formativo` VALUES (1,1,'prova molteplici disp',1,' Dettagli corso ',' Indice dei contenuti... ',222,32,0),(2,1,'creator service',4,' Dettagli corso ',' Indice dei contenuti... ',23,3,0),(3,1,'terzo percorso creato',2,'dett','durata lezioni : 1 ora',24,3,0),(4,1,'quarto percorso creato',1,'dertt','ddasdas',23,32,0),(5,1,'prova costo',3,' Dettagli corso ',' Indice dei contenuti... ',23,10,0),(6,1,'costo 2',1,' Dettagli corso ',' Indice dei contenuti... ',2,10,0),(7,1,'costo 3',1,' Dettagli corso ',' Indice dei contenuti... ',2,10,0),(8,1,'costo .',1,' Dettagli corso ',' Indice dei contenuti... ',23,10,0),(9,1,'costfdsa ',1,' Dettagli corso ',' Indice dei contenuti... ',23,10.5,0),(10,1,'csad',1,' Dettagli corso ',' Indice dei contenuti... ',2,10.5,0),(11,1,'desdfs',1,' Dettagli corso ',' Indice dei contenuti... ',34,10.1,0),(12,1,'qweas',1,' Dettagli corso ',' Indice dei contenuti... ',23,0.3,0),(13,1,'deasde',1,' Dettagli corso ',' Indice dei contenuti... ',34,0,0);
 /*!40000 ALTER TABLE `percorso_formativo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -374,4 +375,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-21 13:18:22
+-- Dump completed on 2022-02-24 16:13:31

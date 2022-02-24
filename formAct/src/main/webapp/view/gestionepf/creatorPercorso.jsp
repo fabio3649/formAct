@@ -5,6 +5,8 @@
 <head>
 <meta charset="ISO-8859-1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="validation.js"> </script>
 <title>FormAct - Creazione percorso formativo</title>
 </head>
 <body>
@@ -112,7 +114,7 @@
 			   				    
    				     <br> <br>  
 		<br><br> <label for="costo">Costo</label> <br> <br>
-			<input type="text" id="costo" name="costo" required maxlength="16" placeholder="inserisci costo corso"> <br> <br>
+			<input type="number" step="0.01" id="costo" name="costo" required placeholder="inserisci costo corso"> <br> <br>
 		
 	
 	                     <%

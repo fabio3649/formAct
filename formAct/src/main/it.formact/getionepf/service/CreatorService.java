@@ -20,7 +20,7 @@ public class CreatorService {
 	Disponibilit‡Entity disp = new Disponibilit‡Entity();
 	
 	
-		public boolean creatorPercorso(HttpServletRequest request) {
+		public boolean creatorPercorso(HttpServletRequest request) throws SQLException {
 		
 			
 		p =	getRequestDataPercorso(request);
@@ -94,14 +94,15 @@ public class CreatorService {
 	
 	
 	// recupero i dati di una disponibilit‡ dal form e creo l'oggetto disponibilit‡ entity
-	public Disponibilit‡Entity getRequestDataDisponibilit‡(HttpServletRequest request, PercorsoFormativoEntity p) {
-		
+	public Disponibilit‡Entity getRequestDataDisponibilit‡(HttpServletRequest request, PercorsoFormativoEntity p) throws SQLException {
+		disp = new Disponibilit‡Entity();
 		// recupero i parametri dal form
 		String giorno = request.getParameter("giorno");
 		String orario = request.getParameter("orario");
 		
 		
 		LocalTime time = LocalTime.parse(orario);
+		disp.setIdDisp(daoDisp.nextId());
 		disp.setGiornoSettimana(giorno);
 		disp.setOrario(time);
 		disp.setStato(1);

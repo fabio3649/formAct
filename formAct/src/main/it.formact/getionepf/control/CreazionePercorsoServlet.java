@@ -53,7 +53,12 @@ public class CreazionePercorsoServlet extends HttpServlet {
 	
 		
 		CreatorService cr = new CreatorService();
-		cr.creatorPercorso(request);
+		try {
+			cr.creatorPercorso(request);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

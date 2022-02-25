@@ -20,14 +20,14 @@
 	<%@include file="/view/fragments/Header.jsp" %>
 	
     <!-- Inizio Form  -->
-    <form class="" action="${pageContext.request.contextPath}/ModificaPasswordServlet" method="post">
+    <form class="" action="${pageContext.request.contextPath}/LoginServlet" method="post">
     
       <!-- Form Container-->
       <div class="mt-5 mb-5 p-4 pb-2 container border-secondary border-2 rounded pricipalContainer" >
 
-        <!-- Label-Riempi le seguenti caselle di testo per modificare la password -->
+        <!-- Label-Inserisci le credenziali di accesso -->
         <div class="container p-0 m-0 mb-4 mt-2 text-center" >
-          <label for="basic-url" class="form-label fw-bold ">Riempi le seguenti caselle di testo per modificare la password</label>
+          <label for="basic-url" class="form-label fw-bold ">Inserisci le credenziali di accesso</label>
         </div>
 
         <!-- Spazio vuoto -->
@@ -37,37 +37,26 @@
 		
 		<!-- Condizione di Erroe "logError", visualizzazione errore -->
 		<%
-			if(request.getSession().getAttribute("updateError")!= null && request.getSession().getAttribute("updateError").equals("true")){
+			if(request.getSession().getAttribute("logError")!= null && request.getSession().getAttribute("logError").equals("true")){
 		%>
 			<div>
-				<p class="text-danger" ><ins><strong>Attenzione! Errore nella modifica della password, Riprova</strong></ins></p>
+				<p class="text-danger" ><ins><strong>Attenzione! Email o Password errati</strong></ins></p>
 			</div>
 		<%
-				request.getSession().removeAttribute("upadateError");
+				request.getSession().removeAttribute("logError");
 			}
 		%>
 		
+        <!-- Text-Email , variabile="email" -->
+        <div class="mb-3">
+          <label for="formGroupExampleInput2" class="form-label">Email</label>
+          <input type="text" class="form-control" id="email" name="email" minlength="6" required>
+        </div>
 
         <!-- Password-Password , variabile="password" -->
         <div class="mb-4">
-          <label for="formGroupExampleInput2" class="form-label">Password attuale</label>
+          <label for="formGroupExampleInput2" class="form-label">Password</label>
           <input type="password" id="password" class="form-control" name="password" minlenght="8" required>
-        </div>
-        
-        <!-- Spazio vuoto -->
-        <div class="p-2">
-        </div>
-        
-        <!-- Password-Password , variabile="nuovaPassword" -->
-        <div class="mb-4">
-          <label for="formGroupExampleInput2" class="form-label">Nuova password</label>
-          <input type="password" id="password" class="form-control" name="nuovaPassword" minlenght="8" required>
-        </div>
-        
-        <!-- Password-Password , variabile="confermaPassword" -->
-        <div class="mb-4">
-          <label for="formGroupExampleInput2" class="form-label">Confera nuova password</label>
-          <input type="password" id="confermaPassword" class="form-control" name="confermaPassword" minlenght="8" required>
         </div>
         
         <!-- Sumbit Button -->
@@ -82,7 +71,7 @@
             <div class="col">
             </div>
             <div class="col">
-              <button type="submit" class="btn btn-outline-info" style="align:right;">Conferma</button>
+              <button type="submit" class="btn btn-outline-info" style="align:right;">Accedi</button>
             </div>
           </div>
         </div>

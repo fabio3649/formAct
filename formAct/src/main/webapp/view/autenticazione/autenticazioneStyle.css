@@ -16,6 +16,6 @@ body{
 
 @media (min-width: 1200px) {
   .pricipalContainer{
-    max-width: 50%;
+    max-width: 40%
   }
 }

@@ -45,18 +45,17 @@ public class ModificaInteressiServlet extends HttpServlet {
 		InteresseStudenteDao dao1= new InteresseStudenteDao();
 		int currentId= (int) request.getSession().getAttribute("currentId");
 		
-		
 		try {
 			ArrayList<InteresseEntity> allInteressi=dao.doRetrieveAll();
 			
 			for(InteresseEntity a: allInteressi){
-				
 				
 				if(request.getParameter(a.getNome())==null) {
 					
 					if(dao1.isContent(a.getIdInteresse(), currentId)== true) {
 						dao1.doDelete(currentId, a.getIdInteresse());
 					}
+					
 				}else{
 					
 					if(dao1.isContent(a.getIdInteresse(), currentId)== false) {
@@ -66,12 +65,8 @@ public class ModificaInteressiServlet extends HttpServlet {
 						dao1.doSave(b);
 					}
 				}
-				
-				
-				
 			}
 	
-		
 		}catch(SQLException e) {
 		
 			e.printStackTrace();

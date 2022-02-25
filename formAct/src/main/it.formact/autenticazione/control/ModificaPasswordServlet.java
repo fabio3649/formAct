@@ -47,6 +47,7 @@ public class ModificaPasswordServlet extends HttpServlet {
 					
 					if(trainer.getPassword().equals(request.getParameter("password")) && (request.getParameter("nuovaPassword").equals(request.getParameter("confermaPassword")))) {
 						daoFormatore.updatePassword((int)request.getSession().getAttribute("currentId"), request.getParameter("nuovaPassword"));
+						System.err.println("Password del Formatore n."+request.getSession().getAttribute("currentId")+" aggiornata con successo");
 					}
 					else {
 						request.getSession().setAttribute("updateError", "true");
@@ -57,6 +58,16 @@ public class ModificaPasswordServlet extends HttpServlet {
 				
 				if(request.getSession().getAttribute("role").equals("Studente")) {
 					
+					StudenteEntity student = (StudenteEntity) daoStudente.doRetrieveByKey((int)request.getSession().getAttribute("currentId"));
+					
+					if(student.getPassword().equals(request.getParameter("password")) && (request.getParameter("nuovaPassword").equals(request.getParameter("confermaPassword")))) {
+						daoStudente.updatePassword((int)request.getSession().getAttribute("currentId"), request.getParameter("nuovaPassword"));
+						System.err.println("Password dello Studente n."+request.getSession().getAttribute("currentId")+" aggiornata con successo");
+					}
+					else {
+						request.getSession().setAttribute("updateError", "true");
+						response.sendRedirect("/formAct/view/autenticazione/ModificaPassword.jsp");
+					}
 					
 				}
 			}

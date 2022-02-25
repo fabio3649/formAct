@@ -67,13 +67,13 @@
         <!-- Password-Password , variabile="password" -->
         <div class="mb-3">
           <label for="formGroupExampleInput2" class="form-label">Password</label>
-          <input type="password" id="password" class="form-control" name="password" maxlenght="8" required>
+          <input type="password" id="password" class="form-control" name="password" minlenght="8" required>
         </div>
 
         <!-- Conferma Password-Password , variabile="password2" -->
         <div >
           <label for="formGroupExampleInput2" class="form-label">Confirm Password</label>
-          <input type="password" id="password2" class="form-control" name="password2" maxlenght="8" required>
+          <input type="password" id="password2" class="form-control" name="password2" minxlenght="8" required>
         </div>
       </div>
 

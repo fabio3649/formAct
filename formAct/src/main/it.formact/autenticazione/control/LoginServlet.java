@@ -33,13 +33,11 @@ public class LoginServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request,response);
 		
-		
-			
 			try{
 				LoginServices services= new LoginServices();
 				if(services.checkTrainerLogin(request) || services.checkStudentLogin(request)){
 					//login effettuato con successo torna alla home
-					response.sendRedirect("/formAct/view/autenticazione/ModificaInteresse2.jsp");
+					response.sendRedirect("/formAct/view/autenticazione/test.jsp");
 				}else {
 					//login fallito
 					

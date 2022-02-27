@@ -45,16 +45,18 @@ private static DataSource ds;
 
 		}
 		
-		public void doSave(Object bean) throws SQLException {
+		public int doSave(Object bean) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 			CategoriaEntity categoria = (CategoriaEntity) bean;
 			String insertSQL = "INSERT INTO " + CategoriaDao.TABLE_NAME
 					+ " (IDCATEGORIA, NOME, DESCRIZIONE, AMBITODISCIPLINARE)"
 					+ " VALUES (?, ?, ?, ?)";
-			
+			int id = 0;
 			try {
 				connection = ds.getConnection();
+				id = this.nextId(); 
+				preparedStatement.setInt(1, this.nextId());
 				preparedStatement = connection.prepareStatement(insertSQL);
 				preparedStatement.setInt(1, this.nextId());
 				preparedStatement.setString(2, categoria.getNome());
@@ -72,6 +74,7 @@ private static DataSource ds;
 						connection.close();
 				}
 			}
+			return id;
 		}
 			
 		

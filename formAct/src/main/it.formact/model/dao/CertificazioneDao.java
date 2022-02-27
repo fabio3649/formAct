@@ -33,7 +33,7 @@ private static DataSource ds;
 	private static final String TABLE_NAME = "certificazione";
 	
 	
-	public void doSave(Object bean) throws SQLException {
+	public int doSave(Object bean) throws SQLException {
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -67,6 +67,7 @@ private static DataSource ds;
 					connection.close();
 			}
 		}
+		return	certificazione.getIdCertificazione();
 	}
 		
 	

@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 import model.entity.InteresseStudenteEntity;
 import model.entity.PreferenzaStudenteEntity;
 
-public class InteresseStudenteDao implements DaoInterface{
+public class InteresseStudenteDao {
 	
 	
 	private static DataSource ds;
@@ -45,12 +45,13 @@ public class InteresseStudenteDao implements DaoInterface{
 		String insertSQL = "INSERT INTO " + InteresseStudenteDao.TABLE_NAME
 				+ " (STUDENTE, INTERESSE)"
 				+ " VALUES (?, ?)";
-		
+		int id = 0;
 		try {
 			connection = ds.getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
 			preparedStatement.setInt(1, pref.getStudente());
 			preparedStatement.setInt(2, pref.getInteresse());
+			id = 
 			preparedStatement.executeUpdate();
 			connection.setAutoCommit(false);
 			connection.commit();
@@ -63,6 +64,7 @@ public class InteresseStudenteDao implements DaoInterface{
 					connection.close();
 			}
 		}
+		
 	}
 
 
@@ -137,18 +139,7 @@ public class InteresseStudenteDao implements DaoInterface{
 	}
 
 
-	@Override
-	public boolean doDelete(int id) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public Object doRetrieveByKey(int id) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	
 	
 	public boolean isContent(int idInteresse,int idStudente) throws SQLException {

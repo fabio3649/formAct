@@ -47,7 +47,7 @@ private static DataSource ds;
 	}
 
 	
-	public void doSave(Object bean) throws SQLException {
+	public int doSave(Object bean) throws SQLException {
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -57,10 +57,11 @@ private static DataSource ds;
 		String insertSQL = "INSERT INTO " + Disponibilit‡Dao.TABLE_NAME
 				+ " (ID, GIORNOSETTIMANA, ORARIO, STATO, PERCORSOFORMATIVO)"
 				+ " VALUES (?, ?, ?, ?, ?)";
-		
+		int id = 0;
 		try {
 			connection = ds.getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
+			id = this.nextId();
 			preparedStatement.setInt(1, this.nextId());
 			preparedStatement.setString(2, disp.getGiornoSettimana());
 			preparedStatement.setTime(3, Time.valueOf(disp.getOrario()));
@@ -78,6 +79,7 @@ private static DataSource ds;
 					connection.close();
 			}
 		}
+		return id;
 	}
 		
 	

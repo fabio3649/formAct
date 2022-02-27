@@ -16,7 +16,7 @@ import model.entity.FormatoreEntity;
 import model.entity.PercorsoFormativoEntity;
 import model.entity.PreferenzaStudenteEntity;
 
-public class PreferenzaStudenteDao implements DaoInterface{
+public class PreferenzaStudenteDao {
 	
 		private static DataSource ds;
 		    
@@ -177,19 +177,7 @@ public class PreferenzaStudenteDao implements DaoInterface{
 		}
 
 
-		@Override
-		public boolean doDelete(int id) throws SQLException {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-
-		@Override
-		public Object doRetrieveByKey(int id) throws SQLException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
+	
 		
 		
        

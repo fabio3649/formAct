@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 import model.entity.InteresseEntity;
 
-public class InteresseDao  {
+public class InteresseDao  implements DaoInterface{
 	
 private static DataSource ds;
     
@@ -44,7 +44,7 @@ private static DataSource ds;
 	}
 
 	
-	public void doSave(Object bean) throws SQLException {
+	public int doSave(Object bean) throws SQLException {
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -53,10 +53,11 @@ private static DataSource ds;
 		String insertSQL = "INSERT INTO " + InteresseDao.TABLE_NAME
 				+ " (IDINTERESSE, NOME)"
 				+ " VALUES (?, ?)";
-		
+		int id = 0;
 		try {
 			connection = ds.getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
+			id = this.nextId();
 			preparedStatement.setInt(1, this.nextId());
 			preparedStatement.setString(2, interesse.getNome());
 			preparedStatement.executeUpdate();
@@ -71,6 +72,7 @@ private static DataSource ds;
 					connection.close();
 			}
 		}
+		return id;
 	}
 		
 	public boolean doUpdate(int id, String nome) throws SQLException {

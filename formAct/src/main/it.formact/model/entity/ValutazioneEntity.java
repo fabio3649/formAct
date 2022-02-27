@@ -3,6 +3,8 @@ package model.entity;
 import java.io.Serializable;
 import java.sql.Date;
 
+
+
 public class ValutazioneEntity implements Serializable {
 
 	/**

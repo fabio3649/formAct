@@ -44,17 +44,18 @@ private static DataSource ds;
 	}
 
 	
-	public void doSave(Object bean) throws SQLException {
+	public int doSave(Object bean) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		StudenteEntity user = (StudenteEntity) bean;
 		String insertSQL = "INSERT INTO " + StudenteDao.TABLE_NAME
 				+ " (IDSTUDENTE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, DATANASCITA, PAESEORIGINE)"
 				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-		
+		int id = 0;
 		try {
 			connection = ds.getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
+			id = this.nextId();
 			preparedStatement.setInt(1, this.nextId());
 			preparedStatement.setString(2, user.getEmail());
 			preparedStatement.setString(3, user.getPassword());
@@ -75,6 +76,7 @@ private static DataSource ds;
 					connection.close();
 			}
 		}
+		return id;
 	}
 		
 	

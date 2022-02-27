@@ -13,14 +13,20 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+
 import model.entity.FormatoreEntity;
 
 
 public class FormatoreDao implements DaoInterface{
 	
+	
+
 private static DataSource ds;
-    
-	static {
+
+   
+	static{
 		try {
 			Context initCtx = new InitialContext();
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -30,6 +36,7 @@ private static DataSource ds;
 		} catch (NamingException e) {
 			System.out.println("Error:" + e.getMessage());
 		}
+		
 	}
                                     
 	private static final String TABLE_NAME = "formatore";
@@ -47,17 +54,18 @@ private static DataSource ds;
 		}
 
 		
-		public void doSave(Object bean) throws SQLException {
+		public int doSave(Object bean) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 			FormatoreEntity user = (FormatoreEntity) bean;
 			String insertSQL = "INSERT INTO " + FormatoreDao.TABLE_NAME
 					+ " (IDFORMATORE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, DATANASCITA, PAESEORIGINE, CODICEFISCALE, CONTOCORRENTE)"
 					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			
+			int id = 0;
 			try {
 				connection = ds.getConnection();
 				preparedStatement = connection.prepareStatement(insertSQL);
+				id = this.nextId(); 
 				preparedStatement.setInt(1, this.nextId());
 				preparedStatement.setString(2, user.getEmail());
 				preparedStatement.setString(3, user.getPassword());
@@ -80,6 +88,8 @@ private static DataSource ds;
 						connection.close();
 				}
 			}
+			
+			return id;
 		}
 			
 		
@@ -162,6 +172,50 @@ private static DataSource ds;
 				connection = ds.getConnection();
 				preparedStatement = connection.prepareStatement(selectSQL);
 				preparedStatement.setInt(1, id);
+
+				ResultSet rs = preparedStatement.executeQuery();
+
+				while (rs.next()) {
+					bean.setId(rs.getInt("IDFORMATORE"));
+					bean.setEmail(rs.getString("EMAIL"));
+					bean.setPassword(rs.getString("PASSWORD"));
+					bean.setName(rs.getString("NOME"));
+					bean.setSurname(rs.getString("COGNOME"));
+				    bean.setGender(rs.getString("SESSO"));
+		            bean.setBirthDate(rs.getDate("DATANASCITA"));
+		            bean.setCountry(rs.getString("PAESEORIGINE"));
+		            bean.setCodiceFiscale(rs.getString("CODICEFISCALE"));
+		            bean.setContoCorrente(rs.getString("CONTOCORRENTE"));
+		            
+				    
+				}
+
+			} finally {
+				try {
+					if (preparedStatement != null)
+						preparedStatement.close();
+				} finally {
+					if (connection != null)
+						connection.close();
+				}
+			}
+			return bean;
+		}
+		
+		public Object doRetrieveByMail(String email) throws SQLException {
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+
+			
+			
+			FormatoreEntity bean = new FormatoreEntity();
+	        
+			String selectSQL = "SELECT * FROM " + FormatoreDao.TABLE_NAME + " WHERE EMAIL = ?";
+
+			try {
+				connection = ds.getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL);
+				preparedStatement.setString(1, email);
 
 				ResultSet rs = preparedStatement.executeQuery();
 

@@ -1,5 +1,6 @@
 package model.dao;
 
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +15,7 @@ import javax.sql.DataSource;
 
 import model.entity.ValutazioneEntity;
 
-public class ValutazioneDao implements DaoInterface{
+public class ValutazioneDao {
 	
 private static DataSource ds;
     
@@ -33,7 +34,7 @@ private static DataSource ds;
 	private static final String TABLE_NAME = "valutazione";
 	
 	
-	public void doSave(Object bean) throws SQLException {
+	public ValutazioneEntity doSave(Object bean) throws SQLException {
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -63,7 +64,9 @@ private static DataSource ds;
 				if (connection != null)
 					connection.close();
 			}
+	
 		}
+		return valutazione;
 	}
 		
 	
@@ -263,18 +266,5 @@ private static DataSource ds;
 
 
 
-	@Override
-	public boolean doDelete(int id) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-
-
-	@Override
-	public Object doRetrieveByKey(int id) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	}

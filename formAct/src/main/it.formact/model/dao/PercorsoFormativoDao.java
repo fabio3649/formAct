@@ -47,7 +47,7 @@ private static DataSource ds;
 	
 	
 	
-	public void doSave(Object bean) throws SQLException {
+	public int doSave(Object bean) throws SQLException {
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -56,10 +56,11 @@ private static DataSource ds;
 		String insertSQL = "INSERT INTO " + PercorsoFormativoDao.TABLE_NAME
 				+ " (IDPERCORSO_FORMATIVO, FORMATORE, NOME, AMBITO, DESCRIZIONE, INDICECONTENUTI, NUMEROLEZIONI, COSTO)"
 				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-		
+		int id = 0;
 		try {
 			connection = ds.getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
+			id = this.nextId();
 			preparedStatement.setInt(1, this.nextId());
 			preparedStatement.setInt(2, percorso.getId_formatore());
 			preparedStatement.setString(3, percorso.getNome());
@@ -80,6 +81,7 @@ private static DataSource ds;
 					connection.close();
 			}
 		}
+		return id;
 	}
 		
 	

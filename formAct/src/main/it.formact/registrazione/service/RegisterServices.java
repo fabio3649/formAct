@@ -124,6 +124,33 @@ public class RegisterServices {
 			return true;
 		return false;
 	}
+	
+	public boolean isEmailContentTrainer(String email){
+		
+		
+		boolean isContent = false;
+		
+		try {
+			ArrayList<FormatoreEntity> AllTrainers = (ArrayList)daoFormatore.doRetrieveAll();
+	
+			if(AllTrainers.size()!=0){
+			
+				for(FormatoreEntity trainer : AllTrainers) {
+					if(trainer.getEmail().equals(email)) {
+						//Controllo non passato, email già esistente nel database
+						isContent=true;
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		//Valore di ritorno dopo i controlli
+		if(isContent==true)
+			return true;
+		return false;
+	}
 }
 
 		

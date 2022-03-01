@@ -9,6 +9,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.google.gson.Gson;
+
 import model.entity.FormatoreEntity;
 import model.dao.*;
 import registrazione.service.*;
@@ -23,36 +27,72 @@ public class CheckFormatoreRegister extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		doPost(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
-	
+		HttpSession session = request.getSession(true);
+	    response.setContentType("text.html");
+	    	    
 		//iniziallizzazione dao
 		FormatoreDao dao = new FormatoreDao();
 		RegisterServices services = new RegisterServices();
 		
-		//Controllo se le due password inseerite coincidono 
-		if(request.getParameter("password").equals(request.getParameter("password2"))) {
-			
-			String newCF = request.getParameter("cf");
-			
-				//Controllo se il codice fiscale è già presente nella piattaforma
-				if(!services.isCfContent(newCF)) {
-					//Controllo passato
-					//Creazione dell'oggetto formatore, attributi prelevati dalla request (submit del form) 
-					services.executeTrainerFormRequest(request);
-				}
-				else{
-					request.getSession().setAttribute("cfError", "true");	
-					response.sendRedirect("/formAct/view/registrazione/registrazioneFormatore.jsp");
-				}	
+		String newCF = request.getParameter("cf");
+		
+		ArrayList<Boolean> risultati = new ArrayList<>();
+		
+		//Controllo se il codice fiscale è già presente nella piattaforma
+		if(!services.isCfContent(newCF)) {
+			//Controllo passato
+			risultati.add(false); // nessun errore (non presente nel DB)
 		}
-		//Se le password non coincidono 
 		else {
-			request.getSession().setAttribute("pswError", "true");	
-			response.sendRedirect("/formAct/view/registrazione/registrazioneFormatore.jsp");
+			//Controllo NON passato
+			risultati.add(true); // errore (presente nel DB)
 		}
+		
+		String newEmail = request.getParameter("email");
+		//Controllo se l'email è già presente nella piattaforma
+		if(!services.isEmailContentTrainer(newEmail)) {
+			//Controllo passato
+			risultati.add(false); // nessun errore (non presente nel DB)
+		}
+		else {
+			//Controllo NON passato
+			risultati.add(true); // errore (presente nel DB)
+		}
+		
+		boolean salvataggio = false;
+		if (risultati.get(0) == false && risultati.get(1) == false) {
+			//Creazione dell'oggetto formatore, attributi prelevati dalla request (submit del form) 
+			salvataggio = services.executeTrainerFormRequest(request);
+		}
+		
+		risultati.add(salvataggio);
+		
+		String risultatiJSON = new Gson().toJson(risultati);
+		response.getWriter().write(risultatiJSON);
+		
+		response.setStatus(200);
+		
+		System.out.println("CIAO");
+		System.out.println(risultatiJSON);
+			
+//			}
+//			else {
+//				request.getSession().setAttribute("emailError", "true");
+//			}	
+//		//}
+//		//else{
+//		//	session.setAttribute("cfError", "true");
+//		//	response.setStatus(400);
+//		//}
+//		if (result == true) {
+//			response.setStatus(200);
+//		}
+//		else {
+//			response.setStatus(400);
+//		}
 	}
 }

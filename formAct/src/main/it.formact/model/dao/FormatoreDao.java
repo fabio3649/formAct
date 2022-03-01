@@ -2,7 +2,7 @@ package model.dao;
 
 
 import java.sql.Connection;
-import java.sql.Date;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,8 +13,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+
 
 import model.entity.FormatoreEntity;
 
@@ -22,10 +21,11 @@ import model.entity.FormatoreEntity;
 public class FormatoreDao implements DaoInterface{
 	
 	
-
+	
 private static DataSource ds;
 
    
+		
 	static{
 		try {
 			Context initCtx = new InitialContext();
@@ -41,7 +41,7 @@ private static DataSource ds;
                                     
 	private static final String TABLE_NAME = "formatore";
 	
-	// creazione id studente dinamico
+	// creazione id formatore dinamico
 		public int nextId() throws SQLException {
 			
 			ArrayList<FormatoreEntity> users = (ArrayList<FormatoreEntity>) this.doRetrieveAll();

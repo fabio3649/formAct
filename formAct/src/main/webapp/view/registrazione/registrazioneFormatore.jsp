@@ -24,7 +24,10 @@
   <body>
     
 	<%@include file="/view/fragments/Header.jsp" %>
-
+	
+	<!-- Inizio Form -->
+	<form>
+	
       <!-- Form Container-->
       <div class="mt-5 mb-5 p-4 pb-5 container border-secondary border-2 rounded pricipalContainer" >
 
@@ -44,17 +47,6 @@
           <label for="formGroupExampleInput2" class="form-label">Email</label>
           <input type="text" class="form-control" id="email" name="email" minlength="6" required>
 		  <p class="text-danger" id="erroreEmail"></p>
-		  <!-- Condizione di Errore "emailError", visualizzazione errore (email già presente)-->
-		  <%
-			if(request.getSession().getAttribute("emailError")!= null && request.getSession().getAttribute("emailError").equals("true")){
-		  %>
-		  <div>
-		    <p class="text-danger" >Attenzione! L'utente con l'email inserita è già iscritto</p>
-		  </div>
-		  <%
-			request.getSession().removeAttribute("emailError");
-			}
-		  %>
         </div>
 
         <!-- Password-Password , variabile="password" -->
@@ -108,8 +100,8 @@
           <div class="form-check form-check-inline">
             <input name="gender" class="form-check-input" type="radio" id="female" value="f">
             <label class="form-check-label" for="inlineCheckbox2"> Femmina </label>
-            <p class="text-danger" id="erroreSesso"></p>
           </div>
+          <p class="text-danger" id="erroreSesso"></p>
         </div>
 
         <!-- Date-Data di nascita , variabile = "birthdate(aaaa-mm-gg)" -->
@@ -131,17 +123,6 @@
           <label for="formGroupExampleInput2" class="form-label">Codice Fiscale</label>
           <input type="text" class="form-control" id="cf" name="cf"  minlength="16" maxlength="16" required>
           <p class="text-danger" id="erroreCF"></p>
-          <!-- Condizione di Erroe "cfError", visualizzazione errore -->
-		  <%
-			if(request.getSession().getAttribute("cfError")!= null && request.getSession().getAttribute("cfError").equals("true")){
-		  %>
-			<div>
-				<p class="text-danger" >Attenzione! L'utente con il codice fiscale inserito è già iscritto</p>
-			</div>
-		  <%
-				request.getSession().removeAttribute("cfError");
-			}
-		  %>
         </div>
         
         <!-- Text-Conto Corrente , variabile = "numCC" -->
@@ -165,7 +146,9 @@
         </div>
 
       </div>
-
+	</form>
+	<!-- Fine Form -->
+	
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   </body>
 </html>

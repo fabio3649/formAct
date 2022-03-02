@@ -31,7 +31,6 @@ public class CheckFormatoreRegister extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(true);
 	    response.setContentType("text.html");
 	    	    
 		//iniziallizzazione dao
@@ -64,6 +63,9 @@ public class CheckFormatoreRegister extends HttpServlet {
 		}
 		
 		boolean salvataggio = false;
+		// se l'email e il codice fiscale inserito 
+		// non sono presenti del DB (nessun errore)
+		// allora salvo il formatore nel DB
 		if (risultati.get(0) == false && risultati.get(1) == false) {
 			//Creazione dell'oggetto formatore, attributi prelevati dalla request (submit del form) 
 			salvataggio = services.executeTrainerFormRequest(request);
@@ -76,23 +78,6 @@ public class CheckFormatoreRegister extends HttpServlet {
 		
 		response.setStatus(200);
 		
-		System.out.println("CIAO");
 		System.out.println(risultatiJSON);
-			
-//			}
-//			else {
-//				request.getSession().setAttribute("emailError", "true");
-//			}	
-//		//}
-//		//else{
-//		//	session.setAttribute("cfError", "true");
-//		//	response.setStatus(400);
-//		//}
-//		if (result == true) {
-//			response.setStatus(200);
-//		}
-//		else {
-//			response.setStatus(400);
-//		}
 	}
 }

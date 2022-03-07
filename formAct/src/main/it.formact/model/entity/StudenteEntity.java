@@ -8,14 +8,14 @@ public class StudenteEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	int id;
-	String email;
-	String password;
-	String name;
-	String surname;
-	String gender;
-	Date birthDate;
-	String country;
+	private int id;
+	private String email;
+	private String password;
+	private String name;
+	private String surname;
+	private String gender;
+	private Date birthDate;
+	private String country;
 
 	
 	

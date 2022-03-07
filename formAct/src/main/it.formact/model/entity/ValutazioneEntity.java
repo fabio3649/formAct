@@ -12,12 +12,12 @@ public class ValutazioneEntity implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	int studente;
-	int formatore;
-	int percorsoFormativo;
-	String descrizione;
-	Date data;
-	int stelle;   // equivale al numero di stelle cliccate nella view della valutazione;
+	private int studente;
+	private int formatore;
+	private int percorsoFormativo;
+	private String descrizione;
+	private Date data;
+	private int stelle;   // equivale al numero di stelle cliccate nella view della valutazione;
 	
 	public ValutazioneEntity() {
 		

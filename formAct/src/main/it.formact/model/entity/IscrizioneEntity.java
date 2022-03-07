@@ -7,18 +7,14 @@ import java.time.LocalTime;
 
 public class IscrizioneEntity implements Serializable{
 	
-	/**
-	 * 
-	 */
 	
-	private static final long serialVersionUID = 1L;
-	int studente;
-	
-	int percorsoFormativo;
-	String giorno;
-	LocalTime orario;
-	String metodoPagamento;
-	Date dataPagamento;
+	static final long serialVersionUID = 1L;
+	private int studente;
+	private int percorsoFormativo;
+	private String giorno;
+	private LocalTime orario;
+	private String metodoPagamento;
+	private Date dataPagamento;
 	
 	public IscrizioneEntity() {
 		

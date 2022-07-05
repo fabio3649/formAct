@@ -1,5 +1,6 @@
 package autenticazione.service;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class LoginServices {
 	
 	public boolean checkTrainerLogin(HttpServletRequest request) throws SQLException {
 		
-		FormatoreDao dao = new FormatoreDao();
+		 FormatoreDao dao = new FormatoreDao();
 		List<FormatoreEntity> allFormatori= dao.doRetrieveAll();
 		String newEmail= request.getParameter("email");
 		String newPassword = request.getParameter("password");
@@ -31,6 +32,11 @@ public class LoginServices {
 			}
 		}
 		return false;
+	}
+	
+	public FormatoreDao createDaoF() {
+		
+		return new FormatoreDao();
 	}
 	
 public boolean checkStudentLogin(HttpServletRequest request) throws SQLException {

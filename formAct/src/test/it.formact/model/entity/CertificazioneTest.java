@@ -74,6 +74,6 @@ public class CertificazioneTest {
 	@Test
 	public void testToString() {
 		CertificazioneEntity certificazione= new CertificazioneEntity();
-		String expectedValue
+		//String expectedValue
 	}
 }

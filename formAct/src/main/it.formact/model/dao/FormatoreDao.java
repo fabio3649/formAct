@@ -54,8 +54,8 @@ private static DataSource ds;
 		}
 
 		
-		public int doSave(Object bean) throws SQLException {
-			Connection connection = null;
+		public int doSaveConn(Object bean, Connection conn) throws SQLException {
+			Connection connection = conn;
 			PreparedStatement preparedStatement = null;
 			FormatoreEntity user = (FormatoreEntity) bean;
 			String insertSQL = "INSERT INTO " + FormatoreDao.TABLE_NAME
@@ -63,7 +63,7 @@ private static DataSource ds;
 					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			int id = 0;
 			try {
-				connection = ds.getConnection();
+				//connection = ds.getConnection();
 				preparedStatement = connection.prepareStatement(insertSQL);
 				id = this.nextId(); 
 				preparedStatement.setInt(1, this.nextId());
@@ -249,6 +249,7 @@ private static DataSource ds;
 
 		
 		public ArrayList<FormatoreEntity> doRetrieveAll() throws SQLException {
+			
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 
@@ -293,6 +294,13 @@ private static DataSource ds;
 				}
 			}
 			return users;
+		}
+
+
+		@Override
+		public int doSave(Object bean) throws SQLException {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 		
 		

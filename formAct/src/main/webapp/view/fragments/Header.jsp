@@ -66,13 +66,13 @@
 	    
 	<!-- Navbar Studente -->
 	
-	<% if(request.getSession().getAttribute("role")==null && request.getSession().getAttribute("role").equals("Studente")){ %>
+	<% if(request.getSession().getAttribute("role")==null || request.getSession().getAttribute("role").equals("Studente")){ %>
 	
 	
 	<% } %>
 	<!-- Navbar Formatore -->
 	
-	 <% if(request.getSession().getAttribute("role")==null && request.getSession().getAttribute("role").equals("Formatore")){ %>
+	 <% if(request.getSession().getAttribute("role")==null || request.getSession().getAttribute("role").equals("Formatore")){ %>
 	
 	
 	<% } %>

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     
+    
 <!doctype html>
 <html lang="en">
   <head>
@@ -22,11 +23,12 @@
     <title>Registrazione Formatore</title>
   </head>
   <body>
+    <% request.getSession().setAttribute("register", "formatore"); %>
     
 	<%@include file="/view/fragments/Header.jsp" %>
-	
+	<% request.setAttribute("register", "ciao"); %>
 	<!-- Inizio Form -->
-	<form>
+	<form action="" method="post">
 	
       <!-- Form Container-->
       <div class="mt-5 mb-5 p-4 pb-5 container border-secondary border-2 rounded pricipalContainer" >

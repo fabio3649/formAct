@@ -26,7 +26,7 @@
  				
  				<div class="col p-5" style="border-style:solid; text-align: center;">
  					<div class="container ">
-						<button type="button" class="btn btn-outline-info"><img alt="" src="/formAct/view/registrazione/studente.png" style="max-width:200px;"></button>
+						 <a href="/formAct/view/registrazione/registrazioneStudente.jsp"> <button type="button" class="btn btn-outline-info"  > <img  alt=""  src="/formAct/view/registrazione/studente.png" style="max-width:200px;"> </button> </a>  
 					</div>
 					<div class="container">
 						<label>Iscriviti come Studente</label>
@@ -35,7 +35,7 @@
     			
     			<div class="col p-5" style="border-style:solid; text-align: center;">
  					<div class="container">
-						<button type="button" class="btn btn-outline-info"><img alt="" src="/formAct/view/registrazione/formatore.png" style="max-width:200px;"></button>
+					<a href="/formAct/view/registrazione/registrazioneFormatore.jsp">	<button type="button"  class="btn btn-outline-info"> <img alt="" src="/formAct/view/registrazione/formatore.png" style="max-width:200px;"></button> </a>
 					</div>
 					<div class="container">
 						<label>Iscriviti come Formatore</label>

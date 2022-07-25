@@ -17,18 +17,23 @@ import model.entity.PreferenzaStudenteEntity;
 public class InteresseStudenteDao {
 	
 	
-	private static DataSource ds;
-    
-	static {
+private Connection getConnection() throws SQLException{
+		
 		try {
 			Context initCtx = new InitialContext();
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
-			ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 DataSource ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 return ds.getConnection();
           
 		} catch (NamingException e) {
+			
 			System.out.println("Error:" + e.getMessage());
+			throw new SQLException(e);
 		}
+		
+		
+		
 	}
 
 	private static final String TABLE_NAME = "interesse_studente";
@@ -47,7 +52,7 @@ public class InteresseStudenteDao {
 				+ " VALUES (?, ?)";
 		int id = 0;
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
 			preparedStatement.setInt(1, pref.getStudente());
 			preparedStatement.setInt(2, pref.getInteresse());
@@ -79,7 +84,7 @@ public class InteresseStudenteDao {
 		String deleteSQL = "DELETE FROM " + InteresseStudenteDao.TABLE_NAME + " WHERE STUDENTE = ? AND INTERESSE = ?";
 	    
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(deleteSQL);
 			preparedStatement.setInt(1, studente);
 			preparedStatement.setInt(2, interesse);
@@ -112,7 +117,7 @@ public class InteresseStudenteDao {
 		}
 	
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
 		
 	
@@ -152,7 +157,7 @@ public class InteresseStudenteDao {
 		String selectSQL = "SELECT * FROM " + InteresseStudenteDao.TABLE_NAME + " WHERE STUDENTE=? AND INTERESSE= ?";
 		
 		try {
-		connection = ds.getConnection();
+		connection = getConnection();
 		preparedStatement = connection.prepareStatement(selectSQL);
 		preparedStatement.setInt(1, idStudente);
 		preparedStatement.setInt(2, idInteresse);

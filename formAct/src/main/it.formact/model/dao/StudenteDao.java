@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -15,24 +16,29 @@ import model.entity.StudenteEntity;
 
 public class StudenteDao implements DaoInterface {
 	
-private static DataSource ds;
-    
-	static {
+private Connection getConnection() throws SQLException{
+		
 		try {
 			Context initCtx = new InitialContext();
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
-			ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 DataSource ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 return ds.getConnection();
           
 		} catch (NamingException e) {
+			
 			System.out.println("Error:" + e.getMessage());
+			throw new SQLException(e);
 		}
+		
+		
+		
 	}
                                     
 	private static final String TABLE_NAME = "studente";
 	
 	// creazione id studente dinamico
-	public int nextId() throws SQLException {
+	/*public int nextId() throws SQLException {
 		
 		ArrayList<StudenteEntity> users = (ArrayList<StudenteEntity>) this.doRetrieveAll();
 		if(users.size()==0)
@@ -41,7 +47,7 @@ private static DataSource ds;
 		
 		return next;
 
-	}
+	} */
 
 	
 	public int doSave(Object bean) throws SQLException {
@@ -53,10 +59,10 @@ private static DataSource ds;
 				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		int id = 0;
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(insertSQL);
-			id = this.nextId();
-			preparedStatement.setInt(1, this.nextId());
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(insertSQL , Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setInt(1, id);
 			preparedStatement.setString(2, user.getEmail());
 			preparedStatement.setString(3, user.getPassword());
 			preparedStatement.setString(4, user.getName());
@@ -65,6 +71,14 @@ private static DataSource ds;
 			preparedStatement.setDate(7, user.getBirthDate());
 			preparedStatement.setString(8, user.getCountry());
 			preparedStatement.executeUpdate();
+			ResultSet rs = preparedStatement.getGeneratedKeys();
+			if ( rs.next()) {   // generazione nuova chiave primaria
+				id = rs.getInt(1);
+				
+			}
+			else { id = 1;//;
+			}
+			
 			connection.setAutoCommit(false);
 			connection.commit();
 		} finally {
@@ -76,6 +90,8 @@ private static DataSource ds;
 					connection.close();
 			}
 		}
+		
+		user.setId(id);
 		return id;
 	}
 		
@@ -93,8 +109,8 @@ private static DataSource ds;
 		String deleteSQL = "DELETE FROM " + StudenteDao.TABLE_NAME + " WHERE IDSTUDENTE = ?";
         
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(deleteSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(deleteSQL, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setInt(1, id);
 
 			result = preparedStatement.executeUpdate();
@@ -124,14 +140,14 @@ private static DataSource ds;
 		String selectSQL = "SELECT * FROM " + StudenteDao.TABLE_NAME + " WHERE IDSTUDENTE = ?";
 
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setInt(1, id);
 
 			ResultSet rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
-				bean.setId(rs.getInt("IDSTUDENTE"));
+				bean.setId(rs.getInt(1));
 				bean.setEmail(rs.getString("EMAIL"));
 				bean.setPassword(rs.getString("PASSWORD"));
 				bean.setName(rs.getString("NOME"));
@@ -168,8 +184,8 @@ private static DataSource ds;
         
 		
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, pwd);
 			preparedStatement.setInt(2, id);
 
@@ -188,6 +204,33 @@ private static DataSource ds;
 		return (result != 0);
 		
 	}
+	
+	public boolean update(int id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		int result = 0;
+		
+		
+
+
+		String selectSQL = "UPDATE " + StudenteDao.TABLE_NAME + " SET EMAIL = ? , PASSWORD = ? , NOME = ? , COGNOME = ? , SESSO = ? ,"
+				+ " str_to_date(DATANASCITA,'%d-%m-%Y') , PAESEORIGINE = ?  " + " WHERE IDSTUDENTE = ? ";
+
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL,Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setInt(1, id);
+			
+
+			
+			result = preparedStatement.executeUpdate();
+
+		} finally {
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
+		}
+		return (result != 0);
+	}
 	    
 	
 
@@ -205,8 +248,8 @@ private static DataSource ds;
 		}
 
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS);
 
 			ResultSet rs = preparedStatement.executeQuery();
 
@@ -214,7 +257,7 @@ private static DataSource ds;
 				
 				StudenteEntity bean = new StudenteEntity();
 
-				bean.setId(rs.getInt("IDSTUDENTE"));
+				bean.setId(rs.getInt(1));  // da verificare se corretto
 				bean.setEmail(rs.getString("EMAIL"));
 				bean.setPassword(rs.getString("PASSWORD"));
 				bean.setName(rs.getString("NOME"));
@@ -235,5 +278,35 @@ private static DataSource ds;
 			}
 		}
 		return users;
+	}
+	
+	
+	protected final void closeConnection(Connection c) {
+		if( c != null)
+			try {
+				c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+	}
+	
+	protected final void closePreparedStatement(PreparedStatement p) {
+		if( p != null)
+			try {
+				p.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+	
+	protected final void closeResultSet(ResultSet rs) {
+		if( rs != null)
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
 	}
 	}

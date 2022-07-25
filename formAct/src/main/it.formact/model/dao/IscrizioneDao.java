@@ -19,18 +19,23 @@ import model.entity.IscrizioneEntity;
 
 public class IscrizioneDao {
 	
-private static DataSource ds;
-    
-	static {
+private Connection getConnection() throws SQLException{
+		
 		try {
 			Context initCtx = new InitialContext();
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
-			ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 DataSource ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 return ds.getConnection();
           
 		} catch (NamingException e) {
+			
 			System.out.println("Error:" + e.getMessage());
+			throw new SQLException(e);
 		}
+		
+		
+		
 	}
                                     
 	private static final String TABLE_NAME = "iscrizione";
@@ -49,7 +54,7 @@ private static DataSource ds;
 					+ " VALUES (?, ?, ?, ?, ?, ?)";
 			
 			try {
-				connection = ds.getConnection();
+				connection = getConnection();
 				preparedStatement = connection.prepareStatement(insertSQL);
 				preparedStatement.setInt(1, iscrizione.getStudente());
 				preparedStatement.setInt(2, iscrizione.getPercorsoFormativo());
@@ -86,7 +91,7 @@ private static DataSource ds;
 			String deleteSQL = "DELETE FROM " + IscrizioneDao.TABLE_NAME + " WHERE STUDENTE = ? AND PERCORSO_FORMATIVO = ?";
 	        
 			try {
-				connection = ds.getConnection();
+				connection = getConnection();
 				preparedStatement = connection.prepareStatement(deleteSQL);
 				preparedStatement.setInt(1, studente);
 				preparedStatement.setInt(2, percorso);
@@ -126,7 +131,7 @@ private static DataSource ds;
 			}
 
 			try {
-				connection = ds.getConnection();
+				connection = getConnection();
 				preparedStatement = connection.prepareStatement(selectSQL);
 				preparedStatement.setInt(1, studente);
 
@@ -174,7 +179,7 @@ private static DataSource ds;
 			}
 
 			try {
-				connection = ds.getConnection();
+				connection = getConnection();
 				preparedStatement = connection.prepareStatement(selectSQL);
 
 				ResultSet rs = preparedStatement.executeQuery();
@@ -217,7 +222,7 @@ private static DataSource ds;
 			} 
 
 			try {
-				connection = ds.getConnection();
+				connection = getConnection();
 				preparedStatement = connection.prepareStatement(selectSQL);
 				preparedStatement.setInt(1, studente);
 				preparedStatement.setString(2, giorno);

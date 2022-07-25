@@ -17,18 +17,23 @@ import model.entity.ValutazioneEntity;
 
 public class ValutazioneDao {
 	
-private static DataSource ds;
-    
-	static {
+private Connection getConnection() throws SQLException{
+		
 		try {
 			Context initCtx = new InitialContext();
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
-			ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 DataSource ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 return ds.getConnection();
           
 		} catch (NamingException e) {
+			
 			System.out.println("Error:" + e.getMessage());
+			throw new SQLException(e);
 		}
+		
+		
+		
 	}
                                     
 	private static final String TABLE_NAME = "valutazione";
@@ -45,7 +50,7 @@ private static DataSource ds;
 				+ " VALUES (?, ?, ?, ?, ?, ?)";
 		
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
 			preparedStatement.setInt(1, valutazione.getStudente());
 			preparedStatement.setInt(2, valutazione.getFormatore());
@@ -83,7 +88,7 @@ private static DataSource ds;
 		String deleteSQL = "DELETE FROM " + ValutazioneDao.TABLE_NAME + " WHERE IDSTUDENTE = ?";
         
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(deleteSQL);
 			preparedStatement.setInt(1, studente);
 
@@ -113,7 +118,7 @@ private static DataSource ds;
 		String deleteSQL = "DELETE FROM " + ValutazioneDao.TABLE_NAME + " WHERE IDFORMATORE = ?";
         
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(deleteSQL);
 			preparedStatement.setInt(1, formatore);
 
@@ -145,7 +150,7 @@ private static DataSource ds;
 		String selectSQL = "SELECT * FROM " + ValutazioneDao.TABLE_NAME + " WHERE IDSTUDENTE = ?";
 
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, studente);
 
@@ -188,7 +193,7 @@ private static DataSource ds;
 		String selectSQL = "SELECT * FROM " + ValutazioneDao.TABLE_NAME + " WHERE IDFORMATORE = ?";
 
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, formatore);
 
@@ -233,7 +238,7 @@ private static DataSource ds;
 		}
 
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
 
 			ResultSet rs = preparedStatement.executeQuery();

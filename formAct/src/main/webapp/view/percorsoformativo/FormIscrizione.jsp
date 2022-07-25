@@ -11,14 +11,14 @@
 	import="model.dao.StudenteDao"
 	import="model.entity.PercorsoFormativoEntity"
 	import="model.entity.FormatoreEntity"
-	import="model.entity.DisponibilitàEntity"
+	import="model.entity.DisponibilitaEntity"
 	import="model.entity.StudenteEntity"
 %>
 
 <%
-	PercorsoFormativoEntity percorsoFormativo = (PercorsoFormativoEntity) session.getAttribute("percorsoFormativo");
+PercorsoFormativoEntity percorsoFormativo = (PercorsoFormativoEntity) session.getAttribute("percorsoFormativo");
 	FormatoreEntity formatore = (FormatoreEntity) session.getAttribute("formatore");
-	ArrayList<DisponibilitàEntity> aLDisponibilita = (ArrayList<DisponibilitàEntity>) session.getAttribute("aLDisponibilita");
+	ArrayList<DisponibilitaEntity> aLDisponibilita = (ArrayList<DisponibilitaEntity>) session.getAttribute("aLDisponibilita");
 	StudenteDao studenteDao = new StudenteDao();
 	StudenteEntity studente = (StudenteEntity) studenteDao.doRetrieveByKey(2);
 	LocalDate dataAttuale = LocalDate.now();
@@ -38,17 +38,17 @@
 	</head>
 	
 	<body>
-		<input type="hidden" id="idPercorsoFormativo" value="<%= percorsoFormativo.getId() %>">
+		<input type="hidden" id="idPercorsoFormativo" value="<%=percorsoFormativo.getId()%>">
 		<h1>Iscrizione al percorso formativo</h1>
-		<p>Nome percorso formativo: <%= percorsoFormativo.getNome() %></p>
-		<p>Formatore: <%= formatore.getName() %> <%= formatore.getSurname() %></p>
+		<p>Nome percorso formativo: <%=percorsoFormativo.getNome()%></p>
+		<p>Formatore: <%=formatore.getName()%> <%=formatore.getSurname()%></p>
 		
 		<label>
     	        Giorno:<br>
     	        <select name="giorno" id="giorno">
     	        	<option value="">Seleziona un giorno</option>
 <%
-					for (DisponibilitàEntity disponibilita : aLDisponibilita) {
+for (DisponibilitaEntity disponibilita : aLDisponibilita) {
 %>
 						<option value="<%= disponibilita.getGiornoSettimana()%>"><%= disponibilita.getGiornoSettimana() %></option>
 <%

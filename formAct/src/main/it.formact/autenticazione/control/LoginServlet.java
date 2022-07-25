@@ -12,40 +12,52 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import autenticazione.service.LoginServices;
+import controller.control.AbstractController;
+import controller.control.Action;
+import controller.control.Service;
 import model.dao.FormatoreDao;
 import model.dao.StudenteDao;
 import model.entity.FormatoreEntity;
 import model.entity.StudenteEntity;
 
+/**
+ * Controller di gestione della login di un utente
+ *
+ */
 @WebServlet("/LoginServlet")
-public class LoginServlet extends HttpServlet{
+public class LoginServlet extends AbstractController{
 
+	private String servizio;
+	private String uri;
+	
 	public LoginServlet() {
 		super();
+		
+		//String uri = req.getRequestURI();
 	}
 
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//doPost(request,response);
-	}
-
+	@Override
+	protected Service newService() {
 	
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return new LoginServices();
 		
 		
-			try{
-				LoginServices services= new LoginServices();
-				if(services.checkTrainerLogin(request) || services.checkStudentLogin(request)){
-					//login effettuato con successo torna alla home
-					response.sendRedirect("/formAct/view/autenticazione/test.jsp");
-				}else {
-					//login fallito
-					
-					request.getSession().setAttribute("logError", "true");
-					response.sendRedirect("/formAct/view/autenticazione/login.jsp");
-				}
-			}catch(SQLException e) {
-				
-			}
 	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	
+
+
+	
+
 }

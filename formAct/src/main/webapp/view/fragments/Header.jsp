@@ -52,7 +52,8 @@
 	              </ul>
 	            </li>
 	            <li class="nav-item">
-	              <a class="nav-link disabled">Link</a>
+	              <a class="nav-link" href="/formAct/view/autenticazione/Login.jsp">Login</a>
+	              
 	            </li>
 	          </ul>
 	          <form class="d-flex">

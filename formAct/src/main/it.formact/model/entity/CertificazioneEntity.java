@@ -3,6 +3,8 @@ package model.entity;
 import java.io.Serializable;
 import java.sql.Date;
 
+import model.utils.Utils;
+
 
 public class CertificazioneEntity implements Serializable{
 
@@ -95,6 +97,21 @@ public class CertificazioneEntity implements Serializable{
 
 	public void setAnnoFine(Date annoFine) {
 		this.annoFine = annoFine;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if( o instanceof CertificazioneEntity) {
+			CertificazioneEntity e = (CertificazioneEntity)o;		
+			return idCertificazione == e.idCertificazione &&
+				   (formatore == e.formatore ) &&
+				   (nome == e.nome || (nome != null && e.nome != null && nome.equals(e.nome))) &&
+				   (tipologia == e.tipologia || (tipologia != null && e.tipologia != null && tipologia.equalsIgnoreCase(e.tipologia))) &&
+				   (istituto == e.istituto || (istituto != null && e.istituto != null && istituto.equalsIgnoreCase(e.istituto))) &&
+				   (descrizione == e.descrizione || (descrizione != null && e.descrizione != null && descrizione.equals(e.descrizione))) &&
+				   Utils.areDatesEqual(annoInizio,e.annoInizio) && Utils.areDatesEqual(annoFine,e.annoFine);
+		}else
+			return false;
 	}
 
 	@Override

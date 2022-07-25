@@ -15,18 +15,23 @@ import model.entity.InteresseEntity;
 
 public class InteresseDao  implements DaoInterface{
 	
-private static DataSource ds;
-    
-	static {
+private Connection getConnection() throws SQLException{
+		
 		try {
 			Context initCtx = new InitialContext();
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
-			ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 DataSource ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 return ds.getConnection();
           
 		} catch (NamingException e) {
+			
 			System.out.println("Error:" + e.getMessage());
+			throw new SQLException(e);
 		}
+		
+		
+		
 	}
                                     
 	private static final String TABLE_NAME = "interesse";
@@ -55,7 +60,7 @@ private static DataSource ds;
 				+ " VALUES (?, ?)";
 		int id = 0;
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
 			id = this.nextId();
 			preparedStatement.setInt(1, this.nextId());
@@ -86,7 +91,7 @@ private static DataSource ds;
 		String selectSQL = "UPDATE " + InteresseDao.TABLE_NAME + " SET NOME = ? " + " WHERE IDINTERESSE = ? ";
 
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
 			preparedStatement.setString(1, nome);
 			preparedStatement.setInt(2, id);
@@ -119,7 +124,7 @@ private static DataSource ds;
 		String deleteSQL = "DELETE FROM " + InteresseDao.TABLE_NAME + " WHERE IDINTERESSE = ?";
         
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(deleteSQL);
 			preparedStatement.setInt(1, id);
 
@@ -150,7 +155,7 @@ private static DataSource ds;
 		String selectSQL = "SELECT * FROM " + InteresseDao.TABLE_NAME + " WHERE IDINTERESSE = ?";
 
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, id);
 
@@ -192,7 +197,7 @@ private static DataSource ds;
 		}
 
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
 
 			ResultSet rs = preparedStatement.executeQuery();
@@ -231,7 +236,7 @@ private static DataSource ds;
 		}
 
 		try {
-			connection = ds.getConnection();
+			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
 			preparedStatement.setString(1, name);
 			
@@ -256,6 +261,13 @@ private static DataSource ds;
 			}
 		}
 		return interessi;
+	}
+
+
+	@Override
+	public boolean update(int id) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 	

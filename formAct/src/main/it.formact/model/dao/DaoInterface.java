@@ -2,14 +2,16 @@ package model.dao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 
-public interface DaoInterface {
+public interface DaoInterface<T> {
 	
-	public int doSave(Object bean) throws SQLException;
+	public int doSave(T bean) throws SQLException;
 	public boolean doDelete(int id) throws SQLException;
-	public Object doRetrieveByKey(int id) throws SQLException;
-	public Object doRetrieveAll() throws SQLException;
+	public T doRetrieveByKey(int id) throws SQLException;
+	public List<T> doRetrieveAll() throws SQLException;
+	public boolean update(int id) throws SQLException;
     
 }

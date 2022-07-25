@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import controller.control.AbstractController;
+import controller.control.Service;
+import getionepf.service.DeletePercorsoServices;
 import model.dao.PercorsoFormativoDao;
 import model.entity.PercorsoFormativoEntity;
 
@@ -16,44 +19,19 @@ import model.entity.PercorsoFormativoEntity;
  * Servlet implementation class EliminaPercorsoServlet
  */
 @WebServlet("/EliminaPercorsoServlet")
-public class EliminaPercorsoServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+public class EliminaPercorsoServlet extends AbstractController {
+	
+    
     public EliminaPercorsoServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		
-		int id =  Integer.parseInt(request.getParameter("percorsi"));
-		PercorsoFormativoDao dao = new PercorsoFormativoDao();
-		try {
-			
-			dao.doDelete(id);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		
-		
-	}	
-		
-	
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	protected Service newService() {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		return new DeletePercorsoServices();
 	}
 
 }

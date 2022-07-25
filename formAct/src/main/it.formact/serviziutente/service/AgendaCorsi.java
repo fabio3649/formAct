@@ -3,20 +3,20 @@ package serviziutente.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import model.dao.Disponibilit‡Dao;
+import model.dao.DisponibilitaDao;
 import model.dao.IscrizioneDao;
 import model.dao.PercorsoFormativoDao;
-import model.entity.Disponibilit‡Entity;
+import model.entity.DisponibilitaEntity;
 import model.entity.IscrizioneEntity;
 import model.entity.PercorsoFormativoEntity;
 
 public class AgendaCorsi {
 	
 	PercorsoFormativoDao daoP = new PercorsoFormativoDao();
-	Disponibilit‡Dao daoDisp = new Disponibilit‡Dao();
+	DisponibilitaDao daoDisp = new DisponibilitaDao();
 	IscrizioneDao daoIsc = new IscrizioneDao();
 	ArrayList<IscrizioneEntity> iscrizioni ; 
-	ArrayList<Disponibilit‡Entity> disps;
+	ArrayList<DisponibilitaEntity> disps;
 	
 	
 	
@@ -39,7 +39,7 @@ public class AgendaCorsi {
 			}
 			
 			
-			
+			 
 			return c;
 		}
 	

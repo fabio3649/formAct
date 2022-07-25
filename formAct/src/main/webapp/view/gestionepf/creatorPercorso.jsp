@@ -11,12 +11,11 @@
 </head>
 <body>
 <%
-	ArrayList <CategoriaEntity> categorie = new ArrayList<CategoriaEntity>();
+ArrayList <CategoriaEntity> categorie = new ArrayList<CategoriaEntity>();
 	CategoriaDao dao = new CategoriaDao();
 	categorie = dao.doRetrieveAll();
-	Disponibilit‡Dao daoDisp = new Disponibilit‡Dao();
-	ArrayList<Disponibilit‡Entity> disps = daoDisp.doRetrieveAll();
-
+	DisponibilitaDao daoDisp = new DisponibilitaDao();
+	ArrayList<DisponibilitaEntity> disps = daoDisp.doRetrieveAll();
 %>
 
 
@@ -30,16 +29,16 @@
 			<textarea id="indice" rows="50" cols="50" name="indice" > Indice dei contenuti... </textarea>
 		<br><br> <label for="cars">Scegli ambito:</label>
 			  <select  id="categoria" name="categoria">
-			  <%	
-   			 for( int i =0 ; i< categorie.size();i++) {
-   				 	CategoriaEntity c = categorie.get(i);
-   				 %>	
-   				 <option value="<%= c.getIdCategoria()%>"> <%= c.getNome()%> </option>	 
+			  <%
+			  for( int i =0 ; i< categorie.size();i++) {
+			     				 	CategoriaEntity c = categorie.get(i);
+			  %>	
+   				 <option value="<%=c.getIdCategoria()%>"> <%=c.getNome()%> </option>	 
 			   
    				 
-   			<%	 
-   			 }
-   			 %>
+   			<%
+	 			      				    			}
+	 			      				    			%>
    				    </select> <br> <br> 
   			
 		<br><br> <label for="lezioni">Numero lezioni</label> <br> <br>
@@ -59,7 +58,9 @@
    			
    				    </select> <br> <br> 
    				    <select  id="orario" name="orario">
-			  <%  // LocalTime considera 1 ora indietro;  %>
+			  <%
+			  // LocalTime considera 1 ora indietro;
+			  %>
    				 <option value="10:00"> 09:00 </option>	
    				 <option value="11:00"> 10:00 </option>
    				 <option value="12:00"> 11:00 </option>
@@ -118,11 +119,9 @@
 		
 	
 	                     <%
-	                     ArrayList<Disponibilit‡Entity> disponibilit‡ = new ArrayList<Disponibilit‡Entity>();
-						 Disponibilit‡Entity d = new Disponibilit‡Entity();
-				        
-	                     
-	                     %>
+				                     ArrayList<DisponibilitaEntity> disponibilit‡ = new ArrayList<DisponibilitaEntity>();
+				                     				 DisponibilitaEntity d = new DisponibilitaEntity();
+				                     %>
      <input type="submit" value="Crea percorso formativo">
 	</form>
 

@@ -18,7 +18,9 @@
   <body>
 	
 	<%@include file="/view/fragments/Header.jsp" %>
-	
+	<%
+		request.getSession().setAttribute("service","LoginServices");
+		%>
     <!-- Inizio Form  -->
     <form class="" action="${pageContext.request.contextPath}/LoginServlet" method="post">
     

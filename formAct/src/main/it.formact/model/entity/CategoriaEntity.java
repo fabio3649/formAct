@@ -2,6 +2,8 @@ package model.entity;
 
 import java.io.Serializable;
 
+import model.utils.Utils;
+
 public class CategoriaEntity implements Serializable{
 	
 	/**
@@ -9,10 +11,10 @@ public class CategoriaEntity implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	int idCategoria;
-	String nome;
-	String descrizione;
-	String ambito;
+	public int idCategoria;
+	public String nome;
+	public String descrizione;
+	public String ambito;
 	
 	
 	public CategoriaEntity() {
@@ -56,7 +58,17 @@ public class CategoriaEntity implements Serializable{
 		this.ambito = ambito;
 	}
 
-	
+	@Override
+	public boolean equals(Object o) {
+		if( o instanceof CategoriaEntity) {
+			CategoriaEntity e = (CategoriaEntity)o;		
+			return idCategoria == e.idCategoria &&
+				   (nome == e.nome || (nome != null && e.nome != null && nome.equalsIgnoreCase(e.nome))) &&
+				   (descrizione == e.descrizione || (descrizione != null && e.descrizione != null && descrizione.equals(e.descrizione))) &&
+				   (ambito == e.ambito || (ambito != null && e.ambito != null && ambito.equals(e.ambito))) ;
+		}else
+			return false;
+	}
 
 	@Override
 	public String toString() {

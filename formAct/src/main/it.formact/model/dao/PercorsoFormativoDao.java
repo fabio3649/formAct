@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.naming.Context;
@@ -16,24 +17,29 @@ import model.entity.PercorsoFormativoEntity;
 
 public class PercorsoFormativoDao implements DaoInterface{
 	
-private static DataSource ds;
-    
-	static {
+private Connection getConnection() throws SQLException{
+		
 		try {
 			Context initCtx = new InitialContext();
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
-			ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 DataSource ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 return ds.getConnection();
           
 		} catch (NamingException e) {
+			
 			System.out.println("Error:" + e.getMessage());
+			throw new SQLException(e);
 		}
+		
+		
+		
 	}
                                     
 	private static final String TABLE_NAME = "percorso_formativo";
 	
 	// creazione id percorso formativo dinamico
-	public int nextId() throws SQLException {
+	/*public int nextId() throws SQLException {
 		
 		ArrayList<PercorsoFormativoEntity> percorsi = (ArrayList<PercorsoFormativoEntity>) this.doRetrieveAll();
 		if(percorsi.size()==0)
@@ -42,7 +48,7 @@ private static DataSource ds;
 		
 		return next;
 
-	}
+	}*/
 	
 	
 	
@@ -54,14 +60,14 @@ private static DataSource ds;
 		
 		PercorsoFormativoEntity percorso = (PercorsoFormativoEntity) bean;
 		String insertSQL = "INSERT INTO " + PercorsoFormativoDao.TABLE_NAME
-				+ " (IDPERCORSO_FORMATIVO, FORMATORE, NOME, AMBITO, DESCRIZIONE, INDICECONTENUTI, NUMEROLEZIONI, COSTO)"
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+				+ " (IDPERCORSO_FORMATIVO, FORMATORE, NOME, AMBITO, DESCRIZIONE, INDICECONTENUTI, NUMEROLEZIONI, COSTO, VALIDATE)"
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		int id = 0;
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(insertSQL);
-			id = this.nextId();
-			preparedStatement.setInt(1, this.nextId());
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+			//id = this.nextId();
+			preparedStatement.setInt(1, id);
 			preparedStatement.setInt(2, percorso.getId_formatore());
 			preparedStatement.setString(3, percorso.getNome());
 			preparedStatement.setInt(4, percorso.getCategoria());
@@ -69,7 +75,15 @@ private static DataSource ds;
 			preparedStatement.setString(6, percorso.getIndice_contenuti());
 			preparedStatement.setInt(7, percorso.getNum_lezioni());
 			preparedStatement.setDouble(8, percorso.getCosto());
+			preparedStatement.setInt(9, percorso.getValidate());
 			preparedStatement.executeUpdate();
+			ResultSet rs = preparedStatement.getGeneratedKeys();
+			if ( rs.next()) {   // generazione nuova chiave primaria
+				id = rs.getInt(1);
+				
+			}
+			else { id = 1;//;
+			}
 			connection.setAutoCommit(false);
 			connection.commit();
 		} finally {
@@ -81,6 +95,7 @@ private static DataSource ds;
 					connection.close();
 			}
 		}
+		percorso.setId(id);
 		return id;
 	}
 		
@@ -98,8 +113,8 @@ private static DataSource ds;
 		String deleteSQL = "DELETE FROM " + PercorsoFormativoDao.TABLE_NAME + " WHERE IDPERCORSO_FORMATIVO = ?";
         
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(deleteSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(deleteSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setInt(1, id);
 
 			result = preparedStatement.executeUpdate();
@@ -129,14 +144,14 @@ private static DataSource ds;
 		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME + " WHERE IDPERCORSO_FORMATIVO = ?";
 
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setInt(1, id);
 
 			ResultSet rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
-				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
+				bean.setId(rs.getInt(1));
 				bean.setId_formatore(rs.getInt("FORMATORE"));
 				bean.setNome(rs.getString("NOME"));
 				bean.setCategoria(rs.getInt("AMBITO"));
@@ -144,6 +159,7 @@ private static DataSource ds;
 			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
 	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
 	            bean.setCosto(rs.getDouble("COSTO"));
+	            bean.setValidate(rs.getInt("VALIDATE"));
 	       
 			    
 			}
@@ -171,8 +187,8 @@ private static DataSource ds;
 		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME + " WHERE NOME = ?";
 
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setDouble(1, costo);
 
 			ResultSet rs = preparedStatement.executeQuery();
@@ -217,8 +233,8 @@ private static DataSource ds;
 		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME + " WHERE NOME LIKE ? ";
 
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, nome);
 
 			ResultSet rs = preparedStatement.executeQuery();
@@ -262,8 +278,8 @@ private static DataSource ds;
 		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME + " WHERE NOME = ?";
 
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, name);
 
 			ResultSet rs = preparedStatement.executeQuery();
@@ -309,8 +325,8 @@ private static DataSource ds;
 				+ "WHERE FORMATORE.NOME = ? AND FORMATORE.COGNOME = ?";
 
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, nome);
 			preparedStatement.setString(2, cognome);
 
@@ -356,8 +372,8 @@ private static DataSource ds;
 				+ "WHERE CATEGORIA.NOME = ?";
 
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, categoria);
 		
 
@@ -405,8 +421,8 @@ private static DataSource ds;
 				+ "WHERE disponibilità.stato = ?";
 
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setInt(1, disp);
 
 			ResultSet rs = preparedStatement.executeQuery();
@@ -453,8 +469,8 @@ private static DataSource ds;
 				+ "WHERE disponibilità.giornoSettimana = ? AND percorso_formativo.idpercorso_formativo = disponibilità.percorsoFormativo";
 
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, giorno);
 
 			ResultSet rs = preparedStatement.executeQuery();
@@ -500,8 +516,8 @@ private static DataSource ds;
 		}
 
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 
 			ResultSet rs = preparedStatement.executeQuery();
 
@@ -566,8 +582,8 @@ private static DataSource ds;
 		}
 		
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			
 			int i = 1;
 			if (str != null && !str.equals("")) {
@@ -631,8 +647,8 @@ private static DataSource ds;
 		}
 
 		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			
 			// Problema: questi 2 comandi erano invertiti:
 			preparedStatement.setInt(1, idStudente);
@@ -663,6 +679,15 @@ private static DataSource ds;
 			}
 		}
 		return iscrizioni;
+	}
+
+
+
+
+	@Override
+	public boolean update(int id) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 	

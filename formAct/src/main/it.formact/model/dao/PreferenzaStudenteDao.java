@@ -11,26 +11,31 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import model.entity.Disponibilit‡Entity;
+import model.entity.DisponibilitaEntity;
 import model.entity.FormatoreEntity;
 import model.entity.PercorsoFormativoEntity;
 import model.entity.PreferenzaStudenteEntity;
 
 public class PreferenzaStudenteDao {
 	
-		private static DataSource ds;
-		    
-			static {
-				try {
-					Context initCtx = new InitialContext();
-					Context envCtx = (Context) initCtx.lookup("java:comp/env");
+private Connection getConnection() throws SQLException{
 		
-					ds = (DataSource) envCtx.lookup("jdbc/formactds");
-		          
-				} catch (NamingException e) {
-					System.out.println("Error:" + e.getMessage());
-				}
-			}
+		try {
+			Context initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+			 DataSource ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 return ds.getConnection();
+          
+		} catch (NamingException e) {
+			
+			System.out.println("Error:" + e.getMessage());
+			throw new SQLException(e);
+		}
+		
+		
+		
+	}
 	
 	     private static final String TABLE_NAME = "preferenza_studente";
 	
@@ -48,7 +53,7 @@ public class PreferenzaStudenteDao {
 						+ " VALUES (?, ?)";
 				
 				try {
-					connection = ds.getConnection();
+					connection = getConnection();
 					preparedStatement = connection.prepareStatement(insertSQL);
 					preparedStatement.setInt(1, pref.getStudente());
 					preparedStatement.setInt(2, pref.getDisponibilita());
@@ -78,7 +83,7 @@ public class PreferenzaStudenteDao {
 			String deleteSQL = "DELETE FROM " + PreferenzaStudenteDao.TABLE_NAME + " WHERE STUDENTE = ? AND DISPONIBILE = ?";
 	        
 			try {
-				connection = ds.getConnection();
+				connection = getConnection();
 				preparedStatement = connection.prepareStatement(deleteSQL);
 				preparedStatement.setInt(1, studente);
 				preparedStatement.setInt(2, disponibile);
@@ -111,7 +116,7 @@ public class PreferenzaStudenteDao {
 			}
 
 			try {
-				connection = ds.getConnection();
+				connection = getConnection();
 				preparedStatement = connection.prepareStatement(selectSQL);
 			
 
@@ -148,7 +153,7 @@ public class PreferenzaStudenteDao {
 			String selectSQL = "SELECT * FROM " + PreferenzaStudenteDao.TABLE_NAME + " WHERE STUDENTE = ?";
 
 			try {
-				connection = ds.getConnection();
+				connection = getConnection();
 				preparedStatement = connection.prepareStatement(selectSQL);
 				preparedStatement.setInt(1, studente);
 

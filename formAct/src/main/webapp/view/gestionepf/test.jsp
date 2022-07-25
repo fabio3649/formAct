@@ -9,20 +9,7 @@
 </head>
 <body>
 
-<%
-	/* FormatoreDao daof= new FormatoreDao();
-		ArrayList<FormatoreEntity> formatori = daof.doRetrieveAll();
-	for(int i=0; i<formatori.size(); i++) {
-		System.out.println(formatori.get(i));
-	} */
-	
-	StudenteDao daos = new StudenteDao();
-	ArrayList<StudenteEntity> studenti = daos.doRetrieveAll();
-	for(int i=0; i<studenti.size(); i++) {
-		System.out.println(studenti.get(i));
-	}
-
-%>
+<%= request.getAttribute("register") %>
 
 </body>
 </html>

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.naming.Context;
@@ -14,27 +15,31 @@ import javax.sql.DataSource;
 import model.entity.CategoriaEntity;
 
 
+public class CategoriaDao {
 
+private Connection getConnection() throws SQLException{
+	
+	try {
+		Context initCtx = new InitialContext();
+		Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
-public class CategoriaDao implements DaoInterface{
-private static DataSource ds;
-    
-	static {
-		try {
-			Context initCtx = new InitialContext();
-			Context envCtx = (Context) initCtx.lookup("java:comp/env");
-
-			ds = (DataSource) envCtx.lookup("jdbc/formactds");
-          
-		} catch (NamingException e) {
-			System.out.println("Error:" + e.getMessage());
-		}
+		 DataSource ds = (DataSource) envCtx.lookup("jdbc/formactds");
+		 return ds.getConnection();
+      
+	} catch (NamingException e) {
+		
+		System.out.println("Error:" + e.getMessage());
+		throw new SQLException(e);
 	}
+	
+	
+	
+}
                                     
 	private static final String TABLE_NAME = "categoria";
 	
 	// creazione id  dinamico
-		public int nextId() throws SQLException {
+	/*	public int nextId() throws SQLException {
 			
 			ArrayList<CategoriaEntity> categorie = (ArrayList<CategoriaEntity>) this.doRetrieveAll();
 			if(categorie.size()==0)
@@ -43,7 +48,7 @@ private static DataSource ds;
 			
 			return next;
 
-		}
+		}  */
 		
 		public int doSave(Object bean) throws SQLException {
 			Connection connection = null;
@@ -54,26 +59,34 @@ private static DataSource ds;
 					+ " VALUES (?, ?, ?, ?)";
 			int id = 0;
 			try {
-				connection = ds.getConnection();
-				id = this.nextId(); 
-				preparedStatement.setInt(1, this.nextId());
-				preparedStatement = connection.prepareStatement(insertSQL);
-				preparedStatement.setInt(1, this.nextId());
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+				//id = this.nextId(); 
+				preparedStatement.setInt(1, id);
 				preparedStatement.setString(2, categoria.getNome());
 				preparedStatement.setString(3, categoria.getDescrizione());
 				preparedStatement.setString(4, categoria.getAmbito());
 				preparedStatement.executeUpdate();
+				ResultSet rs = preparedStatement.getGeneratedKeys();
+				if ( rs.next()) {   // generazione nuova chiave primaria
+					id = rs.getInt(1);
+					
+				}
+				else { id = 1;// prima chiave;
+				}
 				connection.setAutoCommit(false);
 				connection.commit();
-			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
 			}
+			catch(SQLException e)
+			{
+				e.printStackTrace(); 
+			}
+				finally {
+					closePreparedStatement(preparedStatement);
+					closeConnection(connection);
+				}
+			
+			categoria.setIdCategoria(id);
 			return id;
 		}
 			
@@ -91,22 +104,23 @@ private static DataSource ds;
 			String deleteSQL = "DELETE FROM " + CategoriaDao.TABLE_NAME + " WHERE IDCATEGORIA = ?";
 	        
 			try {
-				connection = ds.getConnection();
-				preparedStatement = connection.prepareStatement(deleteSQL);
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(deleteSQL,Statement.RETURN_GENERATED_KEYS);
 				preparedStatement.setInt(1, id);
 
 				result = preparedStatement.executeUpdate();
+				return true;
 
-			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
 			}
-			return (result != 0);
+			catch(SQLException e)
+			{
+				e.printStackTrace(); 
+			}
+			finally {
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
+			}
+			return false;
 		}
 		
 
@@ -114,7 +128,7 @@ private static DataSource ds;
 		public Object doRetrieveByKey(int id) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
-
+			ResultSet rs = null;
 			
 			
 			CategoriaEntity bean = new CategoriaEntity();
@@ -122,11 +136,11 @@ private static DataSource ds;
 			String selectSQL = "SELECT * FROM " + CategoriaDao.TABLE_NAME + " WHERE IDCATEGORIA = ?";
 
 			try {
-				connection = ds.getConnection();
-				preparedStatement = connection.prepareStatement(selectSQL);
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL,Statement.RETURN_GENERATED_KEYS);
 				preparedStatement.setInt(1, id);
 
-				ResultSet rs = preparedStatement.executeQuery();
+				rs = preparedStatement.executeQuery();
 
 				while (rs.next()) {
 					bean.setIdCategoria(rs.getInt("IDCATEGORIA"));
@@ -137,14 +151,16 @@ private static DataSource ds;
 				    
 				}
 
-			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+			}
+			catch(SQLException e)
+			{
+				e.printStackTrace(); 
+			}
+				finally {
+			
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
 			return bean;
 		}
@@ -154,7 +170,7 @@ private static DataSource ds;
 		public ArrayList<CategoriaEntity> doRetrieveAll() throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
-
+			ResultSet rs = null;
 			ArrayList<CategoriaEntity> categorie =  new ArrayList<CategoriaEntity>();
 
 			String selectSQL = "SELECT * FROM " + CategoriaDao.TABLE_NAME;
@@ -164,10 +180,10 @@ private static DataSource ds;
 			}
 
 			try {
-				connection = ds.getConnection();
-				preparedStatement = connection.prepareStatement(selectSQL);
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL,Statement.RETURN_GENERATED_KEYS);
 
-				ResultSet rs = preparedStatement.executeQuery();
+				 rs = preparedStatement.executeQuery();
 
 				while (rs.next()) {
 					
@@ -180,15 +196,16 @@ private static DataSource ds;
 					categorie.add(bean);
 				}
 
-			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
 			}
+			catch(SQLException e)
+			{
+				e.printStackTrace(); 
+			} finally {
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
+			}
+			
 			
 			return  categorie;
 		}
@@ -197,41 +214,72 @@ private static DataSource ds;
 		public CategoriaEntity doRetrieveByName(String name) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
-
+			ResultSet rs = null;
 			
 
-			String selectSQL = "SELECT * FROM " + CategoriaDao.TABLE_NAME + "WHERE NOME = ?";
+			String selectSQL = "SELECT IDCATEGORIA, NOME, DESCRIZIONE, AMBITODISCIPLINARE FROM " + CategoriaDao.TABLE_NAME + " WHERE NOME = ? ";
 
 			CategoriaEntity bean = new CategoriaEntity();
 
 			try {
-				connection = ds.getConnection();
-				preparedStatement = connection.prepareStatement(selectSQL);
-				ResultSet rs = preparedStatement.executeQuery();
-				preparedStatement.setString(1, name);	
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL,Statement.RETURN_GENERATED_KEYS);
+				preparedStatement.setString(1, name);
+				rs = preparedStatement.executeQuery();
+					
 				
 				while (rs.next()) {
 					
 					
 
-					bean.setIdCategoria(rs.getInt("IDCATEGORIA"));
-					bean.setNome(rs.getString("NOME"));
-					bean.setDescrizione(rs.getString("DESCRIZIONE"));
-					bean.setAmbito(rs.getString("AMBITODISCIPLINARE"));
+					bean.setIdCategoria(rs.getInt(1));
+					bean.setNome(rs.getString(2));
+					bean.setDescrizione(rs.getString(3));
+					bean.setAmbito(rs.getString(4));
 					
 				}
 
+			}
+			catch(SQLException e)
+			{
+				e.printStackTrace(); 
 			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
 			
 			return  bean;
+		}
+		
+		
+		protected final void closeConnection(Connection c) {
+			if( c != null)
+				try {
+					c.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+		
+		protected final void closePreparedStatement(PreparedStatement p) {
+			if( p != null)
+				try {
+					p.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		
+		protected final void closeResultSet(ResultSet rs) {
+			if( rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}			
 		}
 		
 		

@@ -16,6 +16,7 @@ public class PercorsoFormativoEntity implements Serializable{
 	private String indice_contenuti;
 	private int num_lezioni;
 	private double costo;
+	private int validate;
 	
 	
 	
@@ -29,9 +30,20 @@ public class PercorsoFormativoEntity implements Serializable{
 		indice_contenuti = "";
 		num_lezioni = 0;
 		costo = 0;
+		validate = 0;
 	}
 	
 	
+	public int getValidate() {
+		return validate;
+	}
+
+
+	public void setValidate(int validate) {
+		this.validate = validate;
+	}
+
+
 	public int getId() {
 		return id;
 	}

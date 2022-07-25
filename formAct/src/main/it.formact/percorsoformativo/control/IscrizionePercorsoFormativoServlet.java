@@ -19,12 +19,12 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 
-import model.dao.Disponibilit‡Dao;
+import model.dao.DisponibilitaDao;
 import model.dao.FormatoreDao;
 import model.dao.IscrizioneDao;
 import model.dao.PercorsoFormativoDao;
 import model.dao.StudenteDao;
-import model.entity.Disponibilit‡Entity;
+import model.entity.DisponibilitaEntity;
 import model.entity.FormatoreEntity;
 import model.entity.IscrizioneEntity;
 import model.entity.PercorsoFormativoEntity;
@@ -80,8 +80,8 @@ public class IscrizionePercorsoFormativoServlet extends HttpServlet {
 	    			FormatoreDao formatoreDao = new FormatoreDao();
 	    			FormatoreEntity formatore = (FormatoreEntity) formatoreDao.doRetrieveByKey(percorsoFormativo.getId_formatore());
 	    			session.setAttribute("formatore", formatore);
-	    			Disponibilit‡Dao disponibilitaDao = new Disponibilit‡Dao();
-	    			ArrayList<Disponibilit‡Entity> aLDisponibilita = disponibilitaDao.doRetrieveAllByPercorso(idPercorsoFormativo);
+	    			DisponibilitaDao disponibilitaDao = new DisponibilitaDao();
+	    			ArrayList<DisponibilitaEntity> aLDisponibilita = disponibilitaDao.doRetrieveAllByPercorso(idPercorsoFormativo);
 	    			session.setAttribute("aLDisponibilita", aLDisponibilita);
 	    			response.sendRedirect("/formAct/view/percorsoformativo/FormIscrizione.jsp");
 	    		}
@@ -89,10 +89,10 @@ public class IscrizionePercorsoFormativoServlet extends HttpServlet {
 	    			response.setContentType("text.html");
 	    			String giorno = request.getParameter("giorno");
 	    			int idPercorsoFormativo = Integer.parseInt(request.getParameter("idPercorsoFormativo"));
-	    			Disponibilit‡Dao disponibilitaDao = new Disponibilit‡Dao();
-	    			ArrayList<Disponibilit‡Entity> aLDisponibilita = disponibilitaDao.doRetrieveByGiornoAndPercorsoFormativo(giorno, idPercorsoFormativo);
+	    			DisponibilitaDao disponibilitaDao = new DisponibilitaDao();
+	    			ArrayList<DisponibilitaEntity> aLDisponibilita = disponibilitaDao.doRetrieveByGiornoAndPercorsoFormativo(giorno, idPercorsoFormativo);
 	    			ArrayList<String> orari = new ArrayList<String>();
-	    			for (Disponibilit‡Entity disponibilita : aLDisponibilita) {
+	    			for (DisponibilitaEntity disponibilita : aLDisponibilita) {
 	    				String idDisponibilita = Integer.toString(disponibilita.getIdDisp());
 	    				String orarioDisponibilita = disponibilita.getOrario().toString();
 	    				orari.add(idDisponibilita);
@@ -108,8 +108,8 @@ public class IscrizionePercorsoFormativoServlet extends HttpServlet {
 	    			
 	    			StudenteDao studenteDao = new StudenteDao();
 	    			StudenteEntity studente = (StudenteEntity) studenteDao.doRetrieveByKey(2);
-	    			Disponibilit‡Dao disponibilitaDao = new Disponibilit‡Dao();
-	    			Disponibilit‡Entity disponibilita = (Disponibilit‡Entity) disponibilitaDao.doRetrieveByKey(idDisponibilita);
+	    			DisponibilitaDao disponibilitaDao = new DisponibilitaDao();
+	    			DisponibilitaEntity disponibilita = (DisponibilitaEntity) disponibilitaDao.doRetrieveByKey(idDisponibilita);
 	    			disponibilitaDao.doDelete(idDisponibilita);
 	    			IscrizioneDao iscrizioneDao = new IscrizioneDao();
 	    			IscrizioneEntity iscrizione = new IscrizioneEntity();

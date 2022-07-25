@@ -14,52 +14,33 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import getionepf.service.CreatorService;
+import controller.control.AbstractController;
+import controller.control.Service;
+import getionepf.service.CreatorServices;
 import model.dao.CategoriaDao;
-import model.dao.Disponibilit‡Dao;
+import model.dao.DisponibilitaDao;
 import model.dao.PercorsoFormativoDao;
 import model.entity.CategoriaEntity;
-import model.entity.Disponibilit‡Entity;
+import model.entity.DisponibilitaEntity;
 import model.entity.PercorsoFormativoEntity;
 
 /**
  * Servlet implementation class CreazionePercorsoServlet
  */
 @WebServlet("/CreazionePercorsoServlet")
-public class CreazionePercorsoServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+public class CreazionePercorsoServlet extends AbstractController {
+	
+   
     public CreazionePercorsoServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-	
-		
-		CreatorService cr = new CreatorService();
-		try {
-			cr.creatorPercorso(request);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+	@Override
+	protected Service newService() {
+		// TODO Auto-generated method stub
+		return new CreatorServices();
 	}
 
 }

@@ -23,7 +23,7 @@
   <body>
     
 	<%@include file="/view/fragments/Header.jsp" %>
-
+<% request.getSession().setAttribute("register", "studente"); %>
     <!-- Inizio Form  -->
     <form class="">
     

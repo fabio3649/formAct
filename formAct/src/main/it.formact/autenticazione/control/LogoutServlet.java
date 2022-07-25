@@ -8,42 +8,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import autenticazione.service.LoginServices;
+import autenticazione.service.LogoutServices;
+import controller.control.AbstractController;
+import controller.control.Service;
+
 
 @WebServlet("/LogoutServlet")
-public class LogoutServlet extends HttpServlet {
+public class LogoutServlet extends AbstractController {
 	
-    public LogoutServlet() {
-        super();
-        
-    }
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		HttpSession session= request.getSession();
-		
-		if(session != null) {
-			if(session.getAttribute("Validation")!=null)
-				session.setAttribute("Validation", "false");
-				
-			if(session.getAttribute("role")!=null)
-				session.removeAttribute("role");
-			
-			if(session.getAttribute("currentId")!=null)
-				session.removeAttribute("currentId");
-					
-			//response.sendRedirect("/formAct/view/autenticazione/autenticazione.jsp");<------ HOME
-		}else {
-			
-			
-		}
+	public LogoutServlet() {
+		super();
 	}
-
+			
+	@Override
+	protected Service newService() {
+		// TODO Auto-generated method stub
+		return new LogoutServices();
+	}	
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		doGet(request, response);
-		
-		
-	}
-
 }

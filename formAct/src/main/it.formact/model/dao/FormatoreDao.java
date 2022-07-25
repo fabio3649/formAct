@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import javax.naming.Context;
@@ -16,33 +18,35 @@ import javax.sql.DataSource;
 
 
 import model.entity.FormatoreEntity;
+import model.utils.Utils;
 
-
-public class FormatoreDao implements DaoInterface{
+public class FormatoreDao implements DaoInterface<FormatoreEntity>{
 	
-	
-	
-private static DataSource ds;
 
    
 		
-	static{
+	private Connection getConnection() throws SQLException{
+		
 		try {
 			Context initCtx = new InitialContext();
 			Context envCtx = (Context) initCtx.lookup("java:comp/env");
 
-			ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 DataSource ds = (DataSource) envCtx.lookup("jdbc/formactds");
+			 return ds.getConnection();
           
 		} catch (NamingException e) {
+			
 			System.out.println("Error:" + e.getMessage());
+			throw new SQLException(e);
 		}
+		
 		
 	}
                                     
 	private static final String TABLE_NAME = "formatore";
 	
 	// creazione id formatore dinamico
-		public int nextId() throws SQLException {
+	/*	public int nextId() throws SQLException {
 			
 			ArrayList<FormatoreEntity> users = (ArrayList<FormatoreEntity>) this.doRetrieveAll();
 			if(users.size()==0)
@@ -51,45 +55,53 @@ private static DataSource ds;
 			
 			return next;
 
-		}
+		}   */
 
 		
-		public int doSaveConn(Object bean, Connection conn) throws SQLException {
-			Connection connection = conn;
+		public int doSave(FormatoreEntity bean) throws SQLException {
+			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 			FormatoreEntity user = (FormatoreEntity) bean;
 			String insertSQL = "INSERT INTO " + FormatoreDao.TABLE_NAME
 					+ " (IDFORMATORE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, DATANASCITA, PAESEORIGINE, CODICEFISCALE, CONTOCORRENTE)"
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			int id = 0;
+					+ " VALUES (?, ?, ?, ?, ?, ?, str_to_date(?,'%d-%m-%Y'), ?, ?, ?) " ;
+			int id = 0 ;
 			try {
-				//connection = ds.getConnection();
-				preparedStatement = connection.prepareStatement(insertSQL);
-				id = this.nextId(); 
-				preparedStatement.setInt(1, this.nextId());
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+				
+				//id = this.nextId(); 
+				preparedStatement.setInt(1, id);
 				preparedStatement.setString(2, user.getEmail());
 				preparedStatement.setString(3, user.getPassword());
 				preparedStatement.setString(4, user.getName());
 				preparedStatement.setString(5, user.getSurname());
 				preparedStatement.setString(6, user.getGender());
-				preparedStatement.setDate(7, user.getBirthDate());
+				if( user.getBirthDate() == null)
+					preparedStatement.setNull(7, java.sql.Types.VARCHAR);
+				else
+					preparedStatement.setString(7, Utils.toStringDate(user.getBirthDate()));
 				preparedStatement.setString(8, user.getCountry());
 				preparedStatement.setString(9, user.getCodiceFiscale());
 				preparedStatement.setString(10, user.getContoCorrente());
 				preparedStatement.executeUpdate();
+				ResultSet rs = preparedStatement.getGeneratedKeys();
+				if ( rs.next()) {   // generazione nuova chiave primaria
+					id = rs.getInt(1);
+					
+				}
+				else { id = 1;//;
+				}
 				connection.setAutoCommit(false);
 				connection.commit();
 			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
 			
+			user.setId(id);
 			return id;
+			
 		}
 			
 		
@@ -105,8 +117,8 @@ private static DataSource ds;
 			String selectSQL = "UPDATE " + FormatoreDao.TABLE_NAME + " SET PASSWORD = ? " + " WHERE IDFORMATORE = ? ";
 
 			try {
-				connection = ds.getConnection();
-				preparedStatement = connection.prepareStatement(selectSQL);
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL,Statement.RETURN_GENERATED_KEYS);
 				preparedStatement.setString(1, pwd);
 				preparedStatement.setInt(2, id);
 
@@ -114,13 +126,35 @@ private static DataSource ds;
 				result = preparedStatement.executeUpdate();
 
 			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
+			}
+			return (result != 0);
+		}
+		
+		public boolean update(int id) throws SQLException {
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+			int result = 0;
+			
+			
+	
+
+			String selectSQL = "UPDATE " + FormatoreDao.TABLE_NAME + " SET EMAIL = ? , PASSWORD = ? , NOME = ? , COGNOME = ? , SESSO = ? ,"
+					+ " str_to_date(DATANASCITA,'%d-%m-%Y') , PAESEORIGINE = ? , CODICEFISCALE = ? , CONTOCORRENTE = ?  " + " WHERE IDFORMATORE = ? ";
+
+			try {
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL,Statement.RETURN_GENERATED_KEYS);
+				preparedStatement.setInt(1, id);
+				
+
+				
+				result = preparedStatement.executeUpdate();
+
+			} finally {
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
 			return (result != 0);
 		}
@@ -138,66 +172,57 @@ private static DataSource ds;
 			String deleteSQL = "DELETE FROM " + FormatoreDao.TABLE_NAME + " WHERE IDFORMATORE = ?";
 	        
 			try {
-				connection = ds.getConnection();
-				preparedStatement = connection.prepareStatement(deleteSQL);
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(deleteSQL,Statement.RETURN_GENERATED_KEYS);
 				preparedStatement.setInt(1, id);
 
 				result = preparedStatement.executeUpdate();
+				return true;
 
 			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
-			return (result != 0);
+			
 		}
 		
 
 		
-		public Object doRetrieveByKey(int id) throws SQLException {
+		public FormatoreEntity doRetrieveByKey(int id) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
-
+			ResultSet rs = null;
 			
 			
 			FormatoreEntity bean = new FormatoreEntity();
 	        
-			String selectSQL = "SELECT * FROM " + FormatoreDao.TABLE_NAME + " WHERE IDFORMATORE = ?";
+			String selectSQL = "SELECT IDFORMATORE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, date_format(DATANASCITA,'%d-%m-%Y'), PAESEORIGINE, CODICEFISCALE, CONTOCORRENTE FROM " + FormatoreDao.TABLE_NAME + " WHERE IDFORMATORE = ?";
 
 			try {
-				connection = ds.getConnection();
-				preparedStatement = connection.prepareStatement(selectSQL);
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS);
 				preparedStatement.setInt(1, id);
 
-				ResultSet rs = preparedStatement.executeQuery();
+				rs = preparedStatement.executeQuery();
 
 				while (rs.next()) {
-					bean.setId(rs.getInt("IDFORMATORE"));
-					bean.setEmail(rs.getString("EMAIL"));
-					bean.setPassword(rs.getString("PASSWORD"));
-					bean.setName(rs.getString("NOME"));
-					bean.setSurname(rs.getString("COGNOME"));
-				    bean.setGender(rs.getString("SESSO"));
-		            bean.setBirthDate(rs.getDate("DATANASCITA"));
-		            bean.setCountry(rs.getString("PAESEORIGINE"));
-		            bean.setCodiceFiscale(rs.getString("CODICEFISCALE"));
-		            bean.setContoCorrente(rs.getString("CONTOCORRENTE"));
-		            
-				    
+					bean.setId(rs.getInt(1));
+					bean.setEmail(rs.getString(2));
+					bean.setPassword(rs.getString(3));
+					bean.setName(rs.getString(4));
+					bean.setSurname(rs.getString(5));
+				    bean.setGender(rs.getString(6));
+		            bean.setBirthDate(Utils.toDate(rs.getString(7)));
+		            bean.setCountry(rs.getString(8));
+		            bean.setCodiceFiscale(rs.getString(9));
+		            bean.setContoCorrente(rs.getString(10));
 				}
-
+			}catch(ParseException e) {
+				throw new SQLException(e);
 			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
 			return bean;
 		}
@@ -205,43 +230,38 @@ private static DataSource ds;
 		public Object doRetrieveByMail(String email) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
-
+			ResultSet rs = null;
 			
 			
 			FormatoreEntity bean = new FormatoreEntity();
 	        
-			String selectSQL = "SELECT * FROM " + FormatoreDao.TABLE_NAME + " WHERE EMAIL = ?";
+			String selectSQL = "SELECT IDFORMATORE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, date_format(DATANASCITA,'%d-%m-%Y'), PAESEORIGINE, CODICEFISCALE, CONTOCORRENTE FROM " + FormatoreDao.TABLE_NAME + " WHERE EMAIL = ?";
 
 			try {
-				connection = ds.getConnection();
-				preparedStatement = connection.prepareStatement(selectSQL);
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL,Statement.RETURN_GENERATED_KEYS);
 				preparedStatement.setString(1, email);
 
-				ResultSet rs = preparedStatement.executeQuery();
+				rs = preparedStatement.executeQuery();
 
-				while (rs.next()) {
-					bean.setId(rs.getInt("IDFORMATORE"));
-					bean.setEmail(rs.getString("EMAIL"));
-					bean.setPassword(rs.getString("PASSWORD"));
-					bean.setName(rs.getString("NOME"));
-					bean.setSurname(rs.getString("COGNOME"));
-				    bean.setGender(rs.getString("SESSO"));
-		            bean.setBirthDate(rs.getDate("DATANASCITA"));
-		            bean.setCountry(rs.getString("PAESEORIGINE"));
-		            bean.setCodiceFiscale(rs.getString("CODICEFISCALE"));
-		            bean.setContoCorrente(rs.getString("CONTOCORRENTE"));
-		            
-				    
+				if (rs.next()) {
+					bean.setId(rs.getInt(1));
+					bean.setEmail(rs.getString(2));
+					bean.setPassword(rs.getString(3));
+					bean.setName(rs.getString(4));
+					bean.setSurname(rs.getString(5));
+				    bean.setGender(rs.getString(6));
+		            bean.setBirthDate(Utils.toDate(rs.getString(7)));
+		            bean.setCountry(rs.getString(8));
+		            bean.setCodiceFiscale(rs.getString(9));
+		            bean.setContoCorrente(rs.getString(10));
 				}
-
+			}catch(ParseException e) {
+				throw new SQLException(e);
 			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
 			return bean;
 		}
@@ -252,60 +272,74 @@ private static DataSource ds;
 			
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
-
+			ResultSet rs = null;
 			ArrayList<FormatoreEntity> users = new ArrayList<FormatoreEntity>();
 
-			String selectSQL = "SELECT * FROM " + FormatoreDao.TABLE_NAME;
+			String selectSQL = "SELECT IDFORMATORE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, date_format(DATANASCITA,'%d-%m-%Y'), PAESEORIGINE, CODICEFISCALE, CONTOCORRENTE FROM " + FormatoreDao.TABLE_NAME ;
 
 			if (users != null && !users.equals("")) {
 				selectSQL += " ORDER BY IDFORMATORE";  // l' errore era qui , clausola order by non aveva un attributo corretto per la tabella studente.
 			}
 
 			try {
-				connection = ds.getConnection();
-				preparedStatement = connection.prepareStatement(selectSQL);
+				connection = getConnection(); 
+				preparedStatement = connection.prepareStatement(selectSQL,Statement.RETURN_GENERATED_KEYS);
 
-				ResultSet rs = preparedStatement.executeQuery();
+				rs = preparedStatement.executeQuery();
 
 				while (rs.next()) {
 					
 					FormatoreEntity bean = new FormatoreEntity();
-
-					bean.setId(rs.getInt("IDFORMATORE"));
-					bean.setEmail(rs.getString("EMAIL"));
-					bean.setPassword(rs.getString("PASSWORD"));
-					bean.setName(rs.getString("NOME"));
-					bean.setSurname(rs.getString("COGNOME"));
-				    bean.setGender(rs.getString("SESSO"));
-		            bean.setBirthDate(rs.getDate("DATANASCITA"));
-		            bean.setCountry(rs.getString("PAESEORIGINE"));
-		            bean.setCodiceFiscale(rs.getString("CODICEFISCALE"));
-		            bean.setContoCorrente(rs.getString("CONTOCORRENTE"));
+					bean.setId(rs.getInt(1)); // da verificare se corretto
+					bean.setEmail(rs.getString(2));
+					bean.setPassword(rs.getString(3));
+					bean.setName(rs.getString(4));
+					bean.setSurname(rs.getString(5));
+				    bean.setGender(rs.getString(6));
+		            bean.setBirthDate(Utils.toDate(rs.getString(7)));
+		            bean.setCountry(rs.getString(8));
+		            bean.setCodiceFiscale(rs.getString(9));
+		            bean.setContoCorrente(rs.getString(10));
 					users.add(bean);
 				}
-
+			}catch(ParseException e) {
+				throw new SQLException(e);
 			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
 			return users;
 		}
 
 
-		@Override
-		public int doSave(Object bean) throws SQLException {
-			// TODO Auto-generated method stub
-			return 0;
+
+		protected final void closeConnection(Connection c) {
+			if( c != null)
+				try {
+					c.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 		}
 		
+		protected final void closePreparedStatement(PreparedStatement p) {
+			if( p != null)
+				try {
+					p.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
 		
+		protected final void closeResultSet(ResultSet rs) {
+			if( rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}			
+		}
 	}
-	
-	
-
-

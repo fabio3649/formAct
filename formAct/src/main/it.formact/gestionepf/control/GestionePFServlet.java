@@ -34,24 +34,25 @@ import model.entity.PercorsoFormativoEntity;
 /**
  * Servlet implementation class CreazionePercorsoServlet
  */
-@WebServlet("/GestionPFServlet/*")
+@WebServlet("/GestionePFServlet/*")
 public class GestionePFServlet extends AbstractController {
 	
-   
-    public GestionePFServlet() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public GestionePFServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
-
-
-
- 
 
     @Override
 	protected Map<String, Service> initServices() {
 		// TODO Auto-generated method stub
 				java.util.Map<String, Service> m = new java.util.HashMap<String, Service>();
 				m.put("CREATORSERVICE", new GestionePFService());
+				
 				m.put("DELETEPERCORSOSERVICE", new GestionePFService());
 				m.put("PERCORSIFORMATORESERVICE", new PercorsiFormatoreService());
 				m.put("VISUALIZZAPERCORSOSERVICE", new VisualizzaPercorsoService());

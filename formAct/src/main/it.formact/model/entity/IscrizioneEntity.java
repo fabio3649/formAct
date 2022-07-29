@@ -12,7 +12,7 @@ public class IscrizioneEntity implements Serializable{
 	private int studente;
 	private int percorsoFormativo;
 	private String giorno;
-	private LocalTime orario;
+	private String orario;
 	private String metodoPagamento;
 	private Date dataPagamento;
 	
@@ -21,7 +21,7 @@ public class IscrizioneEntity implements Serializable{
 		studente= 0;
 		percorsoFormativo = 0;
 		giorno="";
-		orario= null;
+		orario= "00:00";
 		metodoPagamento="";
 		dataPagamento= null;
 	}
@@ -49,12 +49,12 @@ public class IscrizioneEntity implements Serializable{
 	public void setGiorno(String giorno) {
 		this.giorno = giorno;
 	}
-
-	public LocalTime getOrario() {
+    
+	public String getOrario() {
 		return orario;
 	}
 
-	public void setOrario(LocalTime orario) {
+	public void setOrario(String orario) {
 		this.orario = orario;
 	}
 

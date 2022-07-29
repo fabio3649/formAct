@@ -19,7 +19,7 @@ public class DisponibilitaTest {
     }	
 	
 	@Test
-	public void testIdDisponibilità(){
+	public void testIdDisponibilita(){
 		DisponibilitaEntity disp= new DisponibilitaEntity();
 		disp.setIdDisp(1);
 		assertEquals(1,disp.getIdDisp());
@@ -48,7 +48,7 @@ public class DisponibilitaTest {
 	
 	@Test
 	public void testOrario() {
-		LocalTime t= LocalTime.of(14, 00, 00);
+		String t = "14:00";
 		DisponibilitaEntity disp= new DisponibilitaEntity();
 		disp.setOrario(t);
 		assertEquals(t,disp.getOrario());

@@ -52,10 +52,10 @@ public class IscrizioneTest {
 		public void testGetSetOrario() {
 			IscrizioneEntity nuovo = new IscrizioneEntity();
 			String orario = "12:00";
-			LocalTime t = LocalTime.parse(orario);
-			nuovo.setOrario(t);
 			
-			assertEquals(LocalTime.parse(orario),nuovo.getOrario());
+			nuovo.setOrario(orario);
+			
+			assertEquals(orario,nuovo.getOrario());
 		}
 		
 		@Test

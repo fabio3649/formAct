@@ -38,8 +38,8 @@ public class CategoriaDaoTest {
 		dao = new CategoriaDao();
 		c = new CategoriaEntity();
 		
-		c.setNome("reti di calcolatori");
-		c.setDescrizione("reti e teoria dei segnali");
+		c.setNome("programmazione web");
+		c.setDescrizione("HTML , CSS, JAVASCRIPT");
 		c.setAmbito("discipline informatiche");
 		
 	}
@@ -85,7 +85,7 @@ public class CategoriaDaoTest {
 	
 	@Test
 	public void testRetrieveByNameSuccess() throws SQLException {
-		String name = "reti di calcolatori";
+		String name = "programmazione web";
 		CategoriaEntity f = (CategoriaEntity) dao.doRetrieveByName(name);
 		assertEquals(f.getNome(),name);
 	}

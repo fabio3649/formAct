@@ -22,7 +22,7 @@
   <body>
 	
 	<%@include file="/view/fragments/Header.jsp" %>
-	
+	<form action="${pageContext.request.contextPath}/AutenticazioneServlet/ModificaPasswordService" method="post">
       <!-- Form Container-->
       <div class="mt-5 mb-5 p-4 pb-2 container border-secondary border-2 rounded pricipalContainer" >
 
@@ -35,10 +35,10 @@
         <div class="mb-2">
         </div>
 		
-        <!-- Password-Password , variabile="password" -->
+        <!-- Password-Password , variabile="passwordAttuale" -->
         <div class="mb-4">
           <label for="formGroupExampleInput2" class="form-label">Password attuale</label>
-          <input type="password" id="password" class="form-control" name="password" minlenght="8" required>
+          <input type="password" id="password" class="form-control" name="passwordAttuale" minlenght="8" required>
           <p class="text-danger" id="errorePassword1"></p>
         </div>
         
@@ -72,12 +72,14 @@
             <div class="col">
             </div>
             <div class="col">
-              <input type="button" id="modificaPasswordButton" class="btn btn-outline-info" style="align:right;" value="Conferma">
+              <input type="submit" id="modificaPasswordButton" class="btn btn-outline-info" style="align:right;" value="Conferma">
             </div>
           </div>
         </div>
         
 	</div>
+	
+	</form>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   </body>

@@ -108,35 +108,7 @@ public class FormatoreEntity implements Serializable{
 	}
 	
 	
-	 
-	/*@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		FormatoreEntity f;
-		
-		if (obj instanceof FormatoreEntity) {
-			f = (FormatoreEntity) obj;
-		}
-		else return false;
-		
-		if ( this == f) return true;
-		
-		if ( this.id == (f.getId()) && 
-					this.email.equalsIgnoreCase(f.getEmail()) && 
-					this.getPassword().equalsIgnoreCase(f.getPassword()) &&
-							this.getName().equalsIgnoreCase(f.getName()) &&
-							this.getSurname().equalsIgnoreCase(f.getSurname()) &&
-							this.getGender().equalsIgnoreCase(f.getGender()) &&
-							this.getBirthDate().compareTo(f.getBirthDate())== 0 &&
-							this.getCountry().equalsIgnoreCase(f.getCountry()) &&
-							this.getCodiceFiscale().equals(f.getCodiceFiscale()) &&
-							this.getContoCorrente().equals(f.getContoCorrente()) ) {
-							
-			return true;
-		}
-		
-		return false;
-	} */
+
 
 	@Override
 	public boolean equals(Object o) {

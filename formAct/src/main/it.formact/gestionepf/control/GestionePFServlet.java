@@ -1,4 +1,4 @@
-package getionepf.control;
+package gestionepf.control;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,9 +15,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import autenticazione.service.AutenticazioneService;
+
+import autenticazione.service.ModificaProfiloService;
 import controller.control.AbstractController;
 import controller.control.Service;
-import getionepf.service.CreatorServices;
+import gestionepf.service.GestionePFService;
+
+import gestionepf.service.PercorsiFormatoreService;
+import gestionepf.service.VisualizzaPercorsoService;
 import model.dao.CategoriaDao;
 import model.dao.DisponibilitaDao;
 import model.dao.PercorsoFormativoDao;
@@ -27,20 +34,32 @@ import model.entity.PercorsoFormativoEntity;
 /**
  * Servlet implementation class CreazionePercorsoServlet
  */
-@WebServlet("/CreazionePercorsoServlet")
-public class CreazionePercorsoServlet extends AbstractController {
+@WebServlet("/GestionPFServlet/*")
+public class GestionePFServlet extends AbstractController {
 	
    
-    public CreazionePercorsoServlet() {
+    public GestionePFServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
 
 
-	@Override
-	protected Service newService() {
+
+ 
+
+    @Override
+	protected Map<String, Service> initServices() {
 		// TODO Auto-generated method stub
-		return new CreatorServices();
+				java.util.Map<String, Service> m = new java.util.HashMap<String, Service>();
+				m.put("CREATORSERVICE", new GestionePFService());
+				m.put("DELETEPERCORSOSERVICE", new GestionePFService());
+				m.put("PERCORSIFORMATORESERVICE", new PercorsiFormatoreService());
+				m.put("VISUALIZZAPERCORSOSERVICE", new VisualizzaPercorsoService());
+				
+				return m;
 	}
 
 }
+
+
+

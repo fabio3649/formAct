@@ -20,7 +20,8 @@ public interface Service {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	public Action process(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException;
+	
+	public Action process(String serviceName, HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException;
 	
 	/**
 	 * Restituisce la pagina di errore di default

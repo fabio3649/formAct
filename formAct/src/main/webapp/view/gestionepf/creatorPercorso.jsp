@@ -20,7 +20,7 @@ ArrayList <CategoriaEntity> categorie = new ArrayList<CategoriaEntity>();
 
 
 
-	<form action="${pageContext.request.contextPath}/CreazionePercorsoServlet"  method="post"  id="formPercorso" >
+	<form action="${pageContext.request.contextPath}/GestionePFServlet/CreatorService"  method="post"  id="formPercorso" >
 		<label for="nome">Nome</label> <br> <br>
 			<input type="text" id="nome" name="nome"  placeholder="inserisci nome corso">
 		<br><br> <label for="descrizione">Descrizione</label> <br> <br>
@@ -90,14 +90,14 @@ ArrayList <CategoriaEntity> categorie = new ArrayList<CategoriaEntity>();
    				    </select> <br> <br> 
    				    <select  id="orario" name="orario">
 			  
-   				 <option value="10:00"> 09:00 </option>	
-   				 <option value="11:00"> 10:00 </option>
-   				 <option value="12:00"> 11:00 </option>
-   				 <option value="16:00"> 15:00 </option>
-   				 <option value="16:30"> 15:30 </option>
-   				 <option value="17:00"> 16:00 </option>
-   				 <option value="17:30"> 16:30 </option>
-   				 <option value="19:00"> 18:00 </option>
+   				 <option value="09:00"> 09:00 </option>	
+   				 <option value="10:00"> 10:00 </option>
+   				 <option value="11:00"> 11:00 </option>
+   				 <option value="15:00"> 15:00 </option>
+   				 <option value="15:30"> 15:30 </option>
+   				 <option value="16:00"> 16:00 </option>
+   				 <option value="16:30"> 16:30 </option>
+   				 <option value="18:00"> 18:00 </option>
    			
    				    </select>
    			

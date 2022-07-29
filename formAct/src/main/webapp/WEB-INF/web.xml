@@ -26,7 +26,7 @@
   <env-entry-value>LoginServices=formAct.autenticazione.control.LoginServices/
   				   LogoutServices=formAct.autenticazione.control.LogoutServices	</env-entry-value>
    
-   </env-entry>
+ </env-entry>
 	
 		
 		

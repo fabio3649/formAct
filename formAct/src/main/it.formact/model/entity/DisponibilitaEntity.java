@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.Time;
 import java.time.LocalTime;
 
+import model.utils.Utils;
+
 public class DisponibilitaEntity implements Serializable{
 
 	/**
@@ -14,7 +16,7 @@ public class DisponibilitaEntity implements Serializable{
 	int idDisp;
 	int idPercorso;
 	String giornoSettimana;
-	LocalTime orario;
+	String orario;
 	int stato;
 	
 	
@@ -59,12 +61,12 @@ public class DisponibilitaEntity implements Serializable{
 	}
 
 
-	public LocalTime getOrario() {
+	public String getOrario() {
 		return orario;
 	}
 
 
-	public void setOrario(LocalTime orario) {
+	public void setOrario(String orario) {
 		this.orario = orario;
 	}
 
@@ -77,8 +79,24 @@ public class DisponibilitaEntity implements Serializable{
 	public void setStato(int stato) {
 		this.stato = stato;
 	}
+/* int idDisp;
+	int idPercorso;
+	String giornoSettimana;
+	LocalTime orario;
+	int stato;     */
 
-
+	@Override
+	public boolean equals(Object o) {
+		if( o instanceof DisponibilitaEntity) {
+			DisponibilitaEntity e = (DisponibilitaEntity)o;		
+			return idDisp == e.idDisp &&
+				   (idPercorso == e.idPercorso ) &&
+				   (giornoSettimana == e.giornoSettimana || (giornoSettimana != null && e.giornoSettimana != null && giornoSettimana.equals(e.giornoSettimana))) &&
+				   (orario == e.orario || (orario != null && e.orario != null && orario.equals(e.orario))) &&
+				   ( stato == e.stato);
+		}else
+			return false;
+	}
 	@Override
 	public String toString() {
 		return "Disponibilità [idDisp=" + idDisp + ", idPercorso=" + idPercorso + ", giornoSettimana="

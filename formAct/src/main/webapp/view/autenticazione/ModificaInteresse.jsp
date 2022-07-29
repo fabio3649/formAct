@@ -33,7 +33,7 @@
 			<p> Seleziona gli Interessi che preferisci</p>
 		</div>
 		
-		<form action="${pageContext.request.contextPath}/ModificaInteressiServlet" method="post">
+		<form action="${pageContext.request.contextPath}/AutenticazioneServlet/ModificaInteressiService" method="post">
 		<div class="container mt-5 mb-5">
 			
 		  <!-- for che cicla tante volte quante sono le righe -->	

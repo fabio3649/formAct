@@ -12,10 +12,10 @@ public class Calendario {
 	
 	
 	String nome;
-	LocalTime time;
+	String time;
 	int idStudente;
 	
-	public Calendario(String nome, LocalTime t, int studente) {
+	public Calendario(String nome, String t, int studente) {
 		this.nome=nome;
 		this.time = t;
 		this.idStudente = studente;
@@ -34,12 +34,12 @@ public class Calendario {
 	}
 
 
-	public LocalTime getTime() {
+	public String getTime() {
 		return time;
 	}
 
 
-	public void setTime(LocalTime time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
 

@@ -6,13 +6,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.util.ArrayList;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import model.entity.FormatoreEntity;
 import model.entity.StudenteEntity;
+import model.utils.Utils;
 
 public class StudenteDao implements DaoInterface {
 	
@@ -129,48 +132,86 @@ private Connection getConnection() throws SQLException{
 	
 
 	
-	public Object doRetrieveByKey(int id) throws SQLException {
+	public StudenteEntity doRetrieveByKey(int id) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		ResultSet rs = null;
 		
 		
 		StudenteEntity bean = new StudenteEntity();
         
-		String selectSQL = "SELECT * FROM " + StudenteDao.TABLE_NAME + " WHERE IDSTUDENTE = ?";
+		String selectSQL = "SELECT IDSTUDENTE, EMAIL, PASSWORD,"
+				+ " NOME, COGNOME, SESSO, date_format(DATANASCITA,'%d-%m-%Y') , PAESEORIGINE"
+				+ " FROM " + StudenteDao.TABLE_NAME + " WHERE IDSTUDENTE = ?";
 
 		try {
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setInt(1, id);
 
-			ResultSet rs = preparedStatement.executeQuery();
+			 rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				bean.setId(rs.getInt(1));
-				bean.setEmail(rs.getString("EMAIL"));
-				bean.setPassword(rs.getString("PASSWORD"));
-				bean.setName(rs.getString("NOME"));
-				bean.setSurname(rs.getString("COGNOME"));
-			    bean.setGender(rs.getString("SESSO"));
-	            bean.setBirthDate(rs.getDate("DATANASCITA"));
-	            bean.setCountry(rs.getString("PAESEORIGINE"));
+				bean.setEmail(rs.getString(2));
+				bean.setPassword(rs.getString(3));
+				bean.setName(rs.getString(4));
+				bean.setSurname(rs.getString(5));
+			    bean.setGender(rs.getString(6));
+			    bean.setBirthDate(Utils.toDate(rs.getString(7)));
+	            bean.setCountry(rs.getString(8));
 	       
 			    
 			}
 
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
 		return bean;
 	}
 	
+	public Object doRetrieveByMail(String email) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		
+		
+		StudenteEntity bean = new StudenteEntity();
+        
+		String selectSQL = "SELECT IDSTUDENTE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, date_format(DATANASCITA,'%d-%m-%Y'), PAESEORIGINE  FROM " + StudenteDao.TABLE_NAME + " WHERE EMAIL = ?";
+
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL,Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setString(1, email);
+
+			rs = preparedStatement.executeQuery();
+
+			if (rs.next()) {
+				bean.setId(rs.getInt(1));
+				bean.setEmail(rs.getString(2));
+				bean.setPassword(rs.getString(3));
+				bean.setName(rs.getString(4));
+				bean.setSurname(rs.getString(5));
+			    bean.setGender(rs.getString(6));
+	            bean.setBirthDate(Utils.toDate(rs.getString(7)));
+	            bean.setCountry(rs.getString(8));
+	          
+			}
+		}catch(ParseException e) {
+			throw new SQLException(e);
+		} finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
+		}
+		return bean;
+	}
 	
 	public boolean updatePassword(int id, String pwd) throws SQLException {
 		Connection connection = null;
@@ -193,19 +234,15 @@ private Connection getConnection() throws SQLException{
 			result = preparedStatement.executeUpdate();
 
 		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
+		
 		return (result != 0);
 		
 	}
 	
-	public boolean update(int id) throws SQLException {
+	public boolean updateStudent(int id, String email, String country) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		int result = 0;
@@ -213,15 +250,14 @@ private Connection getConnection() throws SQLException{
 		
 
 
-		String selectSQL = "UPDATE " + StudenteDao.TABLE_NAME + " SET EMAIL = ? , PASSWORD = ? , NOME = ? , COGNOME = ? , SESSO = ? ,"
-				+ " str_to_date(DATANASCITA,'%d-%m-%Y') , PAESEORIGINE = ?  " + " WHERE IDSTUDENTE = ? ";
+		String selectSQL = "UPDATE " + StudenteDao.TABLE_NAME + " SET EMAIL = ? , PAESEORIGINE = ?  " + " WHERE IDSTUDENTE = ? ";
 
 		try {
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL,Statement.RETURN_GENERATED_KEYS);
-			preparedStatement.setInt(1, id);
-			
-
+			preparedStatement.setString(1, email);
+			preparedStatement.setString(2, country);
+			preparedStatement.setInt(3, id);
 			
 			result = preparedStatement.executeUpdate();
 
@@ -230,6 +266,12 @@ private Connection getConnection() throws SQLException{
 			closeConnection(connection);
 		}
 		return (result != 0);
+	}
+	
+	public boolean update(int id) throws SQLException {
+		return false;
+		
+		
 	}
 	    
 	
@@ -242,7 +284,7 @@ private Connection getConnection() throws SQLException{
 		ArrayList<StudenteEntity> users = new ArrayList<StudenteEntity>();
 
 		String selectSQL = "SELECT * FROM " + StudenteDao.TABLE_NAME;
-
+		ResultSet rs = null;
 		if (users != null && !users.equals("")) {
 			selectSQL += " ORDER BY IDSTUDENTE";  // l' errore era qui , clausola order by non aveva un attributo corretto per la tabella studente.
 		}
@@ -251,7 +293,7 @@ private Connection getConnection() throws SQLException{
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS);
 
-			ResultSet rs = preparedStatement.executeQuery();
+			rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				
@@ -269,14 +311,11 @@ private Connection getConnection() throws SQLException{
 			}
 
 		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
+		
 		return users;
 	}
 	

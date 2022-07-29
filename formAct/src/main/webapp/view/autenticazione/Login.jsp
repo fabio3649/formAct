@@ -18,11 +18,9 @@
   <body>
 	
 	<%@include file="/view/fragments/Header.jsp" %>
-	<%
-		request.getSession().setAttribute("service","LoginServices");
-		%>
+	
     <!-- Inizio Form  -->
-    <form class="" action="${pageContext.request.contextPath}/LoginServlet" method="post">
+    <form class="" action="${pageContext.request.contextPath}/AutenticazioneServlet/LoginService" method="post">
     
       <!-- Form Container-->
       <div class="mt-5 mb-5 p-4 pb-2 container border-secondary border-2 rounded pricipalContainer" >
@@ -38,7 +36,7 @@
 		
 		
 		<!-- Condizione di Erroe "logError", visualizzazione errore -->
-		<%
+		<% 
 			if(request.getSession().getAttribute("logError")!= null && request.getSession().getAttribute("logError").equals("true")){
 		%>
 			<div>

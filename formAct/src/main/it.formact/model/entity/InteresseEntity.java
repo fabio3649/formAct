@@ -2,6 +2,8 @@ package model.entity;
 
 import java.io.Serializable;
 
+import model.utils.Utils;
+
 public class InteresseEntity implements Serializable{
 
 	/**
@@ -35,6 +37,15 @@ public class InteresseEntity implements Serializable{
 		this.nome = nome;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if( o instanceof InteresseEntity) {
+			InteresseEntity e = (InteresseEntity)o;		
+			return idInteresse == e.idInteresse &&
+				   (nome == e.nome || (nome != null && e.nome != null && nome.equalsIgnoreCase(e.nome)));
+		}else
+			return false;
+	}
 	
 
 	@Override

@@ -1,23 +1,31 @@
 package services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.text.ParseException;
+
+import javax.servlet.ServletException;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
+import controller.control.Action;
 import model.dao.FormatoreDao;
-import registrazione.service.RegisterServices;
+import registrazione.service.RegisterService;
 
 public class RegisterServiceTest extends Mockito{
 	
 	private FormatoreDao dao;
 	private MockHttpServletRequest req;
-	private RegisterServices register;
+	private MockHttpServletResponse res;
+	private RegisterService register;
+	private Action act;
 	
 	void setupNaming() {
 		System.setProperty("java.naming.factory.initial","testUtility.MyContextFactory");
@@ -30,11 +38,49 @@ public class RegisterServiceTest extends Mockito{
 		setupNaming();
 		dao = new FormatoreDao();
 		req = new MockHttpServletRequest();
-		register = new RegisterServices();
+		res = new MockHttpServletResponse();
+		register = new RegisterService();
+		act = new Action("",true,true);
 		
-		req.addParameter("idFormatore", "24");
-		req.addParameter("idStudente", "4");
-		req.addParameter("email", "tesing@prova.it");
+	}
+	
+	@Test
+	public void testProcessErrorPage() throws IOException, ServletException {
+		
+		req.getSession().setAttribute("register", "");
+		act = register.process("RegisterService",req, res);
+		
+		String errorPage = act.getPage();
+		
+		assertNotEquals("/formAct/view/index/index.jsp",errorPage);
+		
+	}
+	
+	@Test
+	public void testProcessStudenteHomePage() throws IOException, ServletException {
+		
+		req.addParameter("email", "testStudente3@prova.it");
+		req.addParameter("password", "testing");
+		req.addParameter("name", "Test nome");
+		req.addParameter("surname", "test cognome");
+		req.addParameter("gender","f");
+		req.addParameter("country", "Italia");
+		req.addParameter("birthdate", "18-07-2022");
+		req.getSession().setAttribute("register", "studente");
+		
+		act = register.process("RegisterService",req, res);
+		
+		
+		String homePage = act.getPage();
+		
+		assertEquals("/formAct/view/index/index.jsp",homePage);
+		
+	}
+	
+	@Test
+	public void testProcessFormatoreHomePage() throws IOException, ServletException {
+		
+		req.addParameter("email", "testFormatore4@prova.it");
 		req.addParameter("password", "testing");
 		req.addParameter("name", "Test nome");
 		req.addParameter("surname", "test cognome");
@@ -43,70 +89,60 @@ public class RegisterServiceTest extends Mockito{
 		req.addParameter("cf", "sdasdasd");
 		req.addParameter("numCC", "dsadadja555sa");
 		req.addParameter("birthdate", "18-07-2022");
+		req.getSession().setAttribute("register", "formatore");
 		
-	}
-	
-	@Test
-	public void trainerRequestTest() throws ParseException {
+		act = register.process("RegisterService",req, res);
 		
-		register.executeTrainerFormRequest(req);
 		
-		assertTrue(register.executeTrainerFormRequest(req));
+		String homePage = act.getPage();
 		
-	}
-	
-	@Test
-	public void studentRequestTest() throws ParseException {
+		assertEquals("/formAct/view/index/index.jsp",homePage);
 		
-		register.executeStudentFormRequest(req);
-		
-		assertTrue(register.executeStudentFormRequest(req));
 	}
 	
 	
 	@Test
-	public void isCfFormatoreContentNullTest() {
+	public void testIsNotContentCfFormatore() {
 		
-		register.isCfContent("");
+		
 		
 		assertEquals(register.isCfContent(""),false);
 		
 	}
 	
 	@Test
-	public void isCfFormatoreContentTest() {
-		register.isCfContent("DASDADWETQG");
+	public void testIsCfFormatoreContent() {
 		
-		assertEquals(register.isCfContent("DASDADWETQG"),true);
+		
+		assertEquals(register.isCfContent("sdasdasd"),true);
 	}
 	
 	@Test
-	public void isEmailStudentContentNullTest() {
-		register.isEmailContent("");
+	public void testIsNotContentStudentEmail() {
 		
 		assertEquals(register.isEmailContent(""),false);
 	}
 	
-	@Test
-	public void isEmailStudentContentTest() {
-		register.isEmailContent("fabio.pica10@gmail.com");
+	/*@Test
+	public void testIsStudentEmailContent() {
 		
-		assertEquals(register.isEmailContent("fabio.pica10@gmail.com"),true);
-	}
+		
+		assertEquals(register.isEmailContent("testStudente3@prova.it"),true);
+	} */
 	
 	@Test
-	public void isEmailTrainerContentNullTest() {
-		register.isEmailContentTrainer("");
+	public void testIsNotContentTrainerEmail() {
+		
 		
 		assertEquals(register.isEmailContentTrainer(""),false);
 	}
 	
-	@Test
-	public void isEmailTrainerContentTest() {
-		register.isEmailContentTrainer("testing@testing.it");
+	/*@Test
+	public void testIsTrainerEmailContent() {
 		
-		assertEquals(register.isEmailContentTrainer("testing@testing.it"),true);
-	}
+		
+		assertEquals(register.isEmailContentTrainer("testFormatore4@prova.it"),true);
+	} */
 	
 	
 

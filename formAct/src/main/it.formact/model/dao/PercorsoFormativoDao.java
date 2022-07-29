@@ -38,17 +38,7 @@ private Connection getConnection() throws SQLException{
                                     
 	private static final String TABLE_NAME = "percorso_formativo";
 	
-	// creazione id percorso formativo dinamico
-	/*public int nextId() throws SQLException {
-		
-		ArrayList<PercorsoFormativoEntity> percorsi = (ArrayList<PercorsoFormativoEntity>) this.doRetrieveAll();
-		if(percorsi.size()==0)
-			return 1;
-		int next = (percorsi.get(percorsi.size()-1).getId())+1;
-		
-		return next;
-
-	}*/
+	
 	
 	
 	
@@ -86,14 +76,10 @@ private Connection getConnection() throws SQLException{
 			}
 			connection.setAutoCommit(false);
 			connection.commit();
+			
 		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
 		percorso.setId(id);
 		return id;
@@ -120,13 +106,8 @@ private Connection getConnection() throws SQLException{
 			result = preparedStatement.executeUpdate();
 
 		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
 		return (result != 0);
 	}
@@ -136,7 +117,7 @@ private Connection getConnection() throws SQLException{
 	public Object doRetrieveByKey(int id) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		ResultSet rs = null;
 		
 		
 		PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
@@ -148,7 +129,7 @@ private Connection getConnection() throws SQLException{
 			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setInt(1, id);
 
-			ResultSet rs = preparedStatement.executeQuery();
+			rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				bean.setId(rs.getInt(1));
@@ -164,22 +145,19 @@ private Connection getConnection() throws SQLException{
 			    
 			}
 
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+		}  finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
+		
 		return bean;
 	}
 	
 	public ArrayList<PercorsoFormativoEntity> doRetrieveByCosto(Double costo) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		ResultSet rs = null;
 		
 		
 		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
@@ -191,7 +169,7 @@ private Connection getConnection() throws SQLException{
 			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setDouble(1, costo);
 
-			ResultSet rs = preparedStatement.executeQuery();
+			rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				
@@ -208,14 +186,10 @@ private Connection getConnection() throws SQLException{
 			    
 			}
 
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+		}  finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
 		return corsi;
 	}
@@ -224,7 +198,7 @@ private Connection getConnection() throws SQLException{
 	public ArrayList<PercorsoFormativoEntity> doRetrieveByString(String str) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		ResultSet rs = null;
 		
 		
 		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
@@ -237,7 +211,7 @@ private Connection getConnection() throws SQLException{
 			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, nome);
 
-			ResultSet rs = preparedStatement.executeQuery();
+			rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				
@@ -254,14 +228,10 @@ private Connection getConnection() throws SQLException{
 			    
 			}
 
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+		}  finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
 		return corsi;
 	}
@@ -270,7 +240,7 @@ private Connection getConnection() throws SQLException{
 	public ArrayList<PercorsoFormativoEntity> doRetrieveByName(String name) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		ResultSet rs = null;
 		
 		
 		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
@@ -282,7 +252,7 @@ private Connection getConnection() throws SQLException{
 			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, name);
 
-			ResultSet rs = preparedStatement.executeQuery();
+		    rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				
@@ -299,14 +269,10 @@ private Connection getConnection() throws SQLException{
 			    
 			}
 
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+		}  finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
 		return corsi;
 	}
@@ -315,7 +281,7 @@ private Connection getConnection() throws SQLException{
 	public ArrayList<PercorsoFormativoEntity> doRetrieveAllByFormatore(String nome, String cognome) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		ResultSet rs = null;
 		
 		
 		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
@@ -330,11 +296,11 @@ private Connection getConnection() throws SQLException{
 			preparedStatement.setString(1, nome);
 			preparedStatement.setString(2, cognome);
 
-			ResultSet rs = preparedStatement.executeQuery();
+			 rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
-				
+			 	
 				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
 				bean.setId_formatore(rs.getInt("FORMATORE"));
 				bean.setNome(rs.getString("NOME"));
@@ -347,14 +313,10 @@ private Connection getConnection() throws SQLException{
 			    
 			}
 
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+		}  finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
 		return corsi;
 	}
@@ -362,7 +324,7 @@ private Connection getConnection() throws SQLException{
 	public ArrayList<PercorsoFormativoEntity> doRetrieveAllByCategory(String categoria) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		ResultSet rs = null;
 		
 		
 		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
@@ -377,7 +339,7 @@ private Connection getConnection() throws SQLException{
 			preparedStatement.setString(1, categoria);
 		
 
-			ResultSet rs = preparedStatement.executeQuery();
+			 rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
@@ -394,14 +356,10 @@ private Connection getConnection() throws SQLException{
 			    
 			}
 
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+		}  finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
 		return corsi;
 	}
@@ -409,7 +367,7 @@ private Connection getConnection() throws SQLException{
 	public ArrayList<PercorsoFormativoEntity> doRetrieveAvailable() throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		ResultSet rs = null;
 		
 		
 		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
@@ -417,15 +375,15 @@ private Connection getConnection() throws SQLException{
 		int disp = 1;
 		
 		String selectSQL = "SELECT * "
-				+ "FROM percorso_formativo,disponibilità "
-				+ "WHERE disponibilità.stato = ?";
+				+ "FROM percorso_formativo,disponibilita "
+				+ "WHERE disponibilita.stato = ?";
 
 		try {
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setInt(1, disp);
 
-			ResultSet rs = preparedStatement.executeQuery();
+			 rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
@@ -442,22 +400,19 @@ private Connection getConnection() throws SQLException{
 			    
 			}
 
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+		}  finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
+		
 		return corsi;
 	}
 	
-	public ArrayList<PercorsoFormativoEntity> doRetrieveByDisponibilità(String giorno) throws SQLException {
+	public ArrayList<PercorsoFormativoEntity> doRetrieveByDisponibilita(String giorno) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		ResultSet rs = null;
 		
 		
 		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
@@ -465,15 +420,15 @@ private Connection getConnection() throws SQLException{
 		int disp = 1;
 		
 		String selectSQL = "SELECT DISTINCT * "
-				+ "FROM percorso_formativo,disponibilità "
-				+ "WHERE disponibilità.giornoSettimana = ? AND percorso_formativo.idpercorso_formativo = disponibilità.percorsoFormativo";
+				+ "FROM percorso_formativo,disponibilita "
+				+ "WHERE disponibilita.giornoSettimana = ? AND percorso_formativo.idpercorso_formativo = disponibilita.percorsoFormativo";
 
 		try {
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, giorno);
 
-			ResultSet rs = preparedStatement.executeQuery();
+			 rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
@@ -490,15 +445,12 @@ private Connection getConnection() throws SQLException{
 			    
 			}
 
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+		}  finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
+		
 		return corsi;
 	}
 	
@@ -506,7 +458,7 @@ private Connection getConnection() throws SQLException{
 	public ArrayList<PercorsoFormativoEntity> doRetrieveAll() throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		ResultSet rs = null;
 		ArrayList<PercorsoFormativoEntity> percorsi = new ArrayList<PercorsoFormativoEntity>();
 
 		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME;
@@ -519,7 +471,7 @@ private Connection getConnection() throws SQLException{
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 
-			ResultSet rs = preparedStatement.executeQuery();
+			rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				
@@ -536,22 +488,19 @@ private Connection getConnection() throws SQLException{
 				percorsi.add(bean);
 			}
 
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+		}  finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
+		
 		return percorsi;
 	}
 	
 	public ArrayList<PercorsoFormativoEntity> doRetrieveAllByParams(String str , String min, String max, String giorno) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		ResultSet rs = null;
 		
 		
 		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
@@ -564,9 +513,9 @@ private Connection getConnection() throws SQLException{
 				+    " percorso_formativo.indiceContenuti, percorso_formativo.numeroLezioni,"
 				+    " percorso_formativo.costo";
 		
-		selectSQL += " FROM percorso_formativo,disponibilità";
-		selectSQL += " WHERE";
-		selectSQL += " percorso_formativo.idpercorso_formativo = disponibilità.percorsoFormativo";
+		selectSQL += " FROM percorso_formativo,disponibilita";
+		
+		selectSQL += " WHERE percorso_formativo.idpercorso_formativo = percorso_formativo.idpercorso_formativo";
 		
 		if (str != null && !str.equals("")) {
 			selectSQL += " AND percorso_formativo.nome LIKE ?";
@@ -578,7 +527,7 @@ private Connection getConnection() throws SQLException{
 			selectSQL += " AND percorso_formativo.costo <= ?";
 		}
 		if (giorno != null && !giorno.equals("")) {
-			selectSQL += " AND disponibilità.giornoSettimana = ?";
+			selectSQL += " AND disponibilita.giornoSettimana = ?";
 		}
 		
 		try {
@@ -603,7 +552,7 @@ private Connection getConnection() throws SQLException{
 				i++;
 			}
 			
-			ResultSet rs = preparedStatement.executeQuery();
+			 rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
@@ -620,22 +569,19 @@ private Connection getConnection() throws SQLException{
 			    
 			}
 
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+		}  finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
+		
 		return corsi;
 	}
 	
 	public ArrayList<PercorsoFormativoEntity> doRetrieveIscrizioniStudente(int idStudente) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		ResultSet rs = null;
 		ArrayList<PercorsoFormativoEntity> iscrizioni = new ArrayList<PercorsoFormativoEntity>();
 
 		String selectSQL = "SELECT DISTINCT * FROM percorso_formativo,iscrizione"
@@ -652,7 +598,7 @@ private Connection getConnection() throws SQLException{
 			
 			// Problema: questi 2 comandi erano invertiti:
 			preparedStatement.setInt(1, idStudente);
-			ResultSet rs = preparedStatement.executeQuery();
+			rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				
@@ -669,19 +615,43 @@ private Connection getConnection() throws SQLException{
 	            iscrizioni.add(bean);
 			}
 
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+		}  finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
+		
 		return iscrizioni;
 	}
 
-
+	protected final void closeConnection(Connection c) {
+		if( c != null)
+			try {
+				c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+	}
+	
+	protected final void closePreparedStatement(PreparedStatement p) {
+		if( p != null)
+			try {
+				p.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+	
+	protected final void closeResultSet(ResultSet rs) {
+		if( rs != null)
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+	}
 
 
 	@Override

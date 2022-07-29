@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.text.ParseException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -15,6 +16,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import model.entity.IscrizioneEntity;
+import model.utils.Utils;
 
 
 public class IscrizioneDao {
@@ -61,7 +63,11 @@ private Connection getConnection() throws SQLException{
 				preparedStatement.setString(3, iscrizione.getGiorno());
 				preparedStatement.setTime(4, Time.valueOf(iscrizione.getOrario()));
 				preparedStatement.setString(5, iscrizione.getMetodoPagamento());
-				preparedStatement.setDate(6,iscrizione.getDataPagamento());
+				if (iscrizione.getDataPagamento() == null)
+					preparedStatement.setNull(6, java.sql.Types.VARCHAR);
+				else
+					preparedStatement.setString(6, Utils.toStringDate(iscrizione.getDataPagamento()));
+				
 				preparedStatement.executeUpdate();
 				connection.setAutoCommit(false);
 				connection.commit();
@@ -83,7 +89,7 @@ private Connection getConnection() throws SQLException{
 																		//in automatico grazie ai vincoli delete on cascade su chiave esterna studente
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
-			
+			 
 		
 	         
 			int result = 0;
@@ -114,9 +120,10 @@ private Connection getConnection() throws SQLException{
 		/**
 		 * 
 		 * Modificato
+		 * @throws ParseException 
 		 * 
 		 */
-		public Object doRetrieveByStudent(int studente) throws SQLException {    // restituisce una entry di iscrizione per id studente, #iscrizione di uno studente#
+		public Object doRetrieveByStudent(int studente) throws SQLException, ParseException {    // restituisce una entry di iscrizione per id studente, #iscrizione di uno studente#
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
             
@@ -144,10 +151,9 @@ private Connection getConnection() throws SQLException{
 					bean.setStudente(rs.getInt("STUDENTE"));
 					bean.setPercorsoFormativo(rs.getInt("PERCORSO_FORMATIVO"));
 					bean.setGiorno(rs.getString("GIORNO"));
-					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
+					bean.setOrario(rs.getString("ORARIO"));
 					bean.setMetodoPagamento(rs.getString("METODO_PAGAMENTO"));
-					bean.setDataPagamento(rs.getDate("DATA_PAGAMENTO"));
-		            
+					bean.setDataPagamento(Utils.toDate(rs.getString("DATA_PAGAMENTO")));
 					iscrizioni.add(bean);
 				    
 				}
@@ -166,7 +172,7 @@ private Connection getConnection() throws SQLException{
 		
 
 		
-		public ArrayList<IscrizioneEntity> doRetrieveAll() throws SQLException {
+		public ArrayList<IscrizioneEntity> doRetrieveAll() throws SQLException, ParseException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 
@@ -191,9 +197,9 @@ private Connection getConnection() throws SQLException{
 					bean.setStudente(rs.getInt("STUDENTE"));
 					bean.setPercorsoFormativo(rs.getInt("PERCORSO_FORMATIVO"));
 					bean.setGiorno(rs.getString("GIORNO"));
-					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
+					bean.setOrario(rs.getString("ORARIO"));
 					bean.setMetodoPagamento(rs.getString("METODO_PAGAMENTO"));
-					bean.setDataPagamento(rs.getDate("DATA_PAGAMENTO"));
+					bean.setDataPagamento(Utils.toDate(rs.getString("DATA_PAGAMENTO")));
 					iscrizioni.add(bean);
 				}
 
@@ -209,7 +215,7 @@ private Connection getConnection() throws SQLException{
 			return iscrizioni;
 		}
 		
-		public ArrayList<IscrizioneEntity> doRetrieveAllByDay(int studente, String giorno) throws SQLException {
+		public ArrayList<IscrizioneEntity> doRetrieveAllByDay(int studente, String giorno) throws SQLException, ParseException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 
@@ -238,9 +244,9 @@ private Connection getConnection() throws SQLException{
 					bean.setStudente(rs.getInt("STUDENTE"));
 					bean.setPercorsoFormativo(rs.getInt("PERCORSO_FORMATIVO"));
 					bean.setGiorno(rs.getString("GIORNO"));
-					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
+					bean.setOrario(rs.getString("ORARIO"));
 					bean.setMetodoPagamento(rs.getString("METODO_PAGAMENTO"));
-					bean.setDataPagamento(rs.getDate("DATA_PAGAMENTO"));
+					bean.setDataPagamento(Utils.toDate(rs.getString("DATA_PAGAMENTO")));
 					iscrizioni.add(bean);
 				}
 

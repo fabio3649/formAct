@@ -45,19 +45,7 @@ public class FormatoreDao implements DaoInterface<FormatoreEntity>{
                                     
 	private static final String TABLE_NAME = "formatore";
 	
-	// creazione id formatore dinamico
-	/*	public int nextId() throws SQLException {
-			
-			ArrayList<FormatoreEntity> users = (ArrayList<FormatoreEntity>) this.doRetrieveAll();
-			if(users.size()==0)
-				return 1;
-			int next = (users.get(users.size()-1).getId())+1;
-			
-			return next;
-
-		}   */
-
-		
+	
 		public int doSave(FormatoreEntity bean) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
@@ -70,7 +58,7 @@ public class FormatoreDao implements DaoInterface<FormatoreEntity>{
 				connection = getConnection();
 				preparedStatement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
 				
-				//id = this.nextId(); 
+				
 				preparedStatement.setInt(1, id);
 				preparedStatement.setString(2, user.getEmail());
 				preparedStatement.setString(3, user.getPassword());
@@ -124,7 +112,7 @@ public class FormatoreDao implements DaoInterface<FormatoreEntity>{
 
 				
 				result = preparedStatement.executeUpdate();
-
+ 
 			} finally {
 				closePreparedStatement(preparedStatement);
 				closeConnection(connection);
@@ -132,23 +120,20 @@ public class FormatoreDao implements DaoInterface<FormatoreEntity>{
 			return (result != 0);
 		}
 		
-		public boolean update(int id) throws SQLException {
+		public boolean updateTrainer(int id, String email, String country, String cc) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 			int result = 0;
 			
-			
-	
-
-			String selectSQL = "UPDATE " + FormatoreDao.TABLE_NAME + " SET EMAIL = ? , PASSWORD = ? , NOME = ? , COGNOME = ? , SESSO = ? ,"
-					+ " str_to_date(DATANASCITA,'%d-%m-%Y') , PAESEORIGINE = ? , CODICEFISCALE = ? , CONTOCORRENTE = ?  " + " WHERE IDFORMATORE = ? ";
+			String selectSQL = "UPDATE " + FormatoreDao.TABLE_NAME + " SET EMAIL = ? , PAESEORIGINE = ? , CONTOCORRENTE = ? " + " WHERE IDFORMATORE = ? ";
 
 			try {
 				connection = getConnection();
 				preparedStatement = connection.prepareStatement(selectSQL,Statement.RETURN_GENERATED_KEYS);
-				preparedStatement.setInt(1, id);
-				
-
+				preparedStatement.setString(1, email);
+				preparedStatement.setString(2, country);
+				preparedStatement.setString(3, cc);
+				preparedStatement.setInt(4, id);
 				
 				result = preparedStatement.executeUpdate();
 
@@ -193,7 +178,7 @@ public class FormatoreDao implements DaoInterface<FormatoreEntity>{
 			PreparedStatement preparedStatement = null;
 			ResultSet rs = null;
 			
-			
+			 
 			FormatoreEntity bean = new FormatoreEntity();
 	        
 			String selectSQL = "SELECT IDFORMATORE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, date_format(DATANASCITA,'%d-%m-%Y'), PAESEORIGINE, CODICEFISCALE, CONTOCORRENTE FROM " + FormatoreDao.TABLE_NAME + " WHERE IDFORMATORE = ?";
@@ -341,5 +326,13 @@ public class FormatoreDao implements DaoInterface<FormatoreEntity>{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}			
+		}
+
+
+
+		@Override
+		public boolean update(int id) throws SQLException {
+			// TODO Auto-generated method stub
+			return false;
 		}
 	}

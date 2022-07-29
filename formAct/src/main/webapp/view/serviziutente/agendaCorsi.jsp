@@ -8,11 +8,11 @@
 </head>
 <body>
 	<%
-						AgendaCorsi ag = new AgendaCorsi();
-						ArrayList<Calendario> agenda = new ArrayList<Calendario>();
-						
-						
-						
+	
+				int studente = (int) request.getAttribute("idStudente");
+					
+					Settimana ag = new Settimana();
+					ArrayList<Calendario> agenda = new ArrayList<Calendario>();
 	%>
 				
 				<div>
@@ -27,7 +27,7 @@
 						<th> Venerdì  </th>
 						
 						           <%
-						          	    agenda = ag.getLunedi(1);
+						          	    agenda = ag.getLunedi(studente);
 										for(int i =0; i< agenda.size() ; i++){
 								   
 									%>
@@ -43,7 +43,7 @@
 											    
 						                      	  
 								  		                <%
-								  		              agenda = ag.getMartedi(1);
+								  		              agenda = ag.getMartedi(studente);
 								  		              for(int i =0; i< agenda.size() ; i++){
 								  		                
 								  		                %>                                        
@@ -57,7 +57,7 @@
 											  		
 											  		
 								  		                <%
-								  		              agenda = ag.getMercoledi(1);
+								  		              agenda = ag.getMercoledi(studente);
 								  		              for(int i =0; i< agenda.size() ; i++){
 								  		                
 								  		                %>                                        
@@ -70,7 +70,7 @@
 									                                 %>
 									                                 
 									                                 <%
-								  		              agenda = ag.getGiovedi(1);
+								  		              agenda = ag.getGiovedi(studente);
 								  		              for(int i =0; i< agenda.size() ; i++){
 								  		                
 								  		                %>                                        
@@ -84,7 +84,7 @@
 									                                 
 									                                 
 									                                 <%
-								  		              agenda = ag.getVenerdi(1);
+								  		              agenda = ag.getVenerdi(studente);
 								  		              for(int i =0; i< agenda.size() ; i++){
 								  		                
 								  		                %>                                        

@@ -66,7 +66,7 @@ private Connection getConnection() throws SQLException{
 				preparedStatement.setNull(7, java.sql.Types.VARCHAR);
 			else
 				preparedStatement.setString(7, Utils.toStringDate(certificazione.getAnnoInizio()));
-			preparedStatement.setDate(7,certificazione.getAnnoInizio());
+			//preparedStatement.setDate(7,certificazione.getAnnoInizio());
 			if (certificazione.getAnnoFine() == null)
 				preparedStatement.setNull(8, java.sql.Types.VARCHAR);
 			else
@@ -175,7 +175,7 @@ private Connection getConnection() throws SQLException{
 	
 
 	
-	public ArrayList<CertificazioneEntity> doRetrieveAllByFormatore(String nome, String cognome) throws SQLException {
+	public ArrayList<CertificazioneEntity> doRetrieveAllByFormatore(String nome, String cognome) throws SQLException, ParseException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
@@ -205,8 +205,8 @@ private Connection getConnection() throws SQLException{
 				bean.setTipologia(rs.getString("TIPOLOGIA"));
 			    bean.setIstituto(rs.getString("ISTITUTO"));
 			    bean.setDescrizione(rs.getString("DESCRIZIONE"));
-			    bean.setAnnoInizio(rs.getDate("ANNOINIZIO"));
-			    bean.setAnnoFine(rs.getDate("ANNOFINE"));
+			    bean.setAnnoInizio(Utils.toDate(rs.getString("ANNOINIZIO")));
+			    bean.setAnnoFine(Utils.toDate(rs.getString("ANNOFINE")));
 				certificazioni.add(bean);
 			}
 

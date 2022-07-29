@@ -34,12 +34,12 @@ public class CertificazioneDaoTest {
 		c= new CertificazioneEntity();
 		dao = new CertificazioneDao();
 		
-		c.setIdCertificazione(123456);
-		c.setFormatore(24);
-		c.setNome("INGLESE B2");
-		c.setTipologia("CERTIFICATO LINGUA INGLESE");
+		c.setIdCertificazione(223456);
+		c.setFormatore(1);
+		c.setNome("CISCO");
+		c.setTipologia("CERTIFICATO RETI CISCO");
 		c.setIstituto("KENNEDY");
-		c.setDescrizione("CERTIFICATO LINGUA INGLESE EUROPEO LIVELLO INTERMEDIO");
+		c.setDescrizione("CERTIFICATO RETI CISCO");
 		java.sql.Date d1 = Utils.toDate("10-02-2020");
 		c.setAnnoInizio(d1);
 		java.sql.Date d2 = Utils.toDate("15-07-2020");
@@ -63,5 +63,7 @@ public class CertificazioneDaoTest {
 		assertTrue(value);
 		
 	}
+	
+	
 
 }

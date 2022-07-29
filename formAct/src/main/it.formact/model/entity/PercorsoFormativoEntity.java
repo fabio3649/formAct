@@ -2,6 +2,8 @@ package model.entity;
 
 import java.io.Serializable;
 
+import model.utils.Utils;
+
 
 
 public class PercorsoFormativoEntity implements Serializable{
@@ -92,6 +94,26 @@ public class PercorsoFormativoEntity implements Serializable{
 	public void setCosto(double costo) {
 		this.costo = costo;
 	}
+	
+	
+	@Override
+	public boolean equals(Object o) {
+		if( o instanceof PercorsoFormativoEntity) {
+			PercorsoFormativoEntity e = (PercorsoFormativoEntity)o;		
+			return id == e.id &&
+				   (id_formatore == e.id_formatore) &&
+				   (nome == e.nome || (nome != null && e.nome != null && nome.equals(e.nome))) &&
+				   (categoria == e.categoria) &&
+				   (descrizione == e.descrizione || (descrizione != null && e.descrizione != null && descrizione.equals(e.descrizione))) &&
+				   (indice_contenuti == e.indice_contenuti || (indice_contenuti != null && e.indice_contenuti != null && indice_contenuti.equals(e.indice_contenuti))) &&
+				   (num_lezioni == e.num_lezioni) &&
+				   (costo == e.costo) &&
+				   (validate == e.validate);
+		}else
+			return false;
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "PercorsoFormativo [id=" + id + ", id_formatore=" + id_formatore + ", nome=" + nome

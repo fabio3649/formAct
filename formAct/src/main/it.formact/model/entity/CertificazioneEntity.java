@@ -105,7 +105,7 @@ public class CertificazioneEntity implements Serializable{
 			CertificazioneEntity e = (CertificazioneEntity)o;		
 			return idCertificazione == e.idCertificazione &&
 				   (formatore == e.formatore ) &&
-				   (nome == e.nome || (nome != null && e.nome != null && nome.equals(e.nome))) &&
+				   (nome == e.nome || (nome != null && e.nome != null && nome.equalsIgnoreCase(e.nome))) &&
 				   (tipologia == e.tipologia || (tipologia != null && e.tipologia != null && tipologia.equalsIgnoreCase(e.tipologia))) &&
 				   (istituto == e.istituto || (istituto != null && e.istituto != null && istituto.equalsIgnoreCase(e.istituto))) &&
 				   (descrizione == e.descrizione || (descrizione != null && e.descrizione != null && descrizione.equals(e.descrizione))) &&

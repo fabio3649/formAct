@@ -40,17 +40,7 @@ private Connection getConnection() throws SQLException{
                                     
 	private static final String TABLE_NAME = "disponibilita";
 	
-	// creazione id studente dinamico
-	/*public int nextId() throws SQLException {
-		
-		ArrayList<DisponibilitaEntity> disps = (ArrayList<DisponibilitaEntity>) this.doRetrieveAll();
-		if(disps.size()==0)
-			return 1;
-		int next = (disps.get(disps.size()-1).getIdDisp())+1;
-		
-		return next;
-
-	} */
+	
 
 	
 	public int doSave(Object bean) throws SQLException {
@@ -70,7 +60,7 @@ private Connection getConnection() throws SQLException{
 			//id = this.nextId();
 			preparedStatement.setInt(1, id);
 			preparedStatement.setString(2, disp.getGiornoSettimana());
-			preparedStatement.setTime(3, Time.valueOf(disp.getOrario()));
+			preparedStatement.setString(3,  disp.getOrario());
 			preparedStatement.setInt(4, disp.getStato());
 			preparedStatement.setInt(5, disp.getIdPercorso());
 			preparedStatement.executeUpdate();
@@ -145,7 +135,7 @@ private Connection getConnection() throws SQLException{
 				bean.setIdDisp(rs.getInt(1));
 				bean.setGiornoSettimana(rs.getString(2));
 				
-				bean.setOrario(rs.getObject(3, LocalTime.class));
+				bean.setOrario(rs.getString(3));
 				bean.setStato(rs.getInt(4));
 				bean.setIdPercorso(rs.getInt(5));
 	       
@@ -159,6 +149,33 @@ private Connection getConnection() throws SQLException{
 		}
 		
 		return bean;
+	}
+	
+	public boolean updateStatus(int id, int status) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		int result = 0;
+			
+		String selectSQL = "UPDATE " + DisponibilitaDao.TABLE_NAME + " SET STATO = ? " + " WHERE ID = ? ";
+		    
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setInt(1, status);
+			preparedStatement.setInt(2, id);
+		
+			result = preparedStatement.executeUpdate();
+		
+		} finally {
+			try {
+				if (preparedStatement != null)
+						preparedStatement.close();
+			} finally {
+				if (connection != null)
+					connection.close();
+			}
+		}
+		return (result != 0);
 	}
 	
 
@@ -187,7 +204,7 @@ private Connection getConnection() throws SQLException{
 
 				bean.setIdDisp(rs.getInt("ID"));
 				bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
-				bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
+				bean.setOrario(rs.getString("ORARIO"));
 				bean.setStato(rs.getInt("STATO"));
 				bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
 				disps.add(bean);
@@ -229,7 +246,7 @@ private Connection getConnection() throws SQLException{
 
 					bean.setIdDisp(rs.getInt("ID"));
 					bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
-					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
+					bean.setOrario(rs.getString("ORARIO"));
 					bean.setStato(rs.getInt("STATO"));
 					bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
 					disps.add(bean);
@@ -266,10 +283,10 @@ private Connection getConnection() throws SQLException{
 				while (rs.next()) {
 					
 					DisponibilitaEntity bean = new DisponibilitaEntity();
-
+ 
 					bean.setIdDisp(rs.getInt("ID"));
 					bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
-					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
+					bean.setOrario(rs.getString("ORARIO"));
 					bean.setStato(rs.getInt("STATO"));
 					bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
 					disps.add(bean);
@@ -309,7 +326,7 @@ private Connection getConnection() throws SQLException{
 
 					bean.setIdDisp(rs.getInt("ID"));
 					bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
-					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
+					bean.setOrario(rs.getString("ORARIO"));
 					bean.setStato(rs.getInt("STATO"));
 					bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
 					disps.add(bean);
@@ -349,7 +366,7 @@ private Connection getConnection() throws SQLException{
 
 					bean.setIdDisp(rs.getInt("ID"));
 					bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
-					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
+					bean.setOrario(rs.getString("ORARIO"));
 					bean.setStato(rs.getInt("STATO"));
 					bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
 					disps.add(bean);
@@ -387,7 +404,7 @@ private Connection getConnection() throws SQLException{
 
 					bean.setIdDisp(rs.getInt("ID"));
 					bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
-					bean.setOrario(rs.getObject("ORARIO", LocalTime.class));
+					bean.setOrario(rs.getString("ORARIO"));
 					bean.setStato(rs.getInt("STATO"));
 					bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
 					disps.add(bean);

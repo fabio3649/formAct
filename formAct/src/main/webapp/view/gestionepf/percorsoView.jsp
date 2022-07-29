@@ -4,12 +4,12 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Scheda percorso formativo</title>
+<title>Scheda percorso formativo </title>
 </head>
 <body>
 <%
 
-	int id = Integer.parseInt(request.getParameter("idPercorso"));
+	int id = (int) (request.getAttribute("idPercorso"));
 	PercorsoFormativoDao dao = new PercorsoFormativoDao();
 	PercorsoFormativoEntity p = (PercorsoFormativoEntity) dao.doRetrieveByKey(id);
 	FormatoreDao daoF = new FormatoreDao();
@@ -24,6 +24,9 @@
 		    <h3> <%=p.getIndice_contenuti() %></h3> <br> <br>
 		    <h3> <%=p.getNum_lezioni() %></h3>
 		    <h3> <%=p.getCosto() %></h3>
+		    
+		    
+		    
 		    
 
 </body>

@@ -8,11 +8,8 @@
 </head>
 <body>
 	<%
-						AgendaCorsi ag = new AgendaCorsi();
-						ArrayList<Calendario> agenda = new ArrayList<Calendario>();
-						
-						
-						
+	Settimana ag = new Settimana();
+					ArrayList<Calendario> agenda = new ArrayList<Calendario>();
 	%>
 				
 				<div>

@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -36,17 +37,7 @@ private Connection getConnection() throws SQLException{
                                     
 	private static final String TABLE_NAME = "interesse";
 	
-	// creazione id studente dinamico
-	public int nextId() throws SQLException {
-		
-		ArrayList<InteresseEntity> interessi = (ArrayList<InteresseEntity>) this.doRetrieveAll();
-		if(interessi.size()==0)
-			return 1;
-		int next = (interessi.get(interessi.size()-1).getIdInteresse())+1;
-		
-		return next;
-
-	}
+	
 
 	
 	public int doSave(Object bean) throws SQLException {
@@ -61,22 +52,26 @@ private Connection getConnection() throws SQLException{
 		int id = 0;
 		try {
 			connection = getConnection();
-			preparedStatement = connection.prepareStatement(insertSQL);
-			id = this.nextId();
-			preparedStatement.setInt(1, this.nextId());
+			preparedStatement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setInt(1, id);
 			preparedStatement.setString(2, interesse.getNome());
 			preparedStatement.executeUpdate();
+			ResultSet rs = preparedStatement.getGeneratedKeys();
+			if ( rs.next()) {   // generazione nuova chiave primaria
+				id = rs.getInt(1);
+				
+			}
+			else { id = 1;//;
+			}
 			connection.setAutoCommit(false);
 			connection.commit();
 		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
+		
+		interesse.setIdInteresse(id);
 		return id;
 	}
 		
@@ -269,6 +264,39 @@ private Connection getConnection() throws SQLException{
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	protected final void closeConnection(Connection c) {
+		if( c != null)
+			try {
+				c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+	}
+	
+	protected final void closePreparedStatement(PreparedStatement p) {
+		if( p != null)
+			try {
+				p.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+	
+	protected final void closeResultSet(ResultSet rs) {
+		if( rs != null)
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+	}
+
+
+
+	
 	
 	
 	}

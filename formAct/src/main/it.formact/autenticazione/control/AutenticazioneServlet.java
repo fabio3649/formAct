@@ -29,15 +29,10 @@ import model.entity.StudenteEntity;
 @WebServlet("/AutenticazioneServlet/*")
 public class AutenticazioneServlet extends AbstractController{
 
-
-	
 	public AutenticazioneServlet() {
 		super();
-		
-	
 	}
-
-
+	
 	@Override
 	protected Map<String, Service> initServices() {
 		// TODO Auto-generated method stub
@@ -49,20 +44,4 @@ public class AutenticazioneServlet extends AbstractController{
 				m.put("MODIFICAPROFILOSERVICE", new ModificaProfiloService());
 				return m; 
 	}	 
-	   
-	    
-	  
-	  
-	
-	
-	
-	
-	
-
-
-	
-
-
-	
-
 }

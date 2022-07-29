@@ -51,22 +51,21 @@ public class AutenticazioneService implements Service{
 	public Action process(String serviceName, HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		if(serviceName.equalsIgnoreCase("LoginService")) {
-		try {
-			if(checkTrainerLogin(req) || checkStudentLogin(req)){
-				//login effettuato con successo torna alla home
-				return homePage;
-			}else {
-				//login fallito
-				req.getSession().setAttribute("logError", "true");
-				return errorPage;
+			try {
+				if(checkTrainerLogin(req) || checkStudentLogin(req)){
+					//login effettuato con successo torna alla home
+					return homePage;
+				}else {
+					//login fallito
+					req.getSession().setAttribute("logError", "true");
+					return errorPage;
+				}
+			}catch(SQLException e) {
+				throw new ServletException(e);
 			}
-		}catch(SQLException e) {
-			throw new ServletException(e);
-		}
-		
+			
 		}
 		if(serviceName.equalsIgnoreCase("LogoutService")) {
-			
 			//chiamata metodo CanLogOut
 			canLogout(req);
 		}
@@ -116,16 +115,14 @@ public class AutenticazioneService implements Service{
 					return true;
 				}
 			}
-		}
-		
+		}	
 		return false;
 	}
 	
 	public boolean canLogout(HttpServletRequest req) {
 		HttpSession session= req.getSession();
 		
-		if((session != null) && (session.getAttribute("Validation")!=null) && (session.getAttribute("currentId")!=null) )
-			{
+		if((session != null) && (session.getAttribute("Validation")!=null) && (session.getAttribute("currentId")!=null) ){
 		
 				session.setAttribute("Validation", "false");
 				session.removeAttribute("role");
@@ -133,9 +130,7 @@ public class AutenticazioneService implements Service{
 			
 				return true;
 		
-		} else
-		return false;
+		}else
+			return false;
 	}
-
-	
 }

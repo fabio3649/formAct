@@ -20,7 +20,7 @@ import model.entity.FormatoreEntity;
 import model.entity.PercorsoFormativoEntity;
 
 public class GestionePFService implements Service{
-	
+	  
 	PercorsoFormativoDao pfDao;
 	FormatoreDao fDao;
 	DisponibilitaDao daoDisp;

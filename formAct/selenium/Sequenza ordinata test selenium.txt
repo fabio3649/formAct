@@ -1,0 +1,4 @@
+1 autenticazione
+2 registrazione
+3 creazione percorso
+4 iscrizione

@@ -116,6 +116,21 @@ public class PercorsoFormativoService implements Service{
 		int k = Integer.parseInt(req.getParameter("iterator"));
 		
 		for(int j=0;j<k;j++) {
+			String isSelected = req.getParameter("giorno"+j+"IsSelected");
+			if (isSelected.equalsIgnoreCase("true")) {
+				DisponibilitaEntity d = (DisponibilitaEntity) dao.doRetrieveByKey(Integer.parseInt(req.getParameter("giorno"+j)));
+				i.setDataPagamento(currentDate); 
+				i.setGiorno(d.getGiornoSettimana());
+				i.setMetodoPagamento(metodoPagamento); 
+				i.setOrario(d.getOrario());
+				i.setPercorsoFormativo(idPF);
+				i.setStudente(idStudente);
+				iDao.doSave(i);				
+				dDao.updateStatus(d.getIdDisp(), 0);
+			}
+		}
+		/*
+		for(int j=0;j<k;j++) {
 			DisponibilitaEntity d = (DisponibilitaEntity) dao.doRetrieveByKey(Integer.parseInt(req.getParameter("giorno"+j)));
 			i.setDataPagamento(currentDate); 
 			i.setGiorno(d.getGiornoSettimana());
@@ -140,7 +155,7 @@ public class PercorsoFormativoService implements Service{
 		if(n == disp.size())
 			pfDao.validation(0,idPF);
 			
-		
+		*/
 		return true;
 		
 		

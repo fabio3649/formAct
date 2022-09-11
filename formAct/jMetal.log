@@ -2,9 +2,9 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2022-09-11T17:19:58.603561400Z</date>
-  <millis>1662916798603</millis>
-  <nanos>561400</nanos>
+  <date>2022-09-11T18:43:23.466335500Z</date>
+  <millis>1662921803466</millis>
+  <nanos>335500</nanos>
   <sequence>0</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
@@ -14,9 +14,9 @@
   <message>Loggers configured with null</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:58.627782Z</date>
-  <millis>1662916798627</millis>
-  <nanos>782000</nanos>
+  <date>2022-09-11T18:43:23.489610200Z</date>
+  <millis>1662921803489</millis>
+  <nanos>610200</nanos>
   <sequence>1</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
@@ -26,45 +26,45 @@
   <message>Problem: Piano formativo personalizzato problem</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:58.628280800Z</date>
-  <millis>1662916798628</millis>
-  <nanos>280800</nanos>
+  <date>2022-09-11T18:43:23.489610200Z</date>
+  <millis>1662921803489</millis>
+  <nanos>610200</nanos>
   <sequence>2</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
   <class>pianoformativo.service.PianoFormativoService</class>
   <method>ottieniSoluzione</method>
   <thread>1</thread>
-  <message>Solution: [7.384629264952249, 8.327302823043519, 3.1123195774211876, 8.133183176014002, 3.0535481406192497, 5.254095885597687, 4.192999542365121, 6.386194518198814, 4.622297097134025, 9.81341665970688]</message>
+  <message>Solution: [8.646040940264292, 1.170631790670691, 3.677567700853997, 6.900159937643901, 9.753368831268649, 0.8788134830361756, 7.757087798459571, 4.713909864078852, 2.551160624398694, 2.25407723807193]</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:58.629109500Z</date>
-  <millis>1662916798629</millis>
-  <nanos>109500</nanos>
+  <date>2022-09-11T18:43:23.490613900Z</date>
+  <millis>1662921803490</millis>
+  <nanos>613900</nanos>
   <sequence>3</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
   <class>pianoformativo.service.PianoFormativoService</class>
   <method>ottieniSoluzione</method>
   <thread>1</thread>
-  <message>Evaluation: [-175.0]</message>
+  <message>Evaluation: [-210.0]</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:58.629609200Z</date>
-  <millis>1662916798629</millis>
-  <nanos>609200</nanos>
+  <date>2022-09-11T18:43:23.491124100Z</date>
+  <millis>1662921803491</millis>
+  <nanos>124100</nanos>
   <sequence>4</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
   <class>pianoformativo.service.PianoFormativoService</class>
   <method>ottieniSoluzione</method>
   <thread>1</thread>
-  <message>Total execution time: 22 ms</message>
+  <message>Total execution time: 4 ms</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:58.630162700Z</date>
-  <millis>1662916798630</millis>
-  <nanos>162700</nanos>
+  <date>2022-09-11T18:43:23.491124100Z</date>
+  <millis>1662921803491</millis>
+  <nanos>124100</nanos>
   <sequence>5</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
@@ -74,9 +74,9 @@
   <message>Description: Generational Genetic Algorithm</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:59.083954100Z</date>
-  <millis>1662916799083</millis>
-  <nanos>954100</nanos>
+  <date>2022-09-11T18:43:23.846150300Z</date>
+  <millis>1662921803846</millis>
+  <nanos>150300</nanos>
   <sequence>6</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
@@ -86,45 +86,45 @@
   <message>Problem: Piano formativo personalizzato problem</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:59.084963Z</date>
-  <millis>1662916799084</millis>
-  <nanos>963000</nanos>
+  <date>2022-09-11T18:43:23.847153800Z</date>
+  <millis>1662921803847</millis>
+  <nanos>153800</nanos>
   <sequence>7</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
   <class>pianoformativo.service.PianoFormativoService</class>
   <method>ottieniSoluzione</method>
   <thread>1</thread>
-  <message>Solution: [7.7224648845708295, 1.868056607835005, 15.107533990794266, 16.65547910645291, 4.082575829898359, 12.958797418380586, 0.8334233840538654, 9.583601969002913, 1.1988878306716135, 3.817426245524504]</message>
+  <message>Solution: [4.459309628938904, 10.231201613795331, 5.091142783544241, 12.516767053247612, 8.27412044494069, 3.7830880466530195, 10.384262629233245, 14.669844503033097, 2.735813561677168, 13.137179036934723]</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:59.084963Z</date>
-  <millis>1662916799084</millis>
-  <nanos>963000</nanos>
+  <date>2022-09-11T18:43:23.847153800Z</date>
+  <millis>1662921803847</millis>
+  <nanos>153800</nanos>
   <sequence>8</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
   <class>pianoformativo.service.PianoFormativoService</class>
   <method>ottieniSoluzione</method>
   <thread>1</thread>
-  <message>Evaluation: [-910.0]</message>
+  <message>Evaluation: [-1030.0]</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:59.085963300Z</date>
-  <millis>1662916799085</millis>
-  <nanos>963300</nanos>
+  <date>2022-09-11T18:43:23.847153800Z</date>
+  <millis>1662921803847</millis>
+  <nanos>153800</nanos>
   <sequence>9</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
   <class>pianoformativo.service.PianoFormativoService</class>
   <method>ottieniSoluzione</method>
   <thread>1</thread>
-  <message>Total execution time: 62 ms</message>
+  <message>Total execution time: 13 ms</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:59.086612Z</date>
-  <millis>1662916799086</millis>
-  <nanos>612000</nanos>
+  <date>2022-09-11T18:43:23.848151900Z</date>
+  <millis>1662921803848</millis>
+  <nanos>151900</nanos>
   <sequence>10</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
@@ -134,9 +134,9 @@
   <message>Description: Generational Genetic Algorithm</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:59.495037500Z</date>
-  <millis>1662916799495</millis>
-  <nanos>37500</nanos>
+  <date>2022-09-11T18:43:24.144780300Z</date>
+  <millis>1662921804144</millis>
+  <nanos>780300</nanos>
   <sequence>11</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
@@ -146,45 +146,45 @@
   <message>Problem: Piano formativo personalizzato problem</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:59.496036800Z</date>
-  <millis>1662916799496</millis>
-  <nanos>36800</nanos>
+  <date>2022-09-11T18:43:24.146182100Z</date>
+  <millis>1662921804146</millis>
+  <nanos>182100</nanos>
   <sequence>12</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
   <class>pianoformativo.service.PianoFormativoService</class>
   <method>ottieniSoluzione</method>
   <thread>1</thread>
-  <message>Solution: [1.2036888747173995, 1.307892873426292, 10.54548648094364, 6.0869088935436295, 3.6898945334299453, 5.636592472287896, 6.95410641267801, 5.199260798329838, 2.8311247648650633, 1.923754240355525]</message>
+  <message>Solution: [7.381986431145064, 11.662085697657403, 9.383236908739553, 0.8071453113574378, 7.3103550368286605, 6.917526836190453, 8.57182868317724, 11.419316095803374, 11.91135620174109, 9.631795599543246]</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:59.496036800Z</date>
-  <millis>1662916799496</millis>
-  <nanos>36800</nanos>
+  <date>2022-09-11T18:43:24.146182100Z</date>
+  <millis>1662921804146</millis>
+  <nanos>182100</nanos>
   <sequence>13</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
   <class>pianoformativo.service.PianoFormativoService</class>
   <method>ottieniSoluzione</method>
   <thread>1</thread>
-  <message>Evaluation: [-165.0]</message>
+  <message>Evaluation: [-135.0]</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:59.497037Z</date>
-  <millis>1662916799497</millis>
-  <nanos>37000</nanos>
+  <date>2022-09-11T18:43:24.146182100Z</date>
+  <millis>1662921804146</millis>
+  <nanos>182100</nanos>
   <sequence>14</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>
   <class>pianoformativo.service.PianoFormativoService</class>
   <method>ottieniSoluzione</method>
   <thread>1</thread>
-  <message>Total execution time: 14 ms</message>
+  <message>Total execution time: 3 ms</message>
 </record>
 <record>
-  <date>2022-09-11T17:19:59.497420100Z</date>
-  <millis>1662916799497</millis>
-  <nanos>420100</nanos>
+  <date>2022-09-11T18:43:24.147191500Z</date>
+  <millis>1662921804147</millis>
+  <nanos>191500</nanos>
   <sequence>15</sequence>
   <logger>org.uma.jmetal.util.JMetalLogger</logger>
   <level>INFO</level>

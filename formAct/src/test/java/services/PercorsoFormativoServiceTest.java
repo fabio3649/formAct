@@ -58,6 +58,7 @@ public class PercorsoFormativoServiceTest extends Mockito{
 		disp.setOrario("10:00");
 		daoD.doSave(disp);
 		
+		req.addParameter("giorno0IsSelected", "true");
 		
 		req.getSession().setAttribute("currentId", 1);
 		req.setParameter("idPercorso", "2");

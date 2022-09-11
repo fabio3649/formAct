@@ -35,7 +35,7 @@ private Connection getConnection() throws SQLException{
 			System.out.println("Error:" + e.getMessage());
 			throw new SQLException(e);
 		}
-		
+		 
 		
 		
 	}
@@ -45,7 +45,7 @@ private Connection getConnection() throws SQLException{
 	
 		
 	
-		public void doSave(Object bean) throws SQLException {
+		public void doSave(IscrizioneEntity bean) throws SQLException {
 			
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
@@ -53,7 +53,7 @@ private Connection getConnection() throws SQLException{
 			
 			String insertSQL = "INSERT INTO " + IscrizioneDao.TABLE_NAME
 					+ " (STUDENTE, PERCORSO_FORMATIVO, GIORNO, ORARIO, METODO_PAGAMENTO, DATA_PAGAMENTO)"
-					+ " VALUES (?, ?, ?, ?, ?, ?)";
+					+ " VALUES (?, ?, ?, ?, ?, str_to_date(?,'%d-%m-%Y'))";
 			
 			try {
 				connection = getConnection();
@@ -61,7 +61,7 @@ private Connection getConnection() throws SQLException{
 				preparedStatement.setInt(1, iscrizione.getStudente());
 				preparedStatement.setInt(2, iscrizione.getPercorsoFormativo());
 				preparedStatement.setString(3, iscrizione.getGiorno());
-				preparedStatement.setTime(4, Time.valueOf(iscrizione.getOrario()));
+				preparedStatement.setString(4, iscrizione.getOrario());
 				preparedStatement.setString(5, iscrizione.getMetodoPagamento());
 				if (iscrizione.getDataPagamento() == null)
 					preparedStatement.setNull(6, java.sql.Types.VARCHAR);
@@ -72,15 +72,13 @@ private Connection getConnection() throws SQLException{
 				connection.setAutoCommit(false);
 				connection.commit();
 			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
+			
+			
 		}
+		
 			
 		
 
@@ -103,17 +101,13 @@ private Connection getConnection() throws SQLException{
 				preparedStatement.setInt(2, percorso);
 
 				result = preparedStatement.executeUpdate();
+				return true;
 
 			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
-			return (result != 0);
+			
 		}
 		
 
@@ -123,10 +117,10 @@ private Connection getConnection() throws SQLException{
 		 * @throws ParseException 
 		 * 
 		 */
-		public Object doRetrieveByStudent(int studente) throws SQLException, ParseException {    // restituisce una entry di iscrizione per id studente, #iscrizione di uno studente#
+		public ArrayList<IscrizioneEntity> doRetrieveByStudent(int studente) throws SQLException, ParseException {    // restituisce una entry di iscrizione per id studente, #iscrizione di uno studente#
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
-            
+            ResultSet rs = null;
 			
 			
 			ArrayList<IscrizioneEntity> iscrizioni = new ArrayList<IscrizioneEntity>();
@@ -134,7 +128,7 @@ private Connection getConnection() throws SQLException{
 			String selectSQL = "SELECT * FROM " + IscrizioneDao.TABLE_NAME + " WHERE STUDENTE = ?";
 			
 			if (iscrizioni != null && !iscrizioni.equals("")) {
-				selectSQL += " ORDER BY STUDENTE";  
+				selectSQL += " ORDER BY GIORNO";  
 			}
 
 			try {
@@ -142,7 +136,7 @@ private Connection getConnection() throws SQLException{
 				preparedStatement = connection.prepareStatement(selectSQL);
 				preparedStatement.setInt(1, studente);
 
-				ResultSet rs = preparedStatement.executeQuery();
+				 rs = preparedStatement.executeQuery();
 
 				while (rs.next()) {
 					
@@ -158,14 +152,10 @@ private Connection getConnection() throws SQLException{
 				    
 				}
 
-			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+			}  finally {
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
 			return iscrizioni;
 		}
@@ -175,7 +165,7 @@ private Connection getConnection() throws SQLException{
 		public ArrayList<IscrizioneEntity> doRetrieveAll() throws SQLException, ParseException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
-
+			ResultSet rs = null;
 			ArrayList<IscrizioneEntity> iscrizioni = new ArrayList<IscrizioneEntity>();
 
 			String selectSQL = "SELECT * FROM " + IscrizioneDao.TABLE_NAME;
@@ -188,7 +178,7 @@ private Connection getConnection() throws SQLException{
 				connection = getConnection();
 				preparedStatement = connection.prepareStatement(selectSQL);
 
-				ResultSet rs = preparedStatement.executeQuery();
+				rs = preparedStatement.executeQuery();
 
 				while (rs.next()) {
 					
@@ -203,14 +193,10 @@ private Connection getConnection() throws SQLException{
 					iscrizioni.add(bean);
 				}
 
-			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+			}  finally {
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
 			return iscrizioni;
 		}
@@ -218,7 +204,7 @@ private Connection getConnection() throws SQLException{
 		public ArrayList<IscrizioneEntity> doRetrieveAllByDay(int studente, String giorno) throws SQLException, ParseException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
-
+			ResultSet rs = null;
 			ArrayList<IscrizioneEntity> iscrizioni = new ArrayList<IscrizioneEntity>();
 
 			String selectSQL = "SELECT DISTINCT * FROM " + IscrizioneDao.TABLE_NAME + " WHERE STUDENTE = ? AND GIORNO = ?"; 
@@ -232,7 +218,7 @@ private Connection getConnection() throws SQLException{
 				preparedStatement = connection.prepareStatement(selectSQL);
 				preparedStatement.setInt(1, studente);
 				preparedStatement.setString(2, giorno);
-				ResultSet rs = preparedStatement.executeQuery();
+				 rs = preparedStatement.executeQuery();
 				
 
 
@@ -250,20 +236,43 @@ private Connection getConnection() throws SQLException{
 					iscrizioni.add(bean);
 				}
 
-			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+			}  finally {
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
 			return iscrizioni;
 		}
 
 		
-
+		protected final void closeConnection(Connection c) {
+			if( c != null)
+				try {
+					c.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+		
+		protected final void closePreparedStatement(PreparedStatement p) {
+			if( p != null)
+				try {
+					p.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		
+		protected final void closeResultSet(ResultSet rs) {
+			if( rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}			
+		}
 
 		
 		

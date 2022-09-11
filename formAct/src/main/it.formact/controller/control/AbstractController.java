@@ -36,13 +36,15 @@ public abstract class AbstractController extends HttpServlet{
 		String path = request.getRequestURI();
 		int pos = path.lastIndexOf('/');
 		path = path.substring(pos+1); 
-		System.out.println(path);
+		System.out.println("PATH DELLA RICHIESTA CLIENT  : " + path);
+		if (path.contains("Service")) {
 		Service service = services.get(path.toUpperCase());
-
+		
 		boolean ok = preProcess(path, request, response);
 		Action action = null;
 		if( ok ) {
 			action = service.process(path, request, response);
+			
 			if(!action.isError())
 				ok = postProcess(path, request, response);
 
@@ -56,7 +58,9 @@ public abstract class AbstractController extends HttpServlet{
 			response.sendRedirect(action.getPage());
 		else
 			request.getRequestDispatcher(action.getPage()).forward(request, response);
-		
+		}
+		else 
+			System.out.println("errore nella request!");
 	}	
 	
 	/**

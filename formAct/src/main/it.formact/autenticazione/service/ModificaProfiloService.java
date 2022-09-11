@@ -4,20 +4,25 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ibm.icu.impl.UResource.Array;
 
 import controller.control.Action;
 import controller.control.Service;
 import model.dao.FormatoreDao;
 import model.dao.InteresseDao;
 import model.dao.InteresseStudenteDao;
+import model.dao.PreferenzaStudenteDao;
 import model.dao.StudenteDao;
 import model.entity.FormatoreEntity;
 import model.entity.InteresseEntity;
 import model.entity.InteresseStudenteEntity;
+import model.entity.PreferenzaStudenteEntity;
 import model.entity.StudenteEntity;
 import model.utils.Utils;
 
@@ -36,22 +41,34 @@ public class ModificaProfiloService implements Service{
 		FormatoreDao fDao;
 		InteresseDao iDao;
 		InteresseStudenteDao isDao;
-		Action errorPage = new Action("/formAct/view/errorPages/errorEditProfile.jsp", true, true);
+		PreferenzaStudenteDao psDao;
+		//redirect
+		Action errorPage = new Action("/formAct/view/messagePages/Errori.jsp", true, true);
 		Action homePage = new Action("/formAct/view/index/index.jsp",true,true);
-	
+		Action profiloPage = new Action("/formAct/view/autenticazione/Profilo.jsp",true,true);
+		
+		
 		public ModificaProfiloService() {
 			sDao = new StudenteDao();
 			fDao = new FormatoreDao();
 			iDao = new InteresseDao();
 			isDao = new InteresseStudenteDao();
+			psDao = new PreferenzaStudenteDao();
 		} 
+		
 		@Override
 		public Action process(String serviceName, HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 			// TODO Auto-generated method stub
 			if(serviceName.equalsIgnoreCase("ModificaProfiloService")) {
 				// chiamata metodo modificaProfilo
 				try {
-					modificaProfilo(req);
+					if (modificaProfilo(req)) {
+						return homePage;
+					}
+					else {
+						req.getSession().setAttribute("erroreModificaProfilo", "true");
+						return errorPage;
+					}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -59,29 +76,39 @@ public class ModificaProfiloService implements Service{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			return homePage;
 			} 
 			
 			if(serviceName.equalsIgnoreCase("ModificaPasswordService")) {
 				// chiamata metodo modificaPassword
 				try {
-					modificaPassword(req);
+					if(modificaPassword(req)) {
+						return profiloPage;						
+					}
+					else {
+						req.getSession().setAttribute("erroreModificaPassword", "true");
+						return errorPage;
+					}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				return homePage;
 			}
 			
 			if(serviceName.equalsIgnoreCase("ModificaInteressiService")) {
 				// chiamata metodo modificaInteressi
 				try {
-					modificaInteressi(req);
+					if (modificaInteressi(req)) {
+						return homePage;
+					}
+					else {
+						req.getSession().setAttribute("erroreModificaInteressi", "true");
+						return errorPage;
+					}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				return homePage;
+				
 			}
 			
 			 
@@ -109,19 +136,23 @@ public class ModificaProfiloService implements Service{
 			//caso in cui l'uente è un Formatore
 			if(role.equals("Formatore")) {
 				String email = req.getParameter("email");
-				String country = req.getParameter("country");
+				
 				String cc = req.getParameter("cc");
 				
-				if(fDao.updateTrainer(id, email, country, cc))
+				if(fDao.updateTrainer(id, email, cc)) {
+					req.getSession().setAttribute("utente", fDao.doRetrieveByKey(id));
 					return true;
+				}
 			}
 			//caso in cui l'uente è uno Studente
 			if(role.equals("Studente")) {
 				String email = req.getParameter("email");
-				String country = req.getParameter("country");
 				
-				if(sDao.updateStudent(id, email, country))
+				
+				if(sDao.updateStudent(id, email)) {
+					req.getSession().setAttribute("utente", sDao.doRetrieveByKey(id));
 					return true;
+				}
 			}
 		}
 		return false;
@@ -131,6 +162,7 @@ public class ModificaProfiloService implements Service{
 		 
 		//Inizializzazione variabili
 		
+		 
 		int currentId= (int) req.getSession().getAttribute("currentId");
 		
 		try {
@@ -165,6 +197,36 @@ public class ModificaProfiloService implements Service{
 			e.printStackTrace();
 		}
 		
+		ArrayList<String> giorni = new ArrayList<>(Arrays.asList("lunedì","martedì","mercoledì","giovedì","venerdì"));
+		
+		for(String s : giorni) {
+			if(req.getParameter(s)!=null) {
+				try {
+					if(!psDao.isContent(currentId, s)) {
+						PreferenzaStudenteEntity ps = new PreferenzaStudenteEntity();
+						ps.setStudente(currentId);
+						ps.setDisponibilita(s);
+						psDao.doSave(ps);
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else
+			{
+				try {
+					if(psDao.isContent(currentId, s)) {
+						psDao.doDelete(currentId, s);
+						
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		}
 		return true;
 	}
 	

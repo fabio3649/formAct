@@ -3,6 +3,8 @@ package model.entity;
 import java.io.Serializable;
 import java.sql.Date;
 
+import model.utils.Utils;
+
 
 
 public class ValutazioneEntity implements Serializable {
@@ -76,6 +78,21 @@ public class ValutazioneEntity implements Serializable {
 	public void setStelle(int stelle) {
 		this.stelle = stelle;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if( o instanceof ValutazioneEntity) {
+			ValutazioneEntity e = (ValutazioneEntity)o;		
+			return studente == e.studente &&
+				   formatore == e.formatore &&
+				   percorsoFormativo == e.percorsoFormativo &&
+				   (descrizione == e.descrizione || (descrizione != null && e.descrizione != null && descrizione.equals(e.descrizione))) &&		
+				   Utils.areDatesEqual(data,e.data) &&
+				   stelle == e.stelle;
+		}else
+			return false;
+	}
+
 
 	@Override
 	public String toString() {

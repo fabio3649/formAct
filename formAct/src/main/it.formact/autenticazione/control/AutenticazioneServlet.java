@@ -29,10 +29,18 @@ import model.entity.StudenteEntity;
 @WebServlet("/AutenticazioneServlet/*")
 public class AutenticazioneServlet extends AbstractController{
 
+	private static final long serialVersionUID = 1L;
+	
+	
+
 	public AutenticazioneServlet() {
 		super();
-	}
-	
+		
+
+		
+	 
+	} 
+
 	@Override
 	protected Map<String, Service> initServices() {
 		// TODO Auto-generated method stub
@@ -42,6 +50,7 @@ public class AutenticazioneServlet extends AbstractController{
 				m.put("MODIFICAINTERESSISERVICE", new ModificaProfiloService());
 				m.put("MODIFICAPASSWORDSERVICE", new ModificaProfiloService());
 				m.put("MODIFICAPROFILOSERVICE", new ModificaProfiloService());
+				m.put("DISISCRIZIONEPIATTAFORMASERVICE", new AutenticazioneService());
 				return m; 
 	}	 
 }

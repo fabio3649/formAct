@@ -38,6 +38,16 @@ public class InteresseStudenteEntity implements Serializable{
 		this.interesse = interesse;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if( o instanceof InteresseStudenteEntity) {
+			InteresseStudenteEntity e = (InteresseStudenteEntity)o;		
+			return interesse == e.interesse &&
+				   studente == e.studente;
+		}else
+			return false;
+	}
+	
 
 	@Override
 	public String toString() {

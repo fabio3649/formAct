@@ -3,6 +3,7 @@ package services;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -24,7 +25,12 @@ import gestionepf.service.GestionePFService;
 import model.dao.PercorsoFormativoDao;
 import model.entity.DisponibilitaEntity;
 import model.entity.PercorsoFormativoEntity;
-
+/*
+ * 
+ * Classe di test che testa il servizio di creazione di un percorso formativo, CreatorService.
+ * 
+ * 
+ * */
 public class CreatorServiceTest extends Mockito{
 	
 	private MockHttpServletRequest req;
@@ -63,7 +69,7 @@ public class CreatorServiceTest extends Mockito{
 		req.addParameter("nome", "percorsoTestNuovo");
 		req.addParameter("descrizione", "aggiunta percorso di prova per test in junit");
 		req.addParameter("categoria", "1");  // categoria attuali : 1 / 2 / 4
-		req.getSession().setAttribute("currentId", "1");
+		req.getSession().setAttribute("currentId", 1);
 		req.addParameter("indice", "Indice contenuti");
 		req.addParameter("costo", "10.00");
 		req.addParameter("lezioni", "50");
@@ -75,8 +81,35 @@ public class CreatorServiceTest extends Mockito{
 		
 		
 		String homePage = act.getPage();
+		//utilizzo redirect
+		// cambiare pagina di redirect
+		assertEquals("/formAct/view/gestionepf/PercorsoCreato.jsp",homePage);
 		
-		assertEquals("/formAct/view/gestionepf/percorsoView.jsp",homePage);
+		
+	}
+	
+	@Test
+	public void testCreazionePercorso2() throws SQLException, IOException, ServletException {
+		
+		//bean percorso
+		req.addParameter("nome", "percorso test id: 2");
+		req.addParameter("descrizione", "aggiunta percorso di prova per test in junit");
+		req.addParameter("categoria", "1");  // categoria attuali : 1 / 2 / 4
+		req.getSession().setAttribute("currentId", 1);
+		req.addParameter("indice", "Indice contenuti");
+		req.addParameter("costo", "10.00");
+		req.addParameter("lezioni", "50");
+		//bean disponibilità
+		req.addParameter("giorno", "lunedì");
+		req.addParameter("orario", "09:00");
+		
+		act = cr.process("CreatorService",req, res);
+		
+		
+		String homePage = act.getPage();
+		//utilizzo redirect
+		// cambiare pagina di redirect
+		assertEquals("/formAct/view/gestionepf/PercorsoCreato.jsp",homePage);
 		
 		
 	}

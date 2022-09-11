@@ -34,9 +34,9 @@ public class PreferenzaStudenteTest {
 	public void testGetSetDisponibilità() {
 		PreferenzaStudenteEntity p = new PreferenzaStudenteEntity();
 		
-		p.setDisponibilita(1);
+		p.setDisponibilita("lunedì");
 		
-		assertEquals(1, p.getDisponibilita());
+		assertEquals("lunedì", p.getDisponibilita());
 		
 	}
 	

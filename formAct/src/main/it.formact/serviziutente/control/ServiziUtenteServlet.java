@@ -14,27 +14,29 @@ import autenticazione.service.AutenticazioneService;
 import autenticazione.service.ModificaProfiloService;
 import controller.control.AbstractController;
 import controller.control.Service;
-import serviziutente.service.AgendaService;
+import serviziutente.service.UserService;
 
-/**
- * Servlet implementation class AgendaServlet
- */
-@WebServlet("/ServiziUtenteServlet")
+
+@WebServlet("/ServiziUtenteServlet/*")
 public class ServiziUtenteServlet extends AbstractController {
 	
-    
-    public ServiziUtenteServlet() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public ServiziUtenteServlet() {
         super();
         
     }
 
-	
     @Override
 	protected Map<String, Service> initServices() {
 		// TODO Auto-generated method stub
 				java.util.Map<String, Service> m = new java.util.HashMap<String, Service>();
-				//m.put("AGENDASERVICE", new AgendaService());
-				
+				m.put("GETAGENDASERVICE", new UserService());
+				m.put("VALUTAZIONESERVICE", new UserService());
+				m.put("VISUALIZZAPROFILOSERVICE", new UserService());
 				return m;
 	}	
 }

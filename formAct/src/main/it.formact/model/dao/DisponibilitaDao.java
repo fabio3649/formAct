@@ -381,6 +381,47 @@ private Connection getConnection() throws SQLException{
 			return disps;
 		}
 		
+		public ArrayList<DisponibilitaEntity> doRetrieveAllAvailable(int percorso) throws SQLException {
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+			ResultSet rs = null;
+			ArrayList<DisponibilitaEntity> disps = new ArrayList<DisponibilitaEntity>();
+
+			String selectSQL = "SELECT * FROM " + DisponibilitaDao.TABLE_NAME + " WHERE PERCORSOFORMATIVO = ? "
+					+ " AND STATO = 1";
+
+			/*if (disps != null && !disps.equals("")) {
+				selectSQL += " ORDER BY GIORNOSETTIMANA";  
+			}*/
+
+			try {
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS);
+				preparedStatement.setInt(1, percorso);
+
+				rs = preparedStatement.executeQuery();
+
+				while (rs.next()) {
+					
+					DisponibilitaEntity bean = new DisponibilitaEntity();
+
+					bean.setIdDisp(rs.getInt("ID"));
+					bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
+					bean.setOrario(rs.getString("ORARIO"));
+					bean.setStato(rs.getInt("STATO"));
+					bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
+					disps.add(bean);
+				}
+
+			} finally {
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
+			
+			}
+			return disps;
+		}
+		
 		
 		public ArrayList<DisponibilitaEntity> doRetrieveByGiornoAndPercorsoFormativo(String giorno, int percorsoFormativo) throws SQLException {
 			Connection connection = null;

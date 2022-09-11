@@ -113,6 +113,24 @@ public class PercorsoFormativoEntity implements Serializable{
 			return false;
 	}
 	
+	public PercorsoFormativoEntity clone() {
+		
+		PercorsoFormativoEntity copia = new PercorsoFormativoEntity();
+		
+		copia.setId(this.getId());
+		copia.setId_formatore(this.getId_formatore());
+		copia.setNome(this.getNome());
+		copia.setCategoria(this.getCategoria());
+		copia.setDescrizione(this.getDescrizione());
+		copia.setIndice_contenuti(this.getIndice_contenuti());
+		copia.setNum_lezioni(this.getNum_lezioni());
+		copia.setCosto(this.getCosto());
+		copia.setValidate(this.getValidate());
+		
+		return copia;
+		
+	}
+	
 	
 	@Override
 	public String toString() {

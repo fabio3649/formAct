@@ -120,20 +120,19 @@ public class FormatoreDao implements DaoInterface<FormatoreEntity>{
 			return (result != 0);
 		}
 		
-		public boolean updateTrainer(int id, String email, String country, String cc) throws SQLException {
+		public boolean updateTrainer(int id, String email,  String cc) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 			int result = 0;
 			
-			String selectSQL = "UPDATE " + FormatoreDao.TABLE_NAME + " SET EMAIL = ? , PAESEORIGINE = ? , CONTOCORRENTE = ? " + " WHERE IDFORMATORE = ? ";
+			String selectSQL = "UPDATE " + FormatoreDao.TABLE_NAME + " SET EMAIL = ? , CONTOCORRENTE = ? " + " WHERE IDFORMATORE = ? ";
 
 			try {
 				connection = getConnection();
 				preparedStatement = connection.prepareStatement(selectSQL,Statement.RETURN_GENERATED_KEYS);
 				preparedStatement.setString(1, email);
-				preparedStatement.setString(2, country);
-				preparedStatement.setString(3, cc);
-				preparedStatement.setInt(4, id);
+				preparedStatement.setString(2, cc);
+				preparedStatement.setInt(3, id);
 				
 				result = preparedStatement.executeUpdate();
 
@@ -210,9 +209,94 @@ public class FormatoreDao implements DaoInterface<FormatoreEntity>{
 				closeConnection(connection);
 			}
 			return bean;
-		}
+		} 
 		
-		public Object doRetrieveByMail(String email) throws SQLException {
+		public FormatoreEntity doRetrieveByNameSurname(String name, String surname) throws SQLException {
+			
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+			ResultSet rs = null;
+			
+			 
+			FormatoreEntity bean = new FormatoreEntity();
+	        
+			String selectSQL = "SELECT IDFORMATORE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, date_format(DATANASCITA,'%d-%m-%Y'), PAESEORIGINE, CODICEFISCALE, CONTOCORRENTE FROM " + FormatoreDao.TABLE_NAME + 
+					" WHERE NOME = ? AND COGNOME = ? ";
+
+			try {
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS);
+				preparedStatement.setString(1, name);
+				preparedStatement.setString(2, surname);
+
+				rs = preparedStatement.executeQuery();
+
+				while (rs.next()) {
+					bean.setId(rs.getInt(1));
+					bean.setEmail(rs.getString(2));
+					bean.setPassword(rs.getString(3));
+					bean.setName(rs.getString(4));
+					bean.setSurname(rs.getString(5));
+				    bean.setGender(rs.getString(6));
+		            bean.setBirthDate(Utils.toDate(rs.getString(7)));
+		            bean.setCountry(rs.getString(8));
+		            bean.setCodiceFiscale(rs.getString(9));
+		            bean.setContoCorrente(rs.getString(10));
+				}
+			}catch(ParseException e) {
+				throw new SQLException(e);
+			} finally {
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
+			}
+			return bean;
+		} 
+		
+		
+		public FormatoreEntity doRetrieveByCF(String cf) throws SQLException {
+			
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+			ResultSet rs = null;
+			
+			 
+			FormatoreEntity bean = new FormatoreEntity();
+	        
+			String selectSQL = "SELECT IDFORMATORE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, date_format(DATANASCITA,'%d-%m-%Y'), PAESEORIGINE, CODICEFISCALE, CONTOCORRENTE FROM " + FormatoreDao.TABLE_NAME + 
+					" WHERE CODICEFISCALE = ? ";
+
+			try {
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS);
+				preparedStatement.setString(1, cf);
+				
+
+				rs = preparedStatement.executeQuery();
+
+				while (rs.next()) {
+					bean.setId(rs.getInt(1));
+					bean.setEmail(rs.getString(2));
+					bean.setPassword(rs.getString(3));
+					bean.setName(rs.getString(4));
+					bean.setSurname(rs.getString(5));
+				    bean.setGender(rs.getString(6));
+		            bean.setBirthDate(Utils.toDate(rs.getString(7)));
+		            bean.setCountry(rs.getString(8));
+		            bean.setCodiceFiscale(rs.getString(9));
+		            bean.setContoCorrente(rs.getString(10));
+				}
+			}catch(ParseException e) {
+				throw new SQLException(e);
+			} finally {
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
+			}
+			return bean;
+		} 
+		
+		public FormatoreEntity doRetrieveByMail(String email) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 			ResultSet rs = null;

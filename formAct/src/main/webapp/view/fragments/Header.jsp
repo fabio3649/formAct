@@ -1,83 +1,99 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page 
+    language="java" 
+    contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"
+%>
+
+<%
+	String ruolo ="";
+	if(request.getSession().getAttribute("role")!=null) {
+    	 ruolo = (String) request.getSession().getAttribute("role");
+	}
+    String logError = (String) request.getSession().getAttribute("logError");
+%>
+
 <!DOCTYPE html>
+
 <html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
-	
-	<%
-		if(request.getSession().getAttribute("role")==null){
-	
-	%>
-	
-	
-	<!-- Navbar Utente -->
-	
-		<nav class="navbar navbar-expand-lg navbar-light"">
-	      <div class="container-fluid header">
-	      
-			<!-- Logo -->      
-	        <a class="navbar-brand" href="/formAct/view/index/index.jsp"><img src="/formAct/view/fragments/logo.png" alt="" width="40" height="40"></a>
-	        
-	        <!-- Media Queries -->
-	        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-	          <span class="navbar-toggler-icon"></span>
-	        </button>
-	        <div class="collapse navbar-collapse" id="navbarScroll">
-	          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-	            
-	            <!-- Primo Link -->
-	            <li class="nav-item">
-	              <a class="nav-link active" aria-current="page" href="#">Home</a>
-	            </li>
-	            
-	            <!-- Secondo Link -->
-	            <li class="nav-item">
-	              <a class="nav-link" href="#">Link</a>
-	            </li>
-	            
-	            <!-- Profilo -->
-	            <li class="nav-item dropdown">
-	              <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-	                Profilo
-	              </a>
-	              <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-	                <li><a class="dropdown-item" href="#">Action</a></li>
-	                <li><a class="dropdown-item" href="#">Another action</a></li>
-	                <li><hr class="dropdown-divider"></li>
-	                <li><a class="dropdown-item" href="#">Something else here</a></li>
-	              </ul>
-	            </li>
-	            <li class="nav-item">
-	              <a class="nav-link" href="/formAct/view/autenticazione/Login.jsp">Login</a>
-	              
-	            </li>
-	          </ul>
-	          <form class="d-flex">
-	            <input class="form-control me-2" type="search" placeholder="Cerca un Percorso Formativo..." aria-label="Search">
-	            <button class="btn btn-primary" type="button">Cerca</button>
-	          </form>
-	        </div>
-	      </div>
-	    </nav>
-	<% } %>    
-	    
-	<!-- Navbar Studente -->
-	
-	<% if(request.getSession().getAttribute("role")==null || request.getSession().getAttribute("role").equals("Studente")){ %>
-	
-	
-	<% } %>
-	<!-- Navbar Formatore -->
-	
-	 <% if(request.getSession().getAttribute("role")==null || request.getSession().getAttribute("role").equals("Formatore")){ %>
-	
-	
-	<% } %>
+  <head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+  </head>
+  
+  <body>
     
-	
-</body>
+    <nav class="navbar navbar-expand-lg navbar-light ">
+      
+      <!-- Logo -->
+      <div class="header_logo">
+        <a href="/formAct/view/index/index.jsp">
+          <img src="/formAct/view/immagini/logo.png" alt="Logo" width="40" height="40" >
+        </a>
+      </div>
+      <div class="col-lg-1 col-sm-6">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/formAct/view/index/index.jsp">Home</a>
+          </li>
+<%
+          
+          if (ruolo != null) {
+            if (ruolo.equalsIgnoreCase("Amministratore")) {
+%>
+  
+              <li class="nav-item">
+                <a class="nav-link" href="/formAct/view/amministrazione/Admin.jsp">Gestione formAct</a>
+              </li>
+<%
+            }
+            else if (ruolo.equalsIgnoreCase("Studente") || ruolo.equalsIgnoreCase("Formatore")) {
+%>
+              <li class="nav-item">
+                <a class="nav-link" href="/formAct/view/autenticazione/Profilo.jsp">Profilo</a>
+              </li>
+<%
+            }
+          }
+%>
+          <li class="nav-item">
+
+<%
+            
+            if (logError != null) {
+              if (logError.equalsIgnoreCase("true")) {
+%>
+                <a class="nav-link" href="/formAct/view/autenticazione/Login.jsp">Login</a>
+<%
+        	  }
+        	  else {
+%>
+                <a class="nav-link" href="${pageContext.request.contextPath}/AutenticazioneServlet/AutenticazioneService/LogoutService">Logout</a>
+<%
+              }
+            }
+            else {
+%>
+              <a class="nav-link" href="/formAct/view/autenticazione/Login.jsp">Login</a>  
+<%
+            }
+%>
+          </li>
+          <li class="nav-item">
+            <form class="d-flex" action="${pageContext.request.contextPath}/PercorsoFormativoServlet/RicercaPFService">
+              <input class="" type="search" id="argomento" name="argomento" placeholder="Cerca un percorso formativo..." aria-label="Search">
+              <button class="nav-link btn-dark" type="submit"><img src="/formAct/view/immagini/search-icon.png"></button>
+            </form>
+          </li>
+        </ul>
+      </div>
+      
+    </nav>
+    
+  </body>
 </html>

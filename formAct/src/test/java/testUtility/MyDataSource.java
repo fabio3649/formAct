@@ -34,7 +34,7 @@ public class MyDataSource implements javax.sql.DataSource {
 			com.mysql.cj.jdbc.Driver d;
 			
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/formact?user=root&password=fabio3649&serverTimezone=UTC");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/formact?user=root&password=utente&serverTimezone=UTC");
 			return conn;
 		}catch(Exception e) {
 			e.printStackTrace();

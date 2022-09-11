@@ -24,7 +24,7 @@ $(document).ready(function() {
 				// controllo se la nuova password inserita ha una lunghezza < 8	
 				if (nuovaPassword.length < 8) {
 					//Errore
-					var str = "*Nuova password non valida";
+					var str = "*Nuova password non valida, lunghezza caratteri < 8";
 					$("#errorePassword2").text(str);
 					controllo = true;
 					$('html, body').animate({scrollTop: 0}, 100);

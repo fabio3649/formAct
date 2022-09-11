@@ -22,7 +22,7 @@ import controller.control.AbstractController;
 import controller.control.Service;
 import gestionepf.service.GestionePFService;
 
-import gestionepf.service.PercorsiFormatoreService;
+
 import gestionepf.service.VisualizzaPercorsoService;
 import model.dao.CategoriaDao;
 import model.dao.DisponibilitaDao;
@@ -36,26 +36,25 @@ import model.entity.PercorsoFormativoEntity;
  */
 @WebServlet("/GestionePFServlet/*")
 public class GestionePFServlet extends AbstractController {
-	
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
-	public GestionePFServlet() {
+   
+    public GestionePFServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
+
+ 
+ 
+ 
 
     @Override
 	protected Map<String, Service> initServices() {
 		// TODO Auto-generated method stub
 				java.util.Map<String, Service> m = new java.util.HashMap<String, Service>();
 				m.put("CREATORSERVICE", new GestionePFService());
-				
 				m.put("DELETEPERCORSOSERVICE", new GestionePFService());
-				m.put("PERCORSIFORMATORESERVICE", new PercorsiFormatoreService());
 				m.put("VISUALIZZAPERCORSOSERVICE", new VisualizzaPercorsoService());
+				m.put("PERCORSIFORMATORESERVICE", new VisualizzaPercorsoService());
 				
 				return m;
 	}

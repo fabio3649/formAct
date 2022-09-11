@@ -1,69 +1,107 @@
-<%@ 
-    page language="java" 
-    contentType="text/html; charset=UTF-8"
+<%@ page 
+    language="java" 
+    contentType="text/html; charset=ISO-8859-1"
     pageEncoding="UTF-8"
     import="java.util.ArrayList"
     import="java.util.Iterator"
+    import="model.dao.FormatoreDao"
     import="model.entity.PercorsoFormativoEntity"
-%>
-
-<%
-	ArrayList<PercorsoFormativoEntity> percorsiFormativi = (ArrayList<PercorsoFormativoEntity>) session.getAttribute("percorsiFormativi");
-	System.out.println(percorsiFormativi.size());
+    import="model.entity.FormatoreEntity"
 %>
 
 <!DOCTYPE html>
+
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Insert title here</title>
-    </head>
+  <head>
+    <!-- basic -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
     
-    <body>
-        <h1>Risultati ricerca</h1>
-        
+    <title>Percorsi formativi</title>
+    
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="/formAct/view/css/bootstrap.min.css">
+    <!-- style css -->
+    <link rel="stylesheet" href="/formAct/view/css/unicoStile.css">
+    <!-- Responsive-->
+    <link rel="stylesheet" href="/formAct/view/css/responsive.css">
+    <!-- favicon -->
+    <link rel="icon" href="/formAct/view/immagini/favicon.png" type="image/gif" />
+    <!-- Tweaks for older IEs-->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+  </head>
+  
+  <body>
+    <!-------------------- Header -------------------->
+    <div class="header_section" style="background-color: #CFEDF0;">
+      <%@include file="/view/fragments/Header.jsp"%>
+    </div>
+    
+    <div class="wrapperTable">
 <%
-        if (percorsiFormativi != null && percorsiFormativi.size() > 0) {
+	  ArrayList<PercorsoFormativoEntity> percorsi = (ArrayList<PercorsoFormativoEntity>) session.getAttribute("percorsiFormativi");
+	  if(percorsi != null && percorsi.size() > 0) {
 %>
-            <table border="1">
-            	<thead>
-                	<tr>
-                		<th>ID</th>
-                		<th>ID Formatore</th>
-                		<th>Nome</th>
-                		<th>Categoria</th>
-                		<th>Descrizione</th>
-                		<th>Indice contenuti</th>
-                		<th>Numero lezioni</th>
-                		<th>Costo</th>
-                	</tr>
-            	</thead>
-            	<tbody>
+      
+  	    <div class="text-center mt-4 name" style="display: block;">
+  	      Percorsi formativi trovati:
+  	    </div> <br> <br>
+  	  
+  	    <div class="contenuto">
 <%
-                	for (PercorsoFormativoEntity percorsoFormativo : percorsiFormativi) {
+          FormatoreDao fDao = new FormatoreDao();
+          for(PercorsoFormativoEntity percorso : percorsi) {
+        	  FormatoreEntity formatore = fDao.doRetrieveByKey(percorso.getId_formatore());
+            
 %>
-            			<tr>
-            		    	<td><%= percorsoFormativo.getId() %></td>
-            		    	<td><%= percorsoFormativo.getId_formatore() %></td>
-            		    	<td><%= percorsoFormativo.getNome() %></td>
-            		    	<td><%= percorsoFormativo.getCategoria() %></td>
-            		    	<td><%= percorsoFormativo.getDescrizione() %></td>
-            		    	<td><%= percorsoFormativo.getIndice_contenuti() %></td>
-            		    	<td><%= percorsoFormativo.getNum_lezioni() %></td>
-            		    	<td><%= percorsoFormativo.getCosto() + " €"%></td>
-            			</tr>
+            <%= percorso.getNome() %> <br> Formatore: <%= formatore.getName() %> <%= formatore.getSurname() %> 
+           	<form action="${pageContext.request.contextPath}/GestionePFServlet/VisualizzaPercorsoService" method="post">
+           		<input type="hidden" value="<%=percorso.getId()%>" name="idPercorso"> 
+            	<button class="btn mt-3">Dettagli</button> 
+            </form>
+            <% if(request.getSession().getAttribute("validation")!=null && ruolo.equals("Studente")) {
+            	%>
+            
+            <form action="/formAct/view/percorsoformativo/Iscrizione.jsp" method="post">
+            	<input type="hidden" value="<%=percorso.getId()%>" name="idPercorso"> 
+            	<button class="btn mt-3">Iscriviti</button>
+            
+            </form>
+            <% } %>
+<%	
+          }
+%>
+  	    </div>
 <%
-            		}
+       
+	  }
+	  else {
 %>
-            	</tbody>
-            </table>
+ 	    <div class="text-center mt-4 name" style="display: block;">
+  	      Nessun percorso formativo trovato
+  	    </div> <br> <br>
 <%
-        }
-        else {
+	  }
 %>
-            <p>Nessun percorso formativo trovato!!</p>
-<%
-        }
-%>
-    </body>
+    </div>
+    
+    <!-------------------- Footer -------------------->
+    <%@include file="/view/fragments/Footer.jsp"%>
+  </body>
 </html>
+
+
+
+
+
+
+
+
+

@@ -102,52 +102,7 @@ private Connection getConnection() throws SQLException{
 		}
 		return (result != 0);
 	}
-	
-	
-	public ArrayList<InteresseStudenteEntity> doRetrieveAll() throws SQLException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-	
-		ArrayList<InteresseStudenteEntity> prefs = new ArrayList<InteresseStudenteEntity>();
-	
-		String selectSQL = "SELECT * FROM " + InteresseStudenteDao.TABLE_NAME;
-				
-		if (prefs != null && !prefs.equals("")) {
-			selectSQL += " ORDER BY STUDENTE";  
-		}
-	
-		try {
-			connection = getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
-		
-	
-			ResultSet rs = preparedStatement.executeQuery();
-	
-			while (rs.next()) {
-				
-				InteresseStudenteEntity bean = new InteresseStudenteEntity();
-				bean.setStudente(rs.getInt("STUDENTE"));
-				bean.setInteresse(rs.getInt("INTERESSE"));
-				prefs.add(bean);
-			}
-	
-		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
-		}
-		return prefs;
-	}
-
-
-	
-	
-	
-	public boolean isContent(int idInteresse,int idStudente) throws SQLException {
+public boolean isContent(int idInteresse,int idStudente) throws SQLException {
 		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -186,6 +141,148 @@ private Connection getConnection() throws SQLException{
 			return false;
 	
 		return true;
+	}
+	
+	public ArrayList<InteresseStudenteEntity> doRetrieveAll() throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+	
+		ArrayList<InteresseStudenteEntity> prefs = new ArrayList<InteresseStudenteEntity>();
+		ResultSet rs = null;
+		String selectSQL = "SELECT * FROM " + InteresseStudenteDao.TABLE_NAME;
+				
+		if (prefs != null && !prefs.equals("")) {
+			selectSQL += " ORDER BY STUDENTE";  
+		}
+	
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+		
+	
+			rs = preparedStatement.executeQuery();
+	
+			while (rs.next()) {
+				
+				InteresseStudenteEntity bean = new InteresseStudenteEntity();
+				bean.setStudente(rs.getInt("STUDENTE"));
+				bean.setInteresse(rs.getInt("INTERESSE"));
+				prefs.add(bean);
+			}
+	
+		} finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
+		}
+		return prefs;
+	}
+
+	
+	/**
+	 * Il seguente metodo restituisce gli interessi dello studente.
+	 * 
+	 * @param idStudente: identificativo studente
+	 * @return gli interessi dello studente
+	 * @throws SQLException
+	 */
+	public ArrayList<String> doRetrieveInteressiStudente(int idStudente) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		ArrayList<String> interessiStudente = new ArrayList<>();
+		
+		String selectSQL = "SELECT interesse.nome FROM interesse_studente, interesse ";
+		selectSQL += " WHERE ";
+		selectSQL += " interesse_studente.interesse = interesse.idinteresse";
+		selectSQL += " AND interesse_studente.studente = ?";
+		
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, idStudente);
+			
+			 rs = preparedStatement.executeQuery();
+			
+			while (rs.next()) {
+				String nomeInteresse = rs.getString("nome");
+				
+				interessiStudente.add(nomeInteresse);
+			}
+		}
+		finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
+		}
+		
+		
+		// ritorno un array di interessi
+		return interessiStudente;
+	}
+	
+	public InteresseStudenteEntity doRetrieveByKeys(int studente , int interesse) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		 InteresseStudenteEntity bean  = new InteresseStudenteEntity();
+		
+		String selectSQL = "SELECT * FROM interesse_studente ";
+		selectSQL += " WHERE STUDENTE = ? AND INTERESSE = ? ";
+		
+		
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, studente);
+			preparedStatement.setInt(2, interesse);
+			
+			rs = preparedStatement.executeQuery();
+			
+			while (rs.next()) {
+				
+				bean.setStudente(rs.getInt("STUDENTE"));
+				bean.setInteresse(rs.getInt("INTERESSE"));
+			}
+		}
+	 finally {
+		closeResultSet(rs);
+		closePreparedStatement(preparedStatement);
+		closeConnection(connection);
+	}
+	return bean;
+	}
+
+	
+	
+	
+	protected final void closeConnection(Connection c) {
+		if( c != null)
+			try {
+				c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+	}
+	
+	protected final void closePreparedStatement(PreparedStatement p) {
+		if( p != null)
+			try {
+				p.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+	
+	protected final void closeResultSet(ResultSet rs) {
+		if( rs != null)
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
 	}
 }
 

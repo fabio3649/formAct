@@ -1,86 +1,89 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<!doctype html>
-<html lang="en">
+<%@ page 
+    language="java" 
+    contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="UTF-8"
+%>
+
+<!DOCTYPE html>
+
+<html>
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
+     <!-- basic -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<!-- Libreria JQuery Ajax -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	
-	<!-- javaScript -->
-	<script src="ModificaPassword.js"></script>
-
-    <!-- Bootstrap CSS -->
-  	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-  	
-  	<link href="autenticazioneStyle.css" rel="stylesheet">
-    <title>FormAct Login Page</title>
-  </head>
-  <body>
-	
-	<%@include file="/view/fragments/Header.jsp" %>
-	<form action="${pageContext.request.contextPath}/AutenticazioneServlet/ModificaPasswordService" method="post">
-      <!-- Form Container-->
-      <div class="mt-5 mb-5 p-4 pb-2 container border-secondary border-2 rounded pricipalContainer" >
-
-        <!-- Label-Riempi le seguenti caselle di testo per modificare la password -->
-        <div class="container p-0 m-0 mb-4 mt-2 text-center" >
-          <label for="basic-url" class="form-label fw-bold ">Riempi le seguenti caselle di testo per modificare la password</label>
-        </div>
-
-        <!-- Spazio vuoto -->
-        <div class="mb-2">
-        </div>
-		
-        <!-- Password-Password , variabile="passwordAttuale" -->
-        <div class="mb-4">
-          <label for="formGroupExampleInput2" class="form-label">Password attuale</label>
-          <input type="password" id="password" class="form-control" name="passwordAttuale" minlenght="8" required>
-          <p class="text-danger" id="errorePassword1"></p>
-        </div>
-        
-        <!-- Spazio vuoto -->
-        <div class="p-2">
-        </div>
-        
-        <!-- Password-Password , variabile="nuovaPassword" -->
-        <div class="mb-4">
-          <label for="formGroupExampleInput2" class="form-label">Nuova password</label>
-          <input type="password" id="password2" class="form-control" name="nuovaPassword" minlenght="8" required>
-          <p class="text-danger" id="errorePassword2"></p>
-        </div>
-        
-        <!-- Password-Password , variabile="confermaPassword" -->
-        <div class="mb-4">
-          <label for="formGroupExampleInput2" class="form-label">Confera nuova password</label>
-          <input type="password" id="confermaPassword" class="form-control" name="confermaPassword" minlenght="8" required>
-          <p class="text-danger" id="errorePassword3"></p>
-        </div>
-        
-        <!-- Sumbit Button -->
-        <div class="mb-2 mt-3">
-          <div class="row align-items-start">
-            <div class="col">
-            </div>
-            <div class="col">
-            </div>
-            <div class="col">
-            </div>
-            <div class="col">
-            </div>
-            <div class="col">
-              <input type="submit" id="modificaPasswordButton" class="btn btn-outline-info" style="align:right;" value="Conferma">
-            </div>
-          </div>
-        </div>
-        
-	</div>
-	
-	</form>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <title>Modifica password</title>
+    
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="/formAct/view/css/bootstrap.min.css">
+    <!-- style css -->
+    <link rel="stylesheet" href="/formAct/view/css/unicoStile.css">
+    <!-- Responsive-->
+    <link rel="stylesheet" href="/formAct/view/css/responsive.css">
+    <!-- favicon -->
+    <link rel="icon" href="/formAct/view/immagini/favicon.png" type="image/gif" />
+    <!-- Tweaks for older IEs-->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js" type="text/javascript"></script>
+  </head>
+  
+  <body>
+    <!-------------------- Header -------------------->
+    <div class="header_section" style="background-color: #CFEDF0;">
+      <%@include file="/view/fragments/Header.jsp"%>
+    </div>
+    
+    <div class="wrapperTable">
+  	  <div class="text-center mt-4 name" style="display: block;">
+  	    Modifica password:
+  	  </div>
+  	  
+  	  <div class="contenuto">
+  	    <form id="modificaPasswordForm" action="${pageContext.request.contextPath}/AutenticazioneServlet/ModificaPasswordService" method="post">
+  	      <label for="passwordAttuale"><span style="color: red;">Password attuale:</span></label>
+          <input type="password" id="passwordAttuale" class="passwordAttuale" name="passwordAttuale"> <br> <br>
+      	  <!-- Errore password attuale -->
+          <p class="text-danger" id="errorePasswordAttuale"></p>
+      	  
+          <label for="nuovaPassword"><span style="color: red;">Nuova password:</span></label>
+          <input type="password" id="nuovaPassword" class="nuovaPassword" name="nuovaPassword"> <br> <br>
+          <!-- Errore nuova password -->
+          <p class="text-danger" id="erroreNuovaPassword"></p>
+      	  
+      	  <label for="confermaPassword"><span style="color: red;">Conferma nuova password:</span></label>
+          <input type="password" id="confermaPassword" class="confermaPassword" name="confermaPassword"> <br> <br>  
+          <!-- Errore conferma password -->
+          <p class="text-danger" id="erroreConfermaPassword"></p>
+          
+      	  <input type="button" class="btn" onclick="modificaPassword()" value="Conferma">
+      	</form>
+  	  </div>
+    </div>
+    
+    <!-------------------- Footer -------------------->
+    <%@include file="/view/fragments/Footer.jsp"%>
+    
+    
+    
+    
+    <script src="/formAct/view/js/validazioniForm/Autenticazione.js" type="text/javascript"></script>
   </body>
 </html>
+
+
+
+
+
+
+
+
+

@@ -12,6 +12,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import model.entity.DisponibilitaEntity;
 import model.entity.IscrizioneEntity;
 import model.entity.PercorsoFormativoEntity;
 
@@ -65,7 +66,7 @@ private Connection getConnection() throws SQLException{
 			preparedStatement.setString(6, percorso.getIndice_contenuti());
 			preparedStatement.setInt(7, percorso.getNum_lezioni());
 			preparedStatement.setDouble(8, percorso.getCosto());
-			preparedStatement.setInt(9, percorso.getValidate());
+			preparedStatement.setInt(9, 1);
 			preparedStatement.executeUpdate();
 			ResultSet rs = preparedStatement.getGeneratedKeys();
 			if ( rs.next()) {   // generazione nuova chiave primaria
@@ -85,7 +86,35 @@ private Connection getConnection() throws SQLException{
 		return id;
 	}
 		
-	
+	public boolean validation(int v, int id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		int result = 0;
+		
+		
+        
+
+		String selectSQL = "UPDATE " + PercorsoFormativoDao.TABLE_NAME + " SET VALIDATE = ? "
+				+ " WHERE IDPERCORSO_FORMATIVO = ? ";
+        
+		
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setInt(1, v);
+			preparedStatement.setInt(2, id);
+
+			
+			result = preparedStatement.executeUpdate();
+
+		} finally {
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
+		}
+		
+		return (result != 0);
+		
+	}
 
 	
 	public boolean doDelete(int id) throws SQLException {
@@ -162,7 +191,7 @@ private Connection getConnection() throws SQLException{
 		
 		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
         
-		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME + " WHERE NOME = ?";
+		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME + " WHERE COSTO = ?";
 
 		try {
 			connection = getConnection();
@@ -277,6 +306,46 @@ private Connection getConnection() throws SQLException{
 		return corsi;
 	}
 	
+	public ArrayList<PercorsoFormativoEntity> doRetrieveByIdFormatore(int id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		
+		
+		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
+        
+		String selectSQL = "SELECT * FROM " + PercorsoFormativoDao.TABLE_NAME + " WHERE FORMATORE = ?";
+
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setInt(1, id);
+
+		    rs = preparedStatement.executeQuery();
+
+			while (rs.next()) {
+				
+				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
+				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
+				bean.setId_formatore(rs.getInt("FORMATORE"));
+				bean.setNome(rs.getString("NOME"));
+				bean.setCategoria(rs.getInt("AMBITO"));
+				bean.setDescrizione(rs.getString("DESCRIZIONE"));
+			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
+	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
+	            bean.setCosto(rs.getDouble("COSTO"));
+	            corsi.add(bean);
+			    
+			}
+
+		}  finally {
+			closeResultSet(rs);
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
+		}
+		return corsi;
+	}
+	
 	
 	public ArrayList<PercorsoFormativoEntity> doRetrieveAllByFormatore(String nome, String cognome) throws SQLException {
 		Connection connection = null;
@@ -364,19 +433,19 @@ private Connection getConnection() throws SQLException{
 		return corsi;
 	}
 	
-	public ArrayList<PercorsoFormativoEntity> doRetrieveAvailable() throws SQLException {
+	public ArrayList<DisponibilitaEntity> doRetrieveAvailable() throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 		
 		
-		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
+		ArrayList<DisponibilitaEntity> availables = new ArrayList<DisponibilitaEntity>();
         
 		int disp = 1;
 		
 		String selectSQL = "SELECT * "
 				+ "FROM percorso_formativo,disponibilita "
-				+ "WHERE disponibilita.stato = ?";
+				+ "WHERE disponibilita.stato = ? AND percorso_formativo.idpercorso_formativo = disponibilita.percorsoFormativo";
 
 		try {
 			connection = getConnection();
@@ -386,17 +455,15 @@ private Connection getConnection() throws SQLException{
 			 rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
-				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
+				DisponibilitaEntity bean = new DisponibilitaEntity();
 				
-				bean.setId(rs.getInt("IDPERCORSO_FORMATIVO"));
-				bean.setId_formatore(rs.getInt("FORMATORE"));
-				bean.setNome(rs.getString("NOME"));
-				bean.setCategoria(rs.getInt("AMBITO"));
-				bean.setDescrizione(rs.getString("DESCRIZIONE"));
-			    bean.setIndice_contenuti(rs.getString("INDICECONTENUTI"));
-	            bean.setNum_lezioni(rs.getInt("NUMEROLEZIONI"));
-	            bean.setCosto(rs.getDouble("COSTO"));
-	            corsi.add(bean);
+				bean.setIdDisp(rs.getInt("ID"));
+				bean.setGiornoSettimana(rs.getString("GIORNOSETTIMANA"));
+				bean.setOrario(rs.getString("ORARIO"));
+				bean.setStato(rs.getInt("STATO"));
+				bean.setIdPercorso(rs.getInt("PERCORSOFORMATIVO"));
+				
+	            availables.add(bean);
 			    
 			}
 
@@ -406,10 +473,10 @@ private Connection getConnection() throws SQLException{
 			closeConnection(connection);
 		}
 		
-		return corsi;
+		return availables;
 	}
 	
-	public ArrayList<PercorsoFormativoEntity> doRetrieveByDisponibilita(String giorno) throws SQLException {
+	public ArrayList<PercorsoFormativoEntity> doRetrieveByGiorno(String giorno) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
@@ -417,7 +484,6 @@ private Connection getConnection() throws SQLException{
 		
 		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
         
-		int disp = 1;
 		
 		String selectSQL = "SELECT DISTINCT * "
 				+ "FROM percorso_formativo,disponibilita "
@@ -497,37 +563,39 @@ private Connection getConnection() throws SQLException{
 		return percorsi;
 	}
 	
-	public ArrayList<PercorsoFormativoEntity> doRetrieveAllByParams(String str , String min, String max, String giorno) throws SQLException {
+	public ArrayList<PercorsoFormativoEntity> doRetrieveAllByParams(String nome , String min, String max, String giorno) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 		
-		
 		ArrayList<PercorsoFormativoEntity> corsi = new ArrayList<PercorsoFormativoEntity>();
-		String stringa = "%" + str +"%";
 		
 		String selectSQL = "";
-		selectSQL += "SELECT DISTINCT";
-		selectSQL += " percorso_formativo.idpercorso_formativo, percorso_formativo.formatore,"
-				+    " percorso_formativo.nome, percorso_formativo.ambito, percorso_formativo.descrizione,"
-				+    " percorso_formativo.indiceContenuti, percorso_formativo.numeroLezioni,"
-				+    " percorso_formativo.costo";
+		selectSQL += "SELECT DISTINCT * ";
+		selectSQL += "FROM DISPONIBILITA ";
+		selectSQL += "INNER JOIN PERCORSO_FORMATIVO ";
+		selectSQL += "ON DISPONIBILITA.PERCORSOFORMATIVO = PERCORSO_FORMATIVO.IDPERCORSO_FORMATIVO ";
+		selectSQL += "WHERE PERCORSO_FORMATIVO.VALIDATE = 1  ";
 		
-		selectSQL += " FROM percorso_formativo,disponibilita";
-		
-		selectSQL += " WHERE percorso_formativo.idpercorso_formativo = percorso_formativo.idpercorso_formativo";
-		
-		if (str != null && !str.equals("")) {
-			selectSQL += " AND percorso_formativo.nome LIKE ?";
-		}
+		if (nome != null && !nome.equals("")) {
+			nome = "%" + nome +"%";
+			String condizione = "PERCORSO_FORMATIVO.NOME LIKE ? ";
+			selectSQL += "AND " + condizione;
+		}  
 		if (min != null && !min.equals("")) {
-			selectSQL += " AND percorso_formativo.costo >= ?";
-		}
+			String condizione = "PERCORSO_FORMATIVO.COSTO >= ? ";
+				selectSQL += "AND " + condizione;
+			}
+		
 		if (max != null && !max.equals("")) {
-			selectSQL += " AND percorso_formativo.costo <= ?";
+			String condizione = "PERCORSO_FORMATIVO.COSTO <= ? ";
+				selectSQL += "AND " + condizione;
+			
 		}
 		if (giorno != null && !giorno.equals("")) {
-			selectSQL += " AND disponibilita.giornoSettimana = ?";
+			String condizione = "DISPONIBILITA.GIORNOSETTIMANA = ? ";
+				selectSQL += "AND " + condizione;
+			
 		}
 		
 		try {
@@ -535,8 +603,8 @@ private Connection getConnection() throws SQLException{
 			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);
 			
 			int i = 1;
-			if (str != null && !str.equals("")) {
-				preparedStatement.setString(i, stringa);
+			if (nome != null && !nome.equals("")) {
+				preparedStatement.setString(i, nome);
 				i++;
 			}
 			if (min != null && !min.equals("")) {
@@ -552,7 +620,7 @@ private Connection getConnection() throws SQLException{
 				i++;
 			}
 			
-			 rs = preparedStatement.executeQuery();
+			rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				PercorsoFormativoEntity bean = new PercorsoFormativoEntity();
@@ -591,7 +659,7 @@ private Connection getConnection() throws SQLException{
 		if (iscrizioni != null && !iscrizioni.equals("")) {
 			selectSQL += " ORDER BY STUDENTE";  
 		}
-
+ 
 		try {
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL , Statement.RETURN_GENERATED_KEYS);

@@ -57,7 +57,7 @@ public class StudenteDaoTest extends Mockito{
 		s.setGender("M");
 		java.sql.Date d = Utils.toDate("10-09-1995");
 		s.setBirthDate(d);
-		s.setCountry("Salerno");
+		s.setCountry("Italy");
 		
 		
 		
@@ -65,20 +65,6 @@ public class StudenteDaoTest extends Mockito{
 	}
 	
 	
-	@Test
-	public void doSaveTest() throws SQLException {
-        
-		dao.doSave(s);
-	
-		StudenteEntity result = (StudenteEntity) dao.doRetrieveByKey(s.getId());
-		boolean value = s.equals(result);
-		System.out.println("Valore dell'equals : " + value);
-		System.out.println(" studente s content : " + s.toString());
-		System.out.println("  studente byID content : " + result.toString());
-		System.out.println("ID GENERATO : " + s.getId());
-		
-		assertTrue(value);
-	}
 	
 	@Test
 	public void testDoRetrieveAll() throws SQLException
@@ -92,28 +78,50 @@ public class StudenteDaoTest extends Mockito{
 	}
 	
 	@Test
+	public void testSaveAndRetrieve() throws SQLException {
+		
+		dao.doSave(s);
+		System.out.println(s.getId() + "id creato da retieveByKey");
+		StudenteEntity s2 = dao.doRetrieveByKey(s.getId());
+		
+		boolean value = s.equals(s2);
+		
+		assertTrue(value);
+		assertNotNull(s2);
+		assertEquals("PinoPallino",s2.getPassword());
+		System.out.println("Valore dell'equals : " + value);
+		System.out.println(" studente  s content : " + s.toString());
+		System.out.println("formatore byID content : " + s2.toString());
+		System.out.println("ID GENERATO : " + s.getId());
+		System.out.println(s2.getPassword() + "password by key");
+	}
+	
+	
+	@Test
 	public void testUpdatePassword() throws SQLException {
 		
-		dao.updatePassword(1, "cambioPassword");
+		dao.updatePassword(4, "cambioPassword");
 		
-		StudenteEntity s = (StudenteEntity) dao.doRetrieveByKey(1);
+		StudenteEntity s = (StudenteEntity) dao.doRetrieveByKey(4);
 		System.out.println(s.getEmail());
 		assertEquals("cambioPassword",s.getPassword());
 		
 		
-	}
-	// studente id = 2
+	}  
+	
 	@Test
 	public void testUpdateStudent() throws SQLException {
 		
-		dao.updateStudent(1, "federico.discipio@gmail.com", "Spagna");
+		dao.updateStudent(4, "federico.discipio@gmail.com");
 		
 		StudenteEntity s = (StudenteEntity) dao.doRetrieveByMail("federico.discipio@gmail.com");
 		System.out.println(s.getEmail());
 		assertEquals("federico.discipio@gmail.com" , s.getEmail());
-		assertEquals("Spagna",s.getCountry());
+		assertEquals("Italy",s.getCountry());
 		
-	}
+	} 
+	
+	
 	
 	
 	@Test

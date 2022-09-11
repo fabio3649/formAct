@@ -13,10 +13,12 @@ import javax.sql.DataSource;
 
 import model.entity.DisponibilitaEntity;
 import model.entity.FormatoreEntity;
+import model.entity.InteresseStudenteEntity;
 import model.entity.PercorsoFormativoEntity;
 import model.entity.PreferenzaStudenteEntity;
 
 public class PreferenzaStudenteDao {
+	
 	
 private Connection getConnection() throws SQLException{
 		
@@ -41,7 +43,7 @@ private Connection getConnection() throws SQLException{
 	
 	     
 	
-		public void doSave(Object bean) throws SQLException {
+		public void doSave(PreferenzaStudenteEntity bean) throws SQLException {
 				
 				Connection connection = null;
 				PreparedStatement preparedStatement = null;
@@ -56,23 +58,21 @@ private Connection getConnection() throws SQLException{
 					connection = getConnection();
 					preparedStatement = connection.prepareStatement(insertSQL);
 					preparedStatement.setInt(1, pref.getStudente());
-					preparedStatement.setInt(2, pref.getDisponibilita());
+					preparedStatement.setString(2, pref.getDisponibilita());
 					preparedStatement.executeUpdate();
 					connection.setAutoCommit(false);
 					connection.commit();
 				} finally {
-					try {
-						if (preparedStatement != null)
-							preparedStatement.close();
-					} finally {
-						if (connection != null)
-							connection.close();
-					}
+					closePreparedStatement(preparedStatement);
+					closeConnection(connection);
 				}
+				
+				
 			}
+			
 		
 		
-		public boolean doDelete(int studente , int disponibile) throws SQLException {
+		public boolean doDelete(int studente , String disponibile) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 			
@@ -86,18 +86,13 @@ private Connection getConnection() throws SQLException{
 				connection = getConnection();
 				preparedStatement = connection.prepareStatement(deleteSQL);
 				preparedStatement.setInt(1, studente);
-				preparedStatement.setInt(2, disponibile);
+				preparedStatement.setString(2, disponibile);
 
 				result = preparedStatement.executeUpdate();
 
 			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
 			return (result != 0);
 		}
@@ -106,7 +101,7 @@ private Connection getConnection() throws SQLException{
 		public ArrayList<PreferenzaStudenteEntity> doRetrieveAll() throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
-
+			ResultSet rs = null;
 			ArrayList<PreferenzaStudenteEntity> prefs = new ArrayList<PreferenzaStudenteEntity>();
 
 			String selectSQL = "SELECT * FROM " + PreferenzaStudenteDao.TABLE_NAME;
@@ -120,32 +115,28 @@ private Connection getConnection() throws SQLException{
 				preparedStatement = connection.prepareStatement(selectSQL);
 			
 
-				ResultSet rs = preparedStatement.executeQuery();
+				rs = preparedStatement.executeQuery();
 
 				while (rs.next()) {
 					
 					PreferenzaStudenteEntity bean = new PreferenzaStudenteEntity();
 					bean.setStudente(rs.getInt("STUDENTE"));
-					bean.setDisponibilita(rs.getInt("DISPONIBILE"));
+					bean.setDisponibilita(rs.getString("DISPONIBILE"));
 					prefs.add(bean);
 				}
 
-			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-				} finally {
-					if (connection != null)
-						connection.close();
-				}
+			}  finally {
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
 			}
 			return prefs;
 		}
 		
-		public Object doRetrieveByStudent(int studente) throws SQLException {
+		public ArrayList<PreferenzaStudenteEntity> doRetrieveAllByStudent(int studente) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
-
+			ResultSet rs = null;
 			
 			
 			ArrayList<PreferenzaStudenteEntity> prefs = new ArrayList<PreferenzaStudenteEntity>();
@@ -157,19 +148,120 @@ private Connection getConnection() throws SQLException{
 				preparedStatement = connection.prepareStatement(selectSQL);
 				preparedStatement.setInt(1, studente);
 
-				ResultSet rs = preparedStatement.executeQuery();
+				rs = preparedStatement.executeQuery();
 
 				while (rs.next()) {
 					
 					PreferenzaStudenteEntity bean = new PreferenzaStudenteEntity();
 					bean.setStudente(rs.getInt("STUDENTE"));
-					bean.setDisponibilita(rs.getInt("DISPONIBILE"));
+					bean.setDisponibilita(rs.getString("DISPONIBILE"));
 					prefs.add(bean);
 		            
 				    
 				}
 
-			} finally {
+			}  finally {
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
+			}
+			return prefs;
+		}
+		
+		public ArrayList<PreferenzaStudenteEntity> doRetrieveByStudent(int studente) throws SQLException {
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+			ResultSet rs = null;
+			
+			
+			String selectSQL = "SELECT * FROM " + PreferenzaStudenteDao.TABLE_NAME + " WHERE STUDENTE = ?";
+			
+			ArrayList<PreferenzaStudenteEntity> preferenze = new ArrayList<>();
+			try {
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL);
+				preparedStatement.setInt(1, studente);
+
+				rs = preparedStatement.executeQuery();
+				
+				while (rs.next()) {
+					PreferenzaStudenteEntity bean = new PreferenzaStudenteEntity();					
+					
+					bean.setStudente(rs.getInt("STUDENTE"));
+					bean.setDisponibilita(rs.getString("DISPONIBILE"));
+					
+		            preferenze.add(bean);
+				}
+
+			}  finally {
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
+			}
+			return preferenze;
+		}
+		
+		public PreferenzaStudenteEntity doRetrieveByKeys(int studente, String giorno) throws SQLException {
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+			ResultSet rs = null;
+			
+			
+			PreferenzaStudenteEntity bean = new PreferenzaStudenteEntity();
+			String selectSQL = "SELECT * FROM " + PreferenzaStudenteDao.TABLE_NAME + " WHERE STUDENTE = ?"
+					+ " AND DISPONIBILE = ? ";
+
+			try {
+				connection = getConnection();
+				preparedStatement = connection.prepareStatement(selectSQL);
+				preparedStatement.setInt(1, studente);
+				preparedStatement.setString(2, giorno);
+
+				rs = preparedStatement.executeQuery();
+
+				while (rs.next()) {
+					
+					
+					bean.setStudente(rs.getInt("STUDENTE"));
+					bean.setDisponibilita(rs.getString("DISPONIBILE"));
+					
+		            
+				}
+
+			}  finally {
+				closeResultSet(rs);
+				closePreparedStatement(preparedStatement);
+				closeConnection(connection);
+			}
+			return bean;
+		}
+		
+		public boolean isContent(int studente, String giorno) throws SQLException {
+			
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+			
+			PreferenzaStudenteEntity bean= new PreferenzaStudenteEntity();
+			
+			String selectSQL = "SELECT * FROM " + PreferenzaStudenteDao.TABLE_NAME + " WHERE STUDENTE=? AND DISPONIBILE= ?";
+			
+			try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, studente);
+			preparedStatement.setString(2, giorno);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				bean.setStudente(rs.getInt("STUDENTE"));
+				bean.setDisponibilita(rs.getString("DISPONIBILE"));;
+			
+			}
+
+			}catch(SQLException e) {
+				
+				
+			}finally {
 				try {
 					if (preparedStatement != null)
 						preparedStatement.close();
@@ -178,8 +270,44 @@ private Connection getConnection() throws SQLException{
 						connection.close();
 				}
 			}
-			return prefs;
+			
+			if(bean.getStudente()==0)
+				return false;
+		
+			return true;
 		}
+		
+		protected final void closeConnection(Connection c) {
+			if( c != null)
+				try {
+					c.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+		
+		protected final void closePreparedStatement(PreparedStatement p) {
+			if( p != null)
+				try {
+					p.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		
+		protected final void closeResultSet(ResultSet rs) {
+			if( rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}			
+		}
+
+
+		
 
 
 	

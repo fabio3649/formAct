@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,10 +38,13 @@ public class DisponibilitaDaoTest {
 		
 		
 		
+		
+		
+		
 	}
 	
 	@Test
-	public void doSaveTest() throws SQLException {
+	public void testDoSave() throws SQLException {
 		
 		dao.doSave(disp);
 		
@@ -50,6 +54,33 @@ public class DisponibilitaDaoTest {
 		assertEquals(value,true);
 		
 	}
+	
+	
+	@Test
+	public void testDelete() throws SQLException {
+		
+		DisponibilitaEntity nuova = new DisponibilitaEntity();
+		
+		nuova.setGiornoSettimana("mercoledi");
+		nuova.setOrario("12:00");
+		nuova.setIdPercorso(1);
+		
+		dao.doSave(nuova);
+		
+		assertTrue(dao.doDelete(nuova.getIdDisp()));
+		
+		
+	}
+	
+	/*@Test
+	public void testDoRetrieveAll() throws SQLException {
+		
+		ArrayList<DisponibilitaEntity> disps = dao.doRetrieveAll();
+		
+		assertEquals(1,disps.size());
+	}*/
+	
+	
 	
 	
 	

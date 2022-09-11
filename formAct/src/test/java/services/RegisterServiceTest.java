@@ -71,14 +71,14 @@ public class RegisterServiceTest extends Mockito{
 		act = register.process("RegisterService",req, res);
 		
 		
-		String homePage = act.getPage();
-		
-		assertEquals("/formAct/view/index/index.jsp",homePage);
+		String loginPage = act.getPage();
+		//redirect
+		assertEquals("/formAct/view/autenticazione/Login.jsp",loginPage);
 		
 	}
 	
 	@Test
-	public void testProcessFormatoreHomePage() throws IOException, ServletException {
+	public void testProcessFormatoreLoginPage() throws IOException, ServletException {
 		
 		req.addParameter("email", "testFormatore4@prova.it");
 		req.addParameter("password", "testing");
@@ -94,9 +94,9 @@ public class RegisterServiceTest extends Mockito{
 		act = register.process("RegisterService",req, res);
 		
 		
-		String homePage = act.getPage();
-		
-		assertEquals("/formAct/view/index/index.jsp",homePage);
+		String loginPage = act.getPage();
+		//redirect
+		assertEquals("/formAct/view/autenticazione/Login.jsp",loginPage);
 		
 	}
 	

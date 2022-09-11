@@ -20,14 +20,15 @@ public class RegisterService implements Service{
 	
 	private FormatoreDao daoFormatore;
 	private StudenteDao daoStudente;
-	Action errorPage = new Action("/formAct/view/messagePages/errorRegister.jsp", true, true);
-	Action homePage = new Action("/formAct/view/index/index.jsp", true, true);
+	// sendRedirect
+	Action errorPage = new Action("/formAct/view/messagePages/Errori.jsp", true, true);
+	Action loginPage = new Action("/formAct/view/autenticazione/Login.jsp", true, true);
 	
 	public RegisterService() {
 		daoFormatore = new FormatoreDao();
 		daoStudente = new StudenteDao();
 		
-	}
+	} 
 	
 	@Override
 	public Action process(String serviceName ,HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
@@ -36,53 +37,40 @@ public class RegisterService implements Service{
 		// se nella request è presente l'idStudente allora sto registrando un account studente
 		
 		if(req.getSession().getAttribute("register") != null && req.getSession().getAttribute("register").equals("studente")) {	
-			//String newEmail = req.getParameter("email");
+		    try {
+			    if(executeStudentFormRequest(req)) {
+			    	return loginPage;
+			    }
+			    else {
+			    	req.getSession().setAttribute("erroreRegistrazione", "true");
+			    	return errorPage;
+			    }
+			} 
+		    catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-			//if(!isEmailContent(newEmail)) {
-				//Controllo passato
-			 // nessun errore (non presente nel DB)
-				//try {
-					try {
-						executeStudentFormRequest(req);
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				//} catch (ParseException e) {
-					// TODO Auto-generated catch block
-				//	e.printStackTrace();
-				//}
-				return homePage;
-			//} else 
-			//{
-				//System.out.println(newEmail);
-				//return errorPage;
-			//}
 		}
 		
 		if(req.getSession().getAttribute("register") != null && req.getSession().getAttribute("register").equals("formatore")) {	
-			//String email = req.getParameter("email");
-			//String cf = req.getParameter("cf");
-			
-			//if(!isCfContent(cf) && !isEmailContentTrainer(email)) {
-				
-				//try {
-					try {
-						executeTrainerFormRequest(req);
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				//} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					//e.printStackTrace();
-				//}
-				return homePage;
-				
-			} else return errorPage;
+			try {
+				if(executeTrainerFormRequest(req)) {
+					return loginPage;
+				}
+				else {
+					req.getSession().setAttribute("erroreRegistrazione", "true");
+					return errorPage;
+				}
+			} 
+			catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}  
 			
 				
-		
+		return errorPage;
 		
 	}
 		
@@ -100,9 +88,8 @@ public class RegisterService implements Service{
 		FormatoreEntity newTrainer = new FormatoreEntity();
 		
 		try {
-			Date date = Utils.toDate(request.getParameter("birthdate"));
-			
-			
+			String r = Utils.format(request.getParameter("birthdate"));
+			Date date = Utils.toDate(r);
 			newTrainer.setEmail(request.getParameter("email"));
 			newTrainer.setPassword(request.getParameter("password"));
 			newTrainer.setName(request.getParameter("name"));
@@ -129,10 +116,11 @@ public class RegisterService implements Service{
 	public boolean executeStudentFormRequest(HttpServletRequest request) throws ParseException{
 		
 		StudenteEntity newStudent = new StudenteEntity();
+	
 		
 		try {
-			Date date = Utils.toDate(request.getParameter("birthdate"));
-			
+			String r = Utils.format(request.getParameter("birthdate"));
+			Date date = Utils.toDate(r);
 			newStudent.setEmail(request.getParameter("email"));
 			newStudent.setPassword(request.getParameter("password"));
 			newStudent.setName(request.getParameter("name"));

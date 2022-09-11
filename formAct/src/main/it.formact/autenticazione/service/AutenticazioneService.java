@@ -2,13 +2,17 @@ package autenticazione.service;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import model.dao.FormatoreDao;
+import model.dao.InteresseStudenteDao;
+import model.dao.PreferenzaStudenteDao;
 import model.dao.StudenteDao;
 import model.entity.FormatoreEntity;
+import model.entity.PreferenzaStudenteEntity;
 import model.entity.StudenteEntity;
 
 import java.io.IOException;
@@ -35,12 +39,12 @@ import model.entity.StudenteEntity;
 public class AutenticazioneService implements Service{
 	StudenteDao sDao;
 	FormatoreDao fDao;
-	Action errorPage = new Action("/formAct/view/autenticazione/Login.jsp", true, true);
-	Action homePage = new Action("/formAct/view/index/index.jsp", true, true);
-	
-	/**
+	Action loginPage = new Action("/formAct/view/autenticazione/Login.jsp", true, true);
+	Action homePage = new Action("/formAct/view/index/index.jsp", true , true ); // redirect funziona a dovere, forward NO
+	 // il forward ( 2 parametro , false ), reindirizza al LoginService e chiama il controller su diversi file nel documento jsp.
+	/** 
 	 * Costruttore di default
-	 */
+	 */ 
 	public AutenticazioneService() {
 		fDao = new FormatoreDao();
 		sDao = new StudenteDao();
@@ -52,30 +56,47 @@ public class AutenticazioneService implements Service{
 		// TODO Auto-generated method stub
 		if(serviceName.equalsIgnoreCase("LoginService")) {
 			try {
-				if(checkTrainerLogin(req) || checkStudentLogin(req)){
+				if(checkAdminLogin(req) || checkTrainerLogin(req) || checkStudentLogin(req) ){
 					//login effettuato con successo torna alla home
+					req.getSession().setAttribute("logError", "false");
 					return homePage;
 				}else {
 					//login fallito
 					req.getSession().setAttribute("logError", "true");
-					return errorPage;
+					return loginPage;
 				}
 			}catch(SQLException e) {
 				throw new ServletException(e);
 			}
 			
 		}
+		
+		
 		if(serviceName.equalsIgnoreCase("LogoutService")) {
 			//chiamata metodo CanLogOut
-			canLogout(req);
+			if(canLogout(req))
+			return homePage;
+			else  return loginPage;
 		}
-		return errorPage;
-	}
+		
+		if(serviceName.equalsIgnoreCase("DisiscrizionePiattaformaService")) {
+            if(disiscrizionePiattaforma(req) && canLogout(req)) {
+            	return homePage;
+            }
+            else {
+            	return loginPage;
+            }
+        }
+    
+		
+		return loginPage;
+	}	
+	
 	
 	@Override
 	public Action getErrorAction() {
 		// TODO Auto-generated method stub
-		return errorPage;
+		return loginPage;
 	}
 	
 	public final boolean checkTrainerLogin(HttpServletRequest request) throws SQLException {
@@ -91,6 +112,8 @@ public class AutenticazioneService implements Service{
 					request.getSession().setAttribute("currentId", a.getId());
 					request.getSession().setAttribute("validation", "true");
 					request.getSession().setAttribute("role", "Formatore");
+					request.getSession().setAttribute("nomeUtente", a.getName());
+					request.getSession().setAttribute("utente", a);
 					return true;
 				 }
 			}
@@ -112,6 +135,15 @@ public class AutenticazioneService implements Service{
 					request.getSession().setAttribute("currentId", a.getId());
 					request.getSession().setAttribute("validation", "true");
 					request.getSession().setAttribute("role", "Studente");
+					request.getSession().setAttribute("nomeUtente", a.getName());
+					request.getSession().setAttribute("utente", a);
+					InteresseStudenteDao isDao = new InteresseStudenteDao();
+					ArrayList<String> interessiStudente = isDao.doRetrieveInteressiStudente(a.getId());
+					request.getSession().setAttribute("interessiStudente", interessiStudente);
+					PreferenzaStudenteDao psDao = new PreferenzaStudenteDao();
+					ArrayList<PreferenzaStudenteEntity> giorniLiberiStudente = (ArrayList<PreferenzaStudenteEntity>) psDao.doRetrieveAllByStudent(a.getId()); 
+					request.getSession().setAttribute("giorniLiberiStudente", giorniLiberiStudente);
+					
 					return true;
 				}
 			}
@@ -122,15 +154,60 @@ public class AutenticazioneService implements Service{
 	public boolean canLogout(HttpServletRequest req) {
 		HttpSession session= req.getSession();
 		
-		if((session != null) && (session.getAttribute("Validation")!=null) && (session.getAttribute("currentId")!=null) ){
+		if( session.getAttribute("validation").equals("true"))
+		{
 		
-				session.setAttribute("Validation", "false");
+				session.setAttribute("validation", "false");
 				session.removeAttribute("role");
 				session.removeAttribute("currentId");
-			
+				session.removeAttribute("logError");
+				
+				session.invalidate();
 				return true;
 		
 		}else
+			
 			return false;
+	}
+	
+	public final boolean checkAdminLogin(HttpServletRequest request) throws SQLException {
+		
+		String email = (String) request.getParameter("email");
+		String password = (String) request.getParameter("password");
+		
+		if (email.equals("admin@admin.it") && password.equals("adminadmin")) {
+			request.getSession().setAttribute("validation", "true");
+			request.getSession().setAttribute("role", "Amministratore");
+			return true;
+		}
+		return false;
+		
+	}
+	
+	public boolean disiscrizionePiattaforma(HttpServletRequest req) {
+		String ruolo = (String) req.getSession().getAttribute("role");
+		if (ruolo != null) {
+			Integer currentId = (Integer) req.getSession().getAttribute("currentId");
+			if (ruolo.equalsIgnoreCase("Studente")) {
+			    try {
+					sDao.doDelete(currentId);
+					return true;
+				} catch (SQLException e) {
+					e.printStackTrace();
+					return false;
+				}
+			    
+			}
+			else if (ruolo.equalsIgnoreCase("Formatore")) {
+			    try {
+					fDao.doDelete(currentId);
+					return true;
+				} catch (SQLException e) {
+					e.printStackTrace();
+					return false;
+				}
+			}
+		}
+		return false;
 	}
 }

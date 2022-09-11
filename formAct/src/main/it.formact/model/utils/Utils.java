@@ -54,4 +54,15 @@ public class Utils {
 		return new Date(f.parse(f.format(new Date(System.currentTimeMillis()))).getTime());
 	}
 	
+	public static String format(String r) {
+		String anno = r.substring(0,4); 
+		String mese = r.substring(5,7);
+		String giorno = r.substring(8,10);
+		
+		
+		return giorno +"-"+mese+"-"+anno;
+		
+		
+	}
+	
 }

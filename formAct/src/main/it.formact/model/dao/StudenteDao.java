@@ -40,26 +40,16 @@ private Connection getConnection() throws SQLException{
                                     
 	private static final String TABLE_NAME = "studente";
 	
-	// creazione id studente dinamico
-	/*public int nextId() throws SQLException {
-		
-		ArrayList<StudenteEntity> users = (ArrayList<StudenteEntity>) this.doRetrieveAll();
-		if(users.size()==0)
-			return 1;
-		int next = (users.get(users.size()-1).getId())+1;
-		
-		return next;
-
-	} */
+	
 
 	
-	public int doSave(Object bean) throws SQLException {
+	public int doSave(StudenteEntity bean) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		StudenteEntity user = (StudenteEntity) bean;
 		String insertSQL = "INSERT INTO " + StudenteDao.TABLE_NAME
 				+ " (IDSTUDENTE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, DATANASCITA, PAESEORIGINE)"
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+				+ " VALUES (?, ?, ?, ?, ?, ?, str_to_date(?,'%d-%m-%Y') , ?)";
 		int id = 0;
 		try {
 			connection = getConnection();
@@ -71,7 +61,10 @@ private Connection getConnection() throws SQLException{
 			preparedStatement.setString(4, user.getName());
 			preparedStatement.setString(5, user.getSurname());
 			preparedStatement.setString(6, user.getGender());
-			preparedStatement.setDate(7, user.getBirthDate());
+			if( user.getBirthDate() == null)
+				preparedStatement.setNull(7, java.sql.Types.VARCHAR);
+			else
+				preparedStatement.setString(7, Utils.toStringDate(user.getBirthDate()));
 			preparedStatement.setString(8, user.getCountry());
 			preparedStatement.executeUpdate();
 			ResultSet rs = preparedStatement.getGeneratedKeys();
@@ -85,13 +78,8 @@ private Connection getConnection() throws SQLException{
 			connection.setAutoCommit(false);
 			connection.commit();
 		} finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			} finally {
-				if (connection != null)
-					connection.close();
-			}
+			closePreparedStatement(preparedStatement);
+			closeConnection(connection);
 		}
 		
 		user.setId(id);
@@ -130,26 +118,24 @@ private Connection getConnection() throws SQLException{
 		return (result != 0);
 	}
 	
-
 	
 	public StudenteEntity doRetrieveByKey(int id) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 		
-		
+		 
 		StudenteEntity bean = new StudenteEntity();
         
-		String selectSQL = "SELECT IDSTUDENTE, EMAIL, PASSWORD,"
-				+ " NOME, COGNOME, SESSO, date_format(DATANASCITA,'%d-%m-%Y') , PAESEORIGINE"
+		String selectSQL = "SELECT IDSTUDENTE, EMAIL, PASSWORD, NOME, COGNOME, SESSO, date_format(DATANASCITA,'%d-%m-%Y'), PAESEORIGINE "
 				+ " FROM " + StudenteDao.TABLE_NAME + " WHERE IDSTUDENTE = ?";
-
+		System.out.println(selectSQL);
 		try {
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setInt(1, id);
 
-			 rs = preparedStatement.executeQuery();
+			rs = preparedStatement.executeQuery();
 
 			while (rs.next()) {
 				bean.setId(rs.getInt(1));
@@ -158,24 +144,21 @@ private Connection getConnection() throws SQLException{
 				bean.setName(rs.getString(4));
 				bean.setSurname(rs.getString(5));
 			    bean.setGender(rs.getString(6));
-			    bean.setBirthDate(Utils.toDate(rs.getString(7)));
+	            bean.setBirthDate(Utils.toDate(rs.getString(7)));
 	            bean.setCountry(rs.getString(8));
-	       
-			    
+	            
 			}
-
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}catch(ParseException e) {
+			throw new SQLException(e);
 		} finally {
 			closeResultSet(rs);
 			closePreparedStatement(preparedStatement);
 			closeConnection(connection);
 		}
 		return bean;
-	}
+	} 
 	
-	public Object doRetrieveByMail(String email) throws SQLException {
+	public StudenteEntity doRetrieveByMail(String email) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
@@ -242,7 +225,7 @@ private Connection getConnection() throws SQLException{
 		
 	}
 	
-	public boolean updateStudent(int id, String email, String country) throws SQLException {
+	public boolean updateStudent(int id, String email) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		int result = 0;
@@ -250,14 +233,13 @@ private Connection getConnection() throws SQLException{
 		
 
 
-		String selectSQL = "UPDATE " + StudenteDao.TABLE_NAME + " SET EMAIL = ? , PAESEORIGINE = ?  " + " WHERE IDSTUDENTE = ? ";
+		String selectSQL = "UPDATE " + StudenteDao.TABLE_NAME + " SET EMAIL = ?  " + " WHERE IDSTUDENTE = ? ";
 
 		try {
 			connection = getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL,Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, email);
-			preparedStatement.setString(2, country);
-			preparedStatement.setInt(3, id);
+			preparedStatement.setInt(2, id);
 			
 			result = preparedStatement.executeUpdate();
 
@@ -347,5 +329,14 @@ private Connection getConnection() throws SQLException{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}			
+	}
+
+
+
+
+	@Override
+	public int doSave(Object bean) throws SQLException {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	}

@@ -1,0 +1,23 @@
+Valutazione gene:
+	
+	Inizializzazione:
+	10
+	
+	nome:
+	10 * numeroInteressi -> 10 * 3 -> 30
+	 5 * numeroInteressi ->  5 * 3 -> 15
+	
+	indiceContenuti:
+	10 * numeroInteressi -> 10 * 3 -> 30
+	 5 * numeroInteressi ->  5 * 3 -> 15
+	
+	categoria:
+	10 * numeroInteressi -> 10 * 3 -> 30
+	 5 * numeroInteressi ->  5 * 3 -> 15
+	
+	10 + 30 + 30 + 30 = 100
+	10 +  5 +  5 +  5 = 25
+	
+ valutazione individuo:
+ 	Valutazione gene * 10 -> 100 * 10 = 1000
+ 	Valutazione gene * 10 ->  25 * 10 = 75

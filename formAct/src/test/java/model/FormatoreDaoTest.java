@@ -31,9 +31,6 @@ import model.utils.Utils;
 public class FormatoreDaoTest extends Mockito{
 	
 	private FormatoreDao dao;
-	private Connection conn;
-	private PreparedStatement ps;
-	private ResultSet rs;
 	private FormatoreEntity f;
 	private int id;
 	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
@@ -65,7 +62,7 @@ public class FormatoreDaoTest extends Mockito{
 		f.setGender("M");
 		java.sql.Date d = Utils.toDate("10-07-2022");
 		f.setBirthDate(d);
-		f.setCountry("Italia");
+		f.setCountry("Italy");
 		f.setCodiceFiscale("TSD28072022");
 		f.setContoCorrente("ITSDTESNPL28072022");
 		 
@@ -86,7 +83,6 @@ public class FormatoreDaoTest extends Mockito{
 		System.out.println(" formatore f content : " + f.toString());
 		System.out.println("formatore byID content : " + result.toString());
 		System.out.println("ID GENERATO : " + f.getId());
-		System.out.println(FormatoreEntity.diff(f, result));
 		assertTrue(value);
 		
 		
@@ -106,13 +102,15 @@ public class FormatoreDaoTest extends Mockito{
 	@Test
 	public void testUpdatePassword() throws SQLException {
 		
-		dao.updatePassword(2, "cambioPassword");
+		dao.updatePassword(1, "cambioPassword");
 		
-		FormatoreEntity f = (FormatoreEntity) dao.doRetrieveByKey(2);
+		FormatoreEntity f = (FormatoreEntity) dao.doRetrieveByKey(1);
 		assertEquals("cambioPassword",f.getPassword());
 		
 		
 	}
+	
+	
 	
 	@Test
 	public void testDoDelete() throws SQLException {

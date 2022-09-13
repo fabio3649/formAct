@@ -51,13 +51,6 @@ public class AllTests {
 	
 	public AllTests () {
 		
-		// metodo init ()  
-		//esecuzione script ( file.sql con istruzioni di delete delle tabelle )
-		// FileInputStream in = new FileInputStream("./script.sql"); file nella cartella della classe che esegue lo script
-		// AllTests.getClass().getResourceAsStream("file.sql")
-		// StringBuffer r = lettura file;
-		//
-		////////////////////////////////////////////////////////////////////////
 		super();
 	}
     
